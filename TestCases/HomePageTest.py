@@ -1,5 +1,5 @@
 import unittest
-
+from selenium import webdriver
 
 class MyTestCase(unittest.TestCase):
     def test_something(self):
