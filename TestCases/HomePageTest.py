@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 
 
 class HomePageTest(unittest.TestCase):
-    @classmethod
+    # @classmethod
     def setUp(cls):
         # create a new Chrome session and maximize the window
         cls.driver = webdriver.Chrome()
@@ -18,8 +18,9 @@ class HomePageTest(unittest.TestCase):
         cls.driver.get("https://test@olyveinc.com:k0sh@ry1@olyve.olyveinc.com")
 
         # Wait till the Home page is loaded
-        locator = 'html/body/div[1]/div/div/div[1]/nav/div[1]/div[2]/a/img'
-        element = WebDriverWait(cls.driver, 40).until(EC.presence_of_element_located((By.XPATH, locator)))
+        locator = "html/body/div[1]/div/div/div[1]/nav/div[1]/div[2]/a/img"
+        homepage = HomePage(cls.driver)
+        homepage.home_page_load(40,By.XPATH,locator)
 
     # The following test case verifies header items(logo, shop button, track button and ribbon message).
     def test_header_items(self):
@@ -78,7 +79,24 @@ class HomePageTest(unittest.TestCase):
             raise Exception("Privacy Terms Navigation Failed")
 
 
-    @classmethod
+    def test_assert_phonenumber_href(self):
+        try:
+            homepage = HomePage(self.driver)
+            self.assertEqual(True,homepage.verify_phonenumber_href)
+
+        except:
+            raise Exception ("Phone number href is not correct")
+
+    def test_assert_servicemail_href(self):
+        try:
+            homepage = HomePage(self.driver)
+            self.assertEqual(True,homepage.verify_serviceamil_href)
+
+        except:
+            raise Exception ("Service email href is not correct")
+
+
+    # @classmethod
     def tearDown(cls):
         # close the browser window
         cls.driver.quit()
