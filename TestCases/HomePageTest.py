@@ -36,11 +36,11 @@ class HomePageTest(unittest.TestCase):
             raise Exception("Header Assertions Failed")
 
     # The following test case verifies footer items(copyright text, privacy terms, conde of conduct, phone number and email).
-    def test_footer_items(self):
+    def test_footer_items_text(self):
         try:
             homepage = HomePage(self.driver)
 
-            # [Kholoud - 8Feb2016] expected footer text hardcoded till finding another way to capture it.
+            # [Kholoud - 8Feb2016] expected footer text and expected url's hardcoded till finding another way to capture it.
             expected_footer_copyright_text = "Copyright 2015, Olyve, Inc."
             expected_footer_privacyterms_text = "Privacy Terms"
             expected_footer_codeofconducts_text = "Code Of Conduct"
@@ -55,7 +55,28 @@ class HomePageTest(unittest.TestCase):
             self.assertEqual(expected_footer_servicemail_text,homepage.get_footer_serviceemail_text)
 
         except:
-            raise Exception("Footer Assertions Failed")
+            raise Exception("Footer Text Assertions Failed")
+
+    # Test privacy terms navigation
+    def test_footer_privacyterms_navigation(self):
+        try:
+            homepage = HomePage(self.driver)
+            expected_privacyterms_url = "https://test%40olyveinc.com:k0sh%40ry1@olyve.olyveinc.com/privacy"
+            self.assertEqual(expected_privacyterms_url,homepage.get_privacyterms_url)
+
+        except:
+            raise Exception("Privacy Terms Navigation Failed")
+
+    # Test code of conduct navigation
+    def test_footer_codeofconduct_navigtion(self):
+        try:
+            homepage = HomePage(self.driver)
+            expected_codeofconduct_url = "https://test%40olyveinc.com:k0sh%40ry1@olyve.olyveinc.com/codeofconduct"
+            self.assertEqual(expected_codeofconduct_url,homepage.get_codeofconduct_url)
+
+        except:
+            raise Exception("Privacy Terms Navigation Failed")
+
 
     @classmethod
     def tearDown(cls):
