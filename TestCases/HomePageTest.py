@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from PageObjects.HomePage import HomePage
 from builtins import classmethod
 from selenium.webdriver.common.by import By
+import http.client
 
 
 class HomePageTest(unittest.TestCase):
@@ -78,7 +79,7 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception("Privacy Terms Navigation Failed")
 
-
+    # check that phone number can be called by clicking on it.
     def test_assert_phonenumber_href(self):
         try:
             homepage = HomePage(self.driver)
@@ -87,6 +88,7 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception ("Phone number href is not correct")
 
+    # check that service email can be used to send email by clicking on it
     def test_assert_servicemail_href(self):
         try:
             homepage = HomePage(self.driver)
