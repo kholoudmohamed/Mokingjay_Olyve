@@ -95,6 +95,41 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception ("Service email href is not correct")
 
+    def test_facebook_social_info(self):
+        try:
+            # Instance from homepage class
+            homepage = HomePage(self.driver)
+            # Call the facebook_social_info function
+            self.assertEqual("https://www.facebook.com/olyveflowers?_rdr=p", homepage.facebook_social_info(),"Facebook link not correct")
+        except:
+            raise Exception("Facebook link not correct")
+
+    def test_instgram_social_info(self):
+        try:
+            # Instance from homepage class
+            homepage = HomePage(self.driver)
+            # Call the instgram_social_info function
+            self.assertEqual("https://www.instagram.com/olyveflowers/", homepage.instgram_social_info(),"Instgram link not correct")
+        except:
+            raise Exception("Instgram link not correct")
+
+    def test_pinterest_social_info(self):
+        try:
+            # Instance from homepage class
+            homepage = HomePage(self.driver)
+            # Call the pinterest_social_info function
+            self.assertEqual("https://www.pinterest.com/olyveflowers/", homepage.pinterest_social_info(),"Pinterest link not correct")
+        except:
+            raise Exception("Pinterest link not correct")
+
+    def test_twitter_social_info(self):
+        try:
+            # Instance from homepage class
+            homepage = HomePage(self.driver)
+            # Call the twitter_social_info function
+            self.assertEqual("https://twitter.com/olyveflowers", homepage.twitter_social_info(),"Twitter link not correct")
+        except:
+            raise Exception("Twitter link not correct")
 
     # @classmethod
     def tearDown(cls):

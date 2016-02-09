@@ -1,9 +1,10 @@
+import http.client
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
 class HomePage:
-    def __init__(self,driver):
+    def __init__(self, driver):
         self._driver = driver
 
         # All home page variables
@@ -113,3 +114,43 @@ class HomePage:
             return True
         else:
             return False
+
+    def get_page_status(self):
+        try:
+            while httplib.HTTPS_PORT != 200:
+                self._driver.implicitly_wait(10)
+            return self._driver.current_url
+        except:
+            return None
+
+    def facebook_social_info(self):
+        # Find the Facebook link in the home page then click on the link found
+        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[1]/i").click()
+        # Wait till Facebook page is loaded
+        current_url = HomePage.get_page_status(self)
+        # Retrun the Facebook link
+        return current_url
+
+    def instgram_social_info(self):
+        # Find the Instgram link in the home page then click on it
+        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[2]/i").click()
+        # Wait till Instgram page is loaded
+        current_url = HomePage.get_page_status(self)
+        # Return the Instgram link
+        return current_url
+
+    def pinterest_social_info(self):
+        # Find the Pinterest link in the home page then click on it
+        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[3]/i").click()
+        # Wait till Pinterest page is loaded
+        current_url = HomePage.get_page_status(self)
+        # Return the Pinterest link
+        return current_url
+
+    def twitter_social_info(self):
+        # Find the Twitter link in the home page then click on it
+        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[4]/i").click()
+        # Wait till Twitter page is loaded
+        current_url = HomePage.get_page_status(self)
+        # Return the Twitter link
+        return current_url
