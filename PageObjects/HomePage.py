@@ -2,6 +2,9 @@ import http.client
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+import requests as req
+import logging
+
 
 class HomePage:
     def __init__(self, driver):
@@ -16,6 +19,16 @@ class HomePage:
         header_track_button = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[1]/nav/div[1]/div[4]/ul/li/a')
         global header_message_ribbon
         header_message_ribbon = self._driver.find_element_by_xpath('//*[@id="home-container"]/div/div[1]/div')
+        global first_products_slide
+        first_products_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/ol/li[1]')
+        global second_products_slide
+        second_products_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/ol/li[2]')
+        global third_products_slide
+        third_products_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/ol/li[3]')
+        global shop_bottn_second_slide
+        shop_bottn_second_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/div/div[2]/div[2]/a')
+        global shop_bottn_third_slide
+        shop_bottn_third_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/div/div[3]/div[2]/a')
         global footer_copyright
         footer_copyright = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[1]/div[1]')
         global footer_privacyterms
@@ -26,40 +39,70 @@ class HomePage:
         footer_phonenumber = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[1]/div[2]/a')
         global footer_serviceemail
         footer_serviceemail = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[2]/div[2]/a')
+        global facebook_link
+        facebook_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[1]/i")
+        global instgram_link
+        instgram_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[2]/i")
+        global pinterest_link
+        pinterest_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[3]/i")
+        global twitter_link
+        twitter_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[4]/i")
 
-
-    # wait till home page logo is displayed
-    def home_page_load(self,time_to_wait,by_method,locator):
+    # explicit wait until presence of configurable element
+    def home_page_load(self, time_to_wait, by_method, locator):
         element = WebDriverWait(self._driver, time_to_wait).until(EC.presence_of_element_located((by_method, locator)))
 
-    # Find olyve logo and check if it's displayed
+    # Check if Olyve logo is displayed
     @property
     def is_logo_displayed(self):
         return header_olyve_logo.is_displayed()
 
-    # Find header shop button and check if it's enabled
+    # Check if header shop button is enabled
     @property
     def is_header_shop_button_enabled(self):
         return header_shop_button.is_enabled()
 
-    # Find track button and check if it's enabled
+    # Check if Track button is enabled
     @property
     def is_header_track_button_enabled(self):
         return header_track_button.is_enabled()
 
-    # Find and return header ribbon message
+    # Return header ribbon message
     @property
     def get_header_ribbon_message(self):
         actual_header_message_ribbon = header_message_ribbon.text
         return actual_header_message_ribbon
 
-    # Find and return footer copyright text
+    # click on a slides and return it
+    def click_on_first_slide(self):
+        first_products_slide.click()
+        return first_products_slide
+
+    def click_on_second_slide(self):
+        second_products_slide.click()
+        return second_products_slide
+
+    def click_on_third_slide(self):
+        third_products_slide.click()
+        return third_products_slide
+
+    # Verify slides class tag contains "active"
+
+    def verify_slide_is_active(self,selected_slide):
+        slide_class = selected_slide.get_attribute('class')
+        active_class = "ng-scope active"
+        if active_class == slide_class:
+            return True
+        else:
+            return False
+
+    # Return footer copyright text
     @property
     def get_footer_copyright_text(self):
         actual_footer_copyright_text = footer_copyright.text
         return actual_footer_copyright_text
 
-    # Find and return footer privacy terms text
+    # Return footer privacy terms text
     @property
     def get_footer_privacyterms_text(self):
         actual_footer_privacyterms_text = footer_privacyterms.text
@@ -72,7 +115,7 @@ class HomePage:
         WebDriverWait(self._driver, 40).until(EC.title_contains("privacy"))
         return self._driver.current_url
 
-    # Find and return footer code of conduct text
+    # Return footer code of conduct text
     @property
     def get_footer_codeofconduct_text(self):
         actual_footer_codeofconduct_text = footer_codeofconduct.text
@@ -85,12 +128,13 @@ class HomePage:
         WebDriverWait(self._driver, 40).until(EC.title_contains("codeofconduct"))
         return self._driver.current_url
 
-    # Find and return footer phone number
+    # Return footer phone number
     @property
     def get_footer_phonenumber_text(self):
         actual_footer_phonenumber_text = footer_phonenumber.text
         return actual_footer_phonenumber_text
 
+    # Verify phone number tag contains "tel:"
     @property
     def verify_phonenumber_href(self):
         phonenumber_href = footer_phonenumber.get_attribute('href')
@@ -100,12 +144,13 @@ class HomePage:
         else:
             return False
 
-    # Find and return footer email
+    # Return footer email
     @property
     def get_footer_serviceemail_text(self):
         actual_footer_serviceemail_text = footer_serviceemail.text
         return actual_footer_serviceemail_text
 
+    # Verify service mail tag contains "mailto:"
     @property
     def verify_serviceamil_href(self):
         servicemail_href = footer_serviceemail.get_attribute('href')
@@ -115,25 +160,18 @@ class HomePage:
         else:
             return False
 
-    def get_page_status(self):
-        try:
-            while httplib.HTTPS_PORT != 200:
-                self._driver.implicitly_wait(10)
-            return self._driver.current_url
-        except:
-            return None
+    def get_page_status(self, URL):
+        response = req.get(URL)
+        pagestatus = response.status_code
+        return pagestatus
 
     def facebook_social_info(self):
         # Find the Facebook link in the home page then click on the link found
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[1]/i").click()
-        # Wait till Facebook page is loaded
-        current_url = HomePage.get_page_status(self)
-        # Retrun the Facebook link
-        return current_url
+        facebook_link.click()
 
     def instgram_social_info(self):
         # Find the Instgram link in the home page then click on it
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[2]/i").click()
+        instgram_link.click()
         # Wait till Instgram page is loaded
         current_url = HomePage.get_page_status(self)
         # Return the Instgram link
@@ -141,7 +179,7 @@ class HomePage:
 
     def pinterest_social_info(self):
         # Find the Pinterest link in the home page then click on it
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[3]/i").click()
+        pinterest_link.click()
         # Wait till Pinterest page is loaded
         current_url = HomePage.get_page_status(self)
         # Return the Pinterest link
@@ -149,7 +187,7 @@ class HomePage:
 
     def twitter_social_info(self):
         # Find the Twitter link in the home page then click on it
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[4]/i").click()
+        twitter_link.click()
         # Wait till Twitter page is loaded
         current_url = HomePage.get_page_status(self)
         # Return the Twitter link
