@@ -6,10 +6,12 @@ from PageObjects.HomePage import HomePage
 from builtins import classmethod
 from selenium.webdriver.common.by import By
 import http.client
+import requests as req
+import time
 
 
 class HomePageTest(unittest.TestCase):
-    # @classmethod
+    @classmethod
     def setUp(cls):
         # create a new Chrome session and maximize the window
         cls.driver = webdriver.Chrome()
@@ -21,7 +23,7 @@ class HomePageTest(unittest.TestCase):
         # Wait till the Home page is loaded
         locator = "html/body/div[1]/div/div/div[1]/nav/div[1]/div[2]/a/img"
         homepage = HomePage(cls.driver)
-        homepage.home_page_load(40,By.XPATH,locator)
+        homepage.home_page_load(40, By.XPATH, locator)
 
     # The following test case verifies header items(logo, shop button, track button and ribbon message).
     def test_header_items(self):
@@ -32,10 +34,29 @@ class HomePageTest(unittest.TestCase):
             self.assertEqual(True, homepage.is_header_track_button_enabled)
 
             expected_header_message_ribbon = "GIFT BOX & DELIVERY ALWAYS INCLUDED"
-            self.assertEqual(expected_header_message_ribbon,homepage.get_header_ribbon_message)
+            self.assertEqual(expected_header_message_ribbon, homepage.get_header_ribbon_message)
 
         except:
             raise Exception("Header Assertions Failed")
+
+    # Assert navigating between products slides
+    def test_navigating_between_products_slide(self):
+        try:
+            homepage = HomePage(self.driver)
+            selected_slide = homepage.click_on_second_slide()
+            self.assertEqual(True, homepage.verify_slide_is_active(selected_slide), "Second Slide is not active")
+
+            self.driver.implicitly_wait(20)
+            selected_slide = homepage.click_on_third_slide()
+            self.assertEqual(True, homepage.verify_slide_is_active(selected_slide), "Third Slide is not active")
+
+            self.driver.implicitly_wait(30)
+            selected_slide = homepage.click_on_first_slide()
+            self.driver.implicitly_wait(5)
+            self.assertEqual(True, homepage.verify_slide_is_active(selected_slide), "First Slide is not active")
+
+        except:
+            raise Exception("There is an issue in navigating between the slides")
 
     # The following test case verifies footer items(copyright text, privacy terms, conde of conduct, phone number and email).
     def test_footer_items_text(self):
@@ -101,8 +122,16 @@ class HomePageTest(unittest.TestCase):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
-            # Call the facebook_social_info function
-            self.assertEqual("https://www.facebook.com/olyveflowers?_rdr=p", homepage.facebook_social_info(),"Facebook link not correct")
+            homepage.facebook_social_info()
+
+            # Switch focus to the new tab
+            main_window = self.driver.current_window_handle
+            self.driver.switch_to.window(main_window)
+
+            locator = "//*[@id='blueBarDOMInspector']/div/div/div[1]/div/div[1]/a/i"
+            homepage.home_page_load(20, By.XPATH, locator)
+
+           # self.assertEqual("https://www.facebook.com/olyveflowers?_rdr=p", self.driver.current_url,"Not My link")
         except:
             raise Exception("Facebook link not correct")
 
@@ -133,7 +162,7 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception("Twitter link not correct")
 
-    # @classmethod
+    @classmethod
     def tearDown(cls):
         # close the browser window
         cls.driver.quit()
