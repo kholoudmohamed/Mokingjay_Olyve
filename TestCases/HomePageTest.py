@@ -5,10 +5,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from PageObjects.HomePage import HomePage
 from builtins import classmethod
 from selenium.webdriver.common.by import By
-import http.client
-import requests as req
-import time
-
 
 class HomePageTest(unittest.TestCase):
     @classmethod
@@ -21,7 +17,7 @@ class HomePageTest(unittest.TestCase):
         cls.driver.get("https://test@olyveinc.com:k0sh@ry1@olyve.olyveinc.com")
 
         # Wait till the Home page is loaded
-        locator = "html/body/div[1]/div/div/div[1]/nav/div[1]/div[2]/a/img"
+        locator = "html/body/div/div/div/div[1]/nav/div[1]/div[2]/a/img"
         homepage = HomePage(cls.driver)
         homepage.home_page_load(40, By.XPATH, locator)
 
@@ -118,47 +114,59 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception ("Service email href is not correct")
 
+    # Check that Olyve Facebook icon is clickbale and direct the user to Olyve Facebook Page
     def test_facebook_social_info(self):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
+            # Wait till home page is loaded before clicking on Facebook link
             homepage.facebook_social_info()
-
-            # Switch focus to the new tab
-            main_window = self.driver.current_window_handle
-            self.driver.switch_to.window(main_window)
-
-            locator = "//*[@id='blueBarDOMInspector']/div/div/div[1]/div/div[1]/a/i"
-            homepage.home_page_load(20, By.XPATH, locator)
-
-           # self.assertEqual("https://www.facebook.com/olyveflowers?_rdr=p", self.driver.current_url,"Not My link")
+            # Wait till home page is loaded after clicking on Facebook link
+            self.driver.implicitly_wait(10)
+            # Call the facebook_social_info function
+            self.assertEqual("https://www.facebook.com/olyveflowers?_rdr=p", self.driver.current_url, "Error in asserting the Facebook link")
         except:
             raise Exception("Facebook link not correct")
 
+    # Check that Olyve Instgram icon is clickbale and direct the user to Olyve Instgram Page
     def test_instgram_social_info(self):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
             # Call the instgram_social_info function
-            self.assertEqual("https://www.instagram.com/olyveflowers/", homepage.instgram_social_info(),"Instgram link not correct")
+            homepage.instgram_social_info()
+            # Wait till home page is loaded after clicking on Instgram link
+            self.driver.implicitly_wait(10)
+            # Verify that the current link of the Instgram page is Olyve Instgram social link
+            self.assertEqual("https://www.instagram.com/olyveflowers/", self.driver.current_url, "Error in asserting the Instgram link")
         except:
             raise Exception("Instgram link not correct")
 
+    # Check that Olyve Pinterest icon is clickbale and direct the user to Olyve Pinterest Page
     def test_pinterest_social_info(self):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
             # Call the pinterest_social_info function
-            self.assertEqual("https://www.pinterest.com/olyveflowers/", homepage.pinterest_social_info(),"Pinterest link not correct")
+            homepage.pinterest_social_info()
+            # Wait till home page is loaded after clicking on Pinterest link
+            self.driver.implicitly_wait(10)
+            # Verify that the current link of the Pinterest page is Olyve Pinterest social link
+            self.assertEqual("https://www.pinterest.com/olyveflowers/", self.driver.current_url, "Error in asserting the Pinterest link")
         except:
             raise Exception("Pinterest link not correct")
 
+    # Check that Olyve Twitter icon is clickbale and direct the user to Olyve Twitter Page
     def test_twitter_social_info(self):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
             # Call the twitter_social_info function
-            self.assertEqual("https://twitter.com/olyveflowers", homepage.twitter_social_info(),"Twitter link not correct")
+            homepage.twitter_social_info()
+            # Wait till home page is loaded after clicking on Twitter link
+            self.driver.implicitly_wait(10)
+            # Verify that the current link of the Twitter page is Olyve Twitter social link
+            self.assertEqual("https://twitter.com/olyveflowers", self.driver.current_url ,"Error in asserting the Twitter link")
         except:
             raise Exception("Twitter link not correct")
 

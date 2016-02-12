@@ -1,10 +1,7 @@
-import http.client
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-import requests as req
 import logging
-
 
 class HomePage:
     def __init__(self, driver):
@@ -73,21 +70,22 @@ class HomePage:
         actual_header_message_ribbon = header_message_ribbon.text
         return actual_header_message_ribbon
 
-    # click on a slides and return it
+    # click on a first slide and return it
     def click_on_first_slide(self):
         first_products_slide.click()
         return first_products_slide
 
+    # click on a second slide and return it
     def click_on_second_slide(self):
         second_products_slide.click()
         return second_products_slide
 
+    # click on a third slide and return it
     def click_on_third_slide(self):
         third_products_slide.click()
         return third_products_slide
 
     # Verify slides class tag contains "active"
-
     def verify_slide_is_active(self,selected_slide):
         slide_class = selected_slide.get_attribute('class')
         active_class = "ng-scope active"
@@ -160,35 +158,22 @@ class HomePage:
         else:
             return False
 
-    def get_page_status(self, URL):
-        response = req.get(URL)
-        pagestatus = response.status_code
-        return pagestatus
-
+    # Click on Facebook icon in Olyve Home Page
     def facebook_social_info(self):
         # Find the Facebook link in the home page then click on the link found
         facebook_link.click()
 
+    # Click on Instgram icon in Olyve Home Page
     def instgram_social_info(self):
         # Find the Instgram link in the home page then click on it
         instgram_link.click()
-        # Wait till Instgram page is loaded
-        current_url = HomePage.get_page_status(self)
-        # Return the Instgram link
-        return current_url
 
+    # Click on Pinterest icon in Olyve Home Page
     def pinterest_social_info(self):
         # Find the Pinterest link in the home page then click on it
         pinterest_link.click()
-        # Wait till Pinterest page is loaded
-        current_url = HomePage.get_page_status(self)
-        # Return the Pinterest link
-        return current_url
 
+    # Click on Twitter icon in Olyve Home Page
     def twitter_social_info(self):
         # Find the Twitter link in the home page then click on it
         twitter_link.click()
-        # Wait till Twitter page is loaded
-        current_url = HomePage.get_page_status(self)
-        # Return the Twitter link
-        return current_url
