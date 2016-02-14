@@ -5,6 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from PageObjects.HomePage import HomePage
 from builtins import classmethod
 from selenium.webdriver.common.by import By
+import time
 
 class HomePageTest(unittest.TestCase):
     @classmethod
@@ -114,7 +115,7 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception ("Service email href is not correct")
 
-    # Check that Olyve Facebook icon is clickbale and direct the user to Olyve Facebook Page
+    # Check that Olyve Facebook icon is clickable and direct the user to Olyve Facebook Page
     def test_facebook_social_info(self):
         try:
             # Instance from homepage class
@@ -122,9 +123,11 @@ class HomePageTest(unittest.TestCase):
             # Wait till home page is loaded before clicking on Facebook link
             homepage.facebook_social_info()
             # Wait till home page is loaded after clicking on Facebook link
-            self.driver.implicitly_wait(10)
+            time.sleep(5)
+            self.driver.switch_to.window(self.driver.window_handles[1])
             # Call the facebook_social_info function
-            self.assertEqual("https://www.facebook.com/olyveflowers?_rdr=p", self.driver.current_url, "Error in asserting the Facebook link")
+            url_of_new_tab = self.driver.current_url
+            self.assertEqual("https://facebook.com/olyveflowers", url_of_new_tab, "Error in asserting the Facebook link")
         except:
             raise Exception("Facebook link not correct")
 
@@ -133,7 +136,7 @@ class HomePageTest(unittest.TestCase):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
-            # Call the instgram_social_info function
+            # Call the instagram_social_info function
             homepage.instgram_social_info()
             # Wait till home page is loaded after clicking on Instgram link
             self.driver.implicitly_wait(10)
