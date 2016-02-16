@@ -3,6 +3,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import logging
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 class HomePage:
     def __init__(self, driver):
@@ -37,18 +38,15 @@ class HomePage:
         footer_phonenumber = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[1]/div[2]/a')
         global footer_serviceemail
         footer_serviceemail = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[2]/div[2]/a')
-        global facebook_link
-        facebook_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[1]/i")
-        global instgram_link
-        instgram_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[2]/i")
-        global pinterest_link
-        pinterest_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[3]/i")
-        global twitter_link
-        twitter_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[4]/div/div[2]/div/a[4]/i")
 
     # explicit wait until presence of configurable element
     def home_page_load(self, time_to_wait, by_method, locator):
         element = WebDriverWait(self._driver, time_to_wait).until(EC.presence_of_element_located((by_method, locator)))
+
+    # explicit wait until presence of configurable element with return as conditional action dependency
+    def home_page_load_special(self, time_to_wait, by_method, locator):
+        element = WebDriverWait(self._driver, time_to_wait).until(EC.presence_of_element_located((by_method, locator)))
+        return True
 
     # Check if Olyve logo is displayed
     @property
@@ -161,20 +159,48 @@ class HomePage:
 
     # Click on Facebook icon in Olyve Home Page
     def facebook_social_info(self):
+        # Create an Instance from ActionChains
+        action = ActionChains(self._driver)
         # Find the Facebook link in the home page then click on the link found
-        facebook_link.click()
+        facebook_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[1]/i")
+        # The below steps are used to open the facebook_link in a new window instead of a new tab
+        action.key_down(Keys.SHIFT)
+        action.click(facebook_link)
+        action.key_up(Keys.SHIFT)
+        action.perform()
 
     # Click on Instgram icon in Olyve Home Page
     def instgram_social_info(self):
+        # Create an Instance from ActionChains
+        action = ActionChains(self._driver)
         # Find the Instgram link in the home page then click on it
-        instgram_link.click()
+        instgram_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[2]/i")
+        # The below steps are used to open the facebook_link in a new window instead of a new tab
+        action.key_down(Keys.SHIFT)
+        action.click(instgram_link)
+        action.key_up(Keys.SHIFT)
+        action.perform()
 
     # Click on Pinterest icon in Olyve Home Page
     def pinterest_social_info(self):
+        # Create an Instance from ActionChains
+        action = ActionChains(self._driver)
         # Find the Pinterest link in the home page then click on it
-        pinterest_link.click()
+        pinterest_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[3]/i")
+        # The below steps are used to open the facebook_link in a new window instead of a new tab
+        action.key_down(Keys.SHIFT)
+        action.click(pinterest_link)
+        action.key_up(Keys.SHIFT)
+        action.perform()
 
     # Click on Twitter icon in Olyve Home Page
     def twitter_social_info(self):
+        # Create an Instance from ActionChains
+        action = ActionChains(self._driver)
         # Find the Twitter link in the home page then click on it
-        twitter_link.click()
+        twitter_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[4]/i")
+        # The below steps are used to open the facebook_link in a new window instead of a new tab
+        action.key_down(Keys.SHIFT)
+        action.click(twitter_link)
+        action.key_up(Keys.SHIFT)
+        action.perform()

@@ -5,7 +5,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from PageObjects.HomePage import HomePage
 from builtins import classmethod
 from selenium.webdriver.common.by import By
-import time
+from selenium.webdriver.common.keys import Keys
 
 class HomePageTest(unittest.TestCase):
     @classmethod
@@ -120,14 +120,24 @@ class HomePageTest(unittest.TestCase):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
+
+            # Variables
+            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator2 = ".//*[@id='u_0_b']/div/div/div/div/div/ul/li[1]/a/div"
+
             # Wait till home page is loaded before clicking on Facebook link
-            homepage.facebook_social_info()
-            # Wait till home page is loaded after clicking on Facebook link
-            time.sleep(5)
-            self.driver.switch_to.window(self.driver.window_handles[1])
-            # Call the facebook_social_info function
-            url_of_new_tab = self.driver.current_url
-            self.assertEqual("https://facebook.com/olyveflowers", url_of_new_tab, "Error in asserting the Facebook link")
+            if homepage.home_page_load_special(40, By.XPATH, locator1):
+                # Call the facebook_social_info function
+                homepage.facebook_social_info()
+                # Wait till home page is loaded after clicking on Facebook link
+                self.driver.implicitly_wait(10)
+                # Switch to the newly opened window
+                self.driver.switch_to.window(self.driver.window_handles[1])
+                # Make sure the newly opened window is loaded in order to get the URL
+                if homepage.home_page_load_special(40,By.XPATH, locator2):
+                    url_name = self.driver.current_url
+                    # Verify that the URL of the newly opened page is the URL of Olyve Facebook Social Link
+                    self.assertEqual('https://www.facebook.com/OlyveFlowers/', url_name, "Error in asserting the Facebook link")
         except:
             raise Exception("Facebook link not correct")
 
@@ -136,12 +146,24 @@ class HomePageTest(unittest.TestCase):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
-            # Call the instagram_social_info function
-            homepage.instgram_social_info()
-            # Wait till home page is loaded after clicking on Instgram link
-            self.driver.implicitly_wait(10)
-            # Verify that the current link of the Instgram page is Olyve Instgram social link
-            self.assertEqual("https://www.instagram.com/olyveflowers/", self.driver.current_url, "Error in asserting the Instgram link")
+
+            # Variables
+            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator2 = ".//*[@id='react-root']/section/main/article/header/div[2]/div[1]/span/button"
+
+            # Wait till home page is loaded before clicking on Instgram link
+            if homepage.home_page_load_special(40, By.XPATH, locator1):
+                # Call the instgram_social_info function
+                homepage.instgram_social_info()
+                # Wait till home page is loaded after clicking on Instgram link
+                self.driver.implicitly_wait(30)
+                # Switch to the newly opened window
+                self.driver.switch_to.window(self.driver.window_handles[1])
+                # Make sure the newly opened window is loaded in order to get the URL
+                if homepage.home_page_load_special(40,By.XPATH, locator2):
+                    url_name = self.driver.current_url
+                    # Verify that the URL of the newly opened page is the URL of Olyve Instgram Social Link
+                    self.assertEqual('https://www.instagram.com/olyveflowers/', self.driver.current_url, "Error in asserting the Instgram link")
         except:
             raise Exception("Instgram link not correct")
 
@@ -150,12 +172,24 @@ class HomePageTest(unittest.TestCase):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
-            # Call the pinterest_social_info function
-            homepage.pinterest_social_info()
-            # Wait till home page is loaded after clicking on Pinterest link
-            self.driver.implicitly_wait(10)
-            # Verify that the current link of the Pinterest page is Olyve Pinterest social link
-            self.assertEqual("https://www.pinterest.com/olyveflowers/", self.driver.current_url, "Error in asserting the Pinterest link")
+
+            # Variables
+            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator2 = "html/body/div[1]/div[1]/div/div[2]/div[2]"
+
+            # Wait till home page is loaded before clicking on Pinterest link
+            if homepage.home_page_load_special(40, By.XPATH, locator1):
+                # Call the pinterest_social_info function
+                homepage.pinterest_social_info()
+                # Wait till home page is loaded after clicking on Pinterest link
+                self.driver.implicitly_wait(20)
+                # Switch to the newly opened window
+                self.driver.switch_to.window(self.driver.window_handles[1])
+                # Make sure the newly opened window is loaded in order to get the URL
+                if homepage.home_page_load_special(40,By.XPATH, locator2):
+                    url_name = self.driver.current_url
+                    # Verify that the URL of the newly opened page is the URL of Olyve Pinterest Social Link
+                    self.assertEqual('https://www.pinterest.com/olyveflowers', self.driver.current_url, "Error in asserting the Pinterest link")
         except:
             raise Exception("Pinterest link not correct")
 
@@ -164,12 +198,24 @@ class HomePageTest(unittest.TestCase):
         try:
             # Instance from homepage class
             homepage = HomePage(self.driver)
-            # Call the twitter_social_info function
-            homepage.twitter_social_info()
-            # Wait till home page is loaded after clicking on Twitter link
-            self.driver.implicitly_wait(10)
-            # Verify that the current link of the Twitter page is Olyve Twitter social link
-            self.assertEqual("https://twitter.com/olyveflowers", self.driver.current_url ,"Error in asserting the Twitter link")
+
+            # Variables
+            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator2 = ".//*[@id='page-container']/div[1]/div/div[1]/div[2]/div[1]/div/a/img"
+
+            # Wait till home page is loaded before clicking on Twitter link
+            if homepage.home_page_load_special(40, By.XPATH, locator1):
+                # Call the twitter_social_info function
+                homepage.twitter_social_info()
+                # Wait till home page is loaded after clicking on Twitter link
+                self.driver.implicitly_wait(20)
+                # Switch to the newly opened window
+                self.driver.switch_to.window(self.driver.window_handles[1])
+                # Make sure the newly opened window is loaded in order to get the URL
+                if homepage.home_page_load_special(40,By.XPATH, locator2):
+                    url_name = self.driver.current_url
+                    # Verify that the URL of the newly opened page is the URL of Olyve Twitter Social Link
+                    self.assertEqual('https://twitter.com/olyveflowers', self.driver.current_url, "Error in asserting the Twitter link")
         except:
             raise Exception("Twitter link not correct")
 
