@@ -204,3 +204,10 @@ class HomePage:
         action.click(twitter_link)
         action.key_up(Keys.SHIFT)
         action.perform()
+
+    def findproductandclick(self):
+        try:
+            productitem = self._driver.find_element_by_partial_link_text('Olyve + Alexan')
+            productitem.click()
+        except:
+            raise Exception("Product Not Found")

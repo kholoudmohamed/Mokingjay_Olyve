@@ -6,6 +6,8 @@ from PageObjects.HomePage import HomePage
 from builtins import classmethod
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from PageObjects.ExcelDataReader import DataReader
+import time
 
 class HomePageTest(unittest.TestCase):
     @classmethod
@@ -15,7 +17,7 @@ class HomePageTest(unittest.TestCase):
         cls.driver.maximize_window()
 
         # Open Olyve website
-        cls.driver.get("https://test@olyveinc.com:k0sh@ry1@olyve.olyveinc.com")
+        cls.driver.get("https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com")
 
         # Wait till the Home page is loaded
         locator = "html/body/div/div/div/div[1]/nav/div[1]/div[2]/a/img"
@@ -218,6 +220,13 @@ class HomePageTest(unittest.TestCase):
                     self.assertEqual('https://twitter.com/olyveflowers', self.driver.current_url, "Error in asserting the Twitter link")
         except:
             raise Exception("Twitter link not correct")
+
+    def test_productsclickable(self):
+        products = DataReader.get_data("C:\\Users\\Syoussef\\PycharmProjects\\Mokingjay_Olyve")
+        availableproducts = HomePage(self.driver)
+        time.sleep(10)
+        availableproducts.findproductandclick()
+        time.sleep(10)
 
     @classmethod
     def tearDown(cls):
