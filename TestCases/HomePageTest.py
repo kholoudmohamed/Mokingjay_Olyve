@@ -20,7 +20,7 @@ class HomePageTest(unittest.TestCase):
         cls.driver.get("https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com")
 
         # Wait till the Home page is loaded
-        locator = "html/body/div/div/div/div[1]/nav/div[1]/div[2]/a/img"
+        locator = "html/body/div/div/div/olv-header/nav/div[1]/div[2]/a/img"
         homepage = HomePage(cls.driver)
         homepage.home_page_load(40, By.XPATH, locator)
 
@@ -124,7 +124,7 @@ class HomePageTest(unittest.TestCase):
             homepage = HomePage(self.driver)
 
             # Variables
-            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator1 = "html/body/div/div/div/div[4]/div/div/div/div[5]/a/olv-image/div/img"
             locator2 = ".//*[@id='u_0_b']/div/div/div/div/div/ul/li[1]/a/div"
 
             # Wait till home page is loaded before clicking on Facebook link
@@ -150,7 +150,7 @@ class HomePageTest(unittest.TestCase):
             homepage = HomePage(self.driver)
 
             # Variables
-            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator1 = "html/body/div/div/div/div[4]/div/div/div/div[5]/a/olv-image/div/img"
             locator2 = ".//*[@id='react-root']/section/main/article/header/div[2]/div[1]/span/button"
 
             # Wait till home page is loaded before clicking on Instgram link
@@ -176,7 +176,7 @@ class HomePageTest(unittest.TestCase):
             homepage = HomePage(self.driver)
 
             # Variables
-            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator1 = "html/body/div/div/div/div[4]/div/div/div/div[5]/a/olv-image/div/img"
             locator2 = "html/body/div[1]/div[1]/div/div[2]/div[2]"
 
             # Wait till home page is loaded before clicking on Pinterest link
@@ -184,7 +184,7 @@ class HomePageTest(unittest.TestCase):
                 # Call the pinterest_social_info function
                 homepage.pinterest_social_info()
                 # Wait till home page is loaded after clicking on Pinterest link
-                self.driver.implicitly_wait(20)
+                self.driver.implicitly_wait(30)
                 # Switch to the newly opened window
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 # Make sure the newly opened window is loaded in order to get the URL
@@ -202,7 +202,7 @@ class HomePageTest(unittest.TestCase):
             homepage = HomePage(self.driver)
 
             # Variables
-            locator1 = ".//*[@id='home-container']/div/div[4]/div/div/div/div[5]/a/div/img"
+            locator1 = "html/body/div/div/div/div[4]/div/div/div/div[5]/a/olv-image/div/img"
             locator2 = ".//*[@id='page-container']/div[1]/div/div[1]/div[2]/div[1]/div/a/img"
 
             # Wait till home page is loaded before clicking on Twitter link
@@ -225,7 +225,7 @@ class HomePageTest(unittest.TestCase):
         products = DataReader.get_data("C:\\Users\\Syoussef\\PycharmProjects\\Mokingjay_Olyve")
         availableproducts = HomePage(self.driver)
         time.sleep(10)
-        availableproducts.findproductandclick()
+        availableproducts.findproductandclick(products[0])
         time.sleep(10)
 
     @classmethod

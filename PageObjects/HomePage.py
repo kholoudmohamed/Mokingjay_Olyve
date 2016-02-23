@@ -162,7 +162,7 @@ class HomePage:
         # Create an Instance from ActionChains
         action = ActionChains(self._driver)
         # Find the Facebook link in the home page then click on the link found
-        facebook_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[1]/i")
+        facebook_link = self._driver.find_element_by_xpath("html/body/div/div/div/olv-social/div/div[2]/div/a[1]/i")
         # The below steps are used to open the facebook_link in a new window instead of a new tab
         action.key_down(Keys.SHIFT)
         action.click(facebook_link)
@@ -174,7 +174,7 @@ class HomePage:
         # Create an Instance from ActionChains
         action = ActionChains(self._driver)
         # Find the Instgram link in the home page then click on it
-        instgram_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[2]/i")
+        instgram_link = self._driver.find_element_by_xpath("html/body/div/div/div/olv-social/div/div[2]/div/a[2]/i")
         # The below steps are used to open the facebook_link in a new window instead of a new tab
         action.key_down(Keys.SHIFT)
         action.click(instgram_link)
@@ -186,7 +186,7 @@ class HomePage:
         # Create an Instance from ActionChains
         action = ActionChains(self._driver)
         # Find the Pinterest link in the home page then click on it
-        pinterest_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[3]/i")
+        pinterest_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/olv-social/div/div[2]/div/a[3]/i")
         # The below steps are used to open the facebook_link in a new window instead of a new tab
         action.key_down(Keys.SHIFT)
         action.click(pinterest_link)
@@ -198,16 +198,16 @@ class HomePage:
         # Create an Instance from ActionChains
         action = ActionChains(self._driver)
         # Find the Twitter link in the home page then click on it
-        twitter_link = self._driver.find_element_by_xpath("html/body/div/div/div/div[4]/div/div[2]/div/a[4]/i")
+        twitter_link = self._driver.find_element_by_xpath("html/body/div[1]/div/div/olv-social/div/div[2]/div/a[4]/i")
         # The below steps are used to open the facebook_link in a new window instead of a new tab
         action.key_down(Keys.SHIFT)
         action.click(twitter_link)
         action.key_up(Keys.SHIFT)
         action.perform()
 
-    def findproductandclick(self):
+    def findproductandclick(self, item):
         try:
-            productitem = self._driver.find_element_by_partial_link_text('Olyve + Alexan')
+            productitem = self._driver.find_element_by_partial_link_text(item)
             productitem.click()
         except:
             raise Exception("Product Not Found")
