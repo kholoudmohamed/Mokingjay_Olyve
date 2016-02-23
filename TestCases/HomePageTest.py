@@ -20,7 +20,7 @@ class HomePageTest(unittest.TestCase):
         cls.driver.get("https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com")
 
         # Wait till the Home page is loaded
-        locator = "html/body/div/div/div/olv-header/nav/div[1]/div[2]/a/img"
+        locator = "html/body/div/div/olv-header/nav/div[1]/div[2]/a/img"
         homepage = HomePage(cls.driver)
         homepage.home_page_load(40, By.XPATH, locator)
 
