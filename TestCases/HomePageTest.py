@@ -34,7 +34,8 @@ class HomePageTest(unittest.TestCase):
             self.assertEqual(True, homepage.is_header_shop_button_enabled)
             self.assertEqual(True, homepage.is_header_track_button_enabled)
 
-            expected_header_message_ribbon = "GIFT BOX & DELIVERY ALWAYS INCLUDED"
+            # Fetch the expected header from the excel sheet
+            expected_header_message_ribbon = DataReader.get_data(self, "Home", 1, 1)
             self.assertEqual(expected_header_message_ribbon, homepage.get_header_ribbon_message)
 
         except:
@@ -64,19 +65,19 @@ class HomePageTest(unittest.TestCase):
         try:
             homepage = HomePage(self.driver)
 
-            # [Kholoud - 8Feb2016] expected footer text and expected url's hardcoded till finding another way to capture it.
-            expected_footer_copyright_text = "Copyright 2015, Olyve, Inc."
-            expected_footer_privacyterms_text = "Privacy Terms"
-            expected_footer_codeofconducts_text = "Code Of Conduct"
-            expected_footer_phonenumber_text = "844-35-OLYVE"
-            expected_footer_servicemail_text = "Service@olyve.com"
+            # Fetch All the text values from the excel sheet
+            expected_footer_copyright_text = DataReader.get_data(self, "Home", 2, 1)
+            expected_footer_privacyterms_text = DataReader.get_data(self, "Home", 3, 1)
+            expected_footer_codeofconducts_text = DataReader.get_data(self, "Home", 4, 1)
+            expected_footer_phonenumber_text = DataReader.get_data(self, "Home", 5, 1)
+            expected_footer_servicemail_text = DataReader.get_data(self, "Home", 6, 1)
 
             # Footer text assertions
-            self.assertEqual(expected_footer_copyright_text,homepage.get_footer_copyright_text)
-            self.assertEqual(expected_footer_privacyterms_text,homepage.get_footer_privacyterms_text)
-            self.assertEqual(expected_footer_codeofconducts_text,homepage.get_footer_codeofconduct_text)
-            self.assertEqual(expected_footer_phonenumber_text,homepage.get_footer_phonenumber_text)
-            self.assertEqual(expected_footer_servicemail_text,homepage.get_footer_serviceemail_text)
+            self.assertEqual(expected_footer_copyright_text, homepage.get_footer_copyright_text)
+            self.assertEqual(expected_footer_privacyterms_text, homepage.get_footer_privacyterms_text)
+            self.assertEqual(expected_footer_codeofconducts_text, homepage.get_footer_codeofconduct_text)
+            self.assertEqual(expected_footer_phonenumber_text, homepage.get_footer_phonenumber_text)
+            self.assertEqual(expected_footer_servicemail_text, homepage.get_footer_serviceemail_text)
 
         except:
             raise Exception("Footer Text Assertions Failed")
@@ -86,7 +87,7 @@ class HomePageTest(unittest.TestCase):
         try:
             homepage = HomePage(self.driver)
             expected_privacyterms_url = "https://test%40olyveinc.com:k0sh%40ry1@olyve.olyveinc.com/privacy"
-            self.assertEqual(expected_privacyterms_url,homepage.get_privacyterms_url)
+            self.assertEqual(expected_privacyterms_url, homepage.get_privacyterms_url)
 
         except:
             raise Exception("Privacy Terms Navigation Failed")
@@ -96,7 +97,7 @@ class HomePageTest(unittest.TestCase):
         try:
             homepage = HomePage(self.driver)
             expected_codeofconduct_url = "https://test%40olyveinc.com:k0sh%40ry1@olyve.olyveinc.com/codeofconduct"
-            self.assertEqual(expected_codeofconduct_url,homepage.get_codeofconduct_url)
+            self.assertEqual(expected_codeofconduct_url, homepage.get_codeofconduct_url)
 
         except:
             raise Exception("Privacy Terms Navigation Failed")
@@ -223,17 +224,10 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception("Twitter link not correct")
 
-    def test_productsclickable(self):
-        products = DataReader.get_data("C:\\Users\\Syoussef\\PycharmProjects\\Mokingjay_Olyve")
-        availableproducts = HomePage(self.driver)
-        time.sleep(10)
-        availableproducts.findproductandclick(products[0])
-        time.sleep(10)
-
     def test_go_to_product(self):
-
         homepage = HomePage(self.driver)
 
+        # Get the number of products
         for x in range(0, homepage.get_product_count()):
             homepage.findproductandclick(x)
             self.driver.implicitly_wait(20)
@@ -241,7 +235,7 @@ class HomePageTest(unittest.TestCase):
             locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
             if homepage.home_page_load_special(40, By.XPATH, locator3):
                 url_name = self.driver.current_url
-                url_name_from_excel = DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1)
+                url_name_from_excel = DataReader.get_data(self, "Products", x+1, 1)
                 self.assertEqual(url_name, url_name_from_excel)
             self.driver.back()
             self.driver.refresh()

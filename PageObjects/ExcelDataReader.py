@@ -1,15 +1,17 @@
 import xlrd
 from selenium.webdriver.common.by import By
 
+
 class DataReader:
-    def get_data(self, file_name, row, column):
+    def get_data(self, sheet_name, row, column):
         try:
-            # create an empty list to store rows
+            # Create an empty list to store rows
             rows = []
-            # open the specified Excel spreadsheet as workbook
-            book = xlrd.open_workbook(file_name)
-            # get the first sheet
-            sheet = book.sheet_by_index(0)
+            # Open the specified Excel spreadsheet as workbook
+            book = xlrd.open_workbook("C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Olyve.xlsx")
+            # Get the appropriate sheet
+            sheet = book.sheet_by_name(sheet_name)
+            # Return the desired cell value
             return (sheet.cell(row, column)).value
         except:
             raise Exception("The file is incorrect")
