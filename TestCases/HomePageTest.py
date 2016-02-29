@@ -237,14 +237,13 @@ class HomePageTest(unittest.TestCase):
         for x in range(0, homepage.get_product_count()):
             homepage.findproductandclick(x)
             self.driver.implicitly_wait(20)
-            # Switch to the newly opened window
-            self.driver.switch_to.window(self.driver.window_handles[1])
             # the following locator is temp and needs to be placed in array
             locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
             if homepage.home_page_load_special(40, By.XPATH, locator3):
                 url_name = self.driver.current_url
-                self.assertEqual(url_name, DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1))
-            self.driver.close()
+                url_name_from_excel = str(DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1))
+                self.assertEqual(url_name, url_name_from_excel)
+            self.driver.back()
             self.driver.refresh()
             self.driver.implicitly_wait(5)
 

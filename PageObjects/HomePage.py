@@ -207,17 +207,12 @@ class HomePage:
 
     def findproductandclick(self, x):
         try:
-            action = ActionChains(self._driver)
-
             res = []
             elem = WebDriverWait(driver=self._driver, timeout=5).until(
                 EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
             res.append(elem[x].text)
-            action.key_down(Keys.SHIFT)
             product_link = self._driver.find_element_by_link_text(elem[x].text)
-            action.click(product_link)
-            action.key_up(Keys.SHIFT)
-            action.perform()
+            product_link.click()
         except:
             raise Exception("Product Not Found")
 
