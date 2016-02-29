@@ -86,7 +86,7 @@ class HomePageTest(unittest.TestCase):
     def test_footer_privacyterms_navigation(self):
         try:
             homepage = HomePage(self.driver)
-            expected_privacyterms_url = "https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com/privacy"
+            expected_privacyterms_url = "https://test%40olyveinc.com:Amr%3C3skype@olyve.olyveinc.com/privacy"
             self.assertEqual(expected_privacyterms_url, homepage.get_privacyterms_url)
 
         except:
@@ -96,7 +96,7 @@ class HomePageTest(unittest.TestCase):
     def test_footer_codeofconduct_navigtion(self):
         try:
             homepage = HomePage(self.driver)
-            expected_codeofconduct_url = "https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com/codeofconduct"
+            expected_codeofconduct_url = "https://test%40olyveinc.com:Amr%3C3skype@olyve.olyveinc.com/codeofconduct"
             self.assertEqual(expected_codeofconduct_url, homepage.get_codeofconduct_url)
 
         except:
@@ -106,7 +106,7 @@ class HomePageTest(unittest.TestCase):
     def test_assert_phonenumber_href(self):
         try:
             homepage = HomePage(self.driver)
-            self.assertEqual(True,homepage.verify_phonenumber_href)
+            self.assertEqual(True, homepage.verify_phonenumber_href)
 
         except:
             raise Exception ("Phone number href is not correct")
@@ -115,7 +115,7 @@ class HomePageTest(unittest.TestCase):
     def test_assert_servicemail_href(self):
         try:
             homepage = HomePage(self.driver)
-            self.assertEqual(True,homepage.verify_serviceamil_href)
+            self.assertEqual(True, homepage.verify_serviceamil_href)
 
         except:
             raise Exception ("Service email href is not correct")
