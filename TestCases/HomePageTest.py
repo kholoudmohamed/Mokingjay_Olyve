@@ -86,7 +86,7 @@ class HomePageTest(unittest.TestCase):
     def test_footer_privacyterms_navigation(self):
         try:
             homepage = HomePage(self.driver)
-            expected_privacyterms_url = "https://test%40olyveinc.com:k0sh%40ry1@olyve.olyveinc.com/privacy"
+            expected_privacyterms_url = "https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com/privacy"
             self.assertEqual(expected_privacyterms_url, homepage.get_privacyterms_url)
 
         except:
@@ -96,7 +96,7 @@ class HomePageTest(unittest.TestCase):
     def test_footer_codeofconduct_navigtion(self):
         try:
             homepage = HomePage(self.driver)
-            expected_codeofconduct_url = "https://test%40olyveinc.com:k0sh%40ry1@olyve.olyveinc.com/codeofconduct"
+            expected_codeofconduct_url = "https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com/codeofconduct"
             self.assertEqual(expected_codeofconduct_url, homepage.get_codeofconduct_url)
 
         except:
@@ -128,7 +128,7 @@ class HomePageTest(unittest.TestCase):
 
             # Variables
             locator1 = "html/body/div/div/div/div[4]/div/div/div/div[5]/a/olv-image/div/img"
-            locator2 = ".//*[@id='u_0_b']/div/div/div/div/div/ul/li[1]/a/div"
+            locator2 = "pagelet_bluebar"
 
             # Wait till home page is loaded before clicking on Facebook link
             if homepage.home_page_load_special(40, By.XPATH, locator1):
@@ -139,7 +139,7 @@ class HomePageTest(unittest.TestCase):
                 # Switch to the newly opened window
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 # Make sure the newly opened window is loaded in order to get the URL
-                if homepage.home_page_load_special(40,By.XPATH, locator2):
+                if homepage.home_page_load_special(40, By.ID, locator2):
                     url_name = self.driver.current_url
                     # Verify that the URL of the newly opened page is the URL of Olyve Facebook Social Link
                     self.assertEqual('https://www.facebook.com/OlyveFlowers/', url_name, "Error in asserting the Facebook link")
@@ -231,7 +231,8 @@ class HomePageTest(unittest.TestCase):
         for x in range(0, homepage.get_product_count()):
             homepage.findproductandclick(x)
             self.driver.implicitly_wait(20)
-            # the following locator is temp and needs to be placed in array
+
+            # Following locator is for Pick Me button.
             locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
             if homepage.home_page_load_special(40, By.XPATH, locator3):
                 url_name = self.driver.current_url
