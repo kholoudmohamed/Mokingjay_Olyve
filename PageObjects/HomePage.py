@@ -11,13 +11,13 @@ class HomePage:
 
         # All home page variables
         global header_olyve_logo
-        header_olyve_logo = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[1]/nav/div[1]/div[2]/a/img')
+        header_olyve_logo = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-header/nav/div[1]/div[2]/a/img')
         global header_shop_button
-        header_shop_button = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[1]/nav/div[1]/div[1]/ul/li/a')
+        header_shop_button = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li/a')
         global header_track_button
-        header_track_button = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[1]/nav/div[1]/div[4]/ul/li/a')
+        header_track_button = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li/a')
         global header_message_ribbon
-        header_message_ribbon = self._driver.find_element_by_xpath('//*[@id="home-container"]/div/div[1]/div')
+        header_message_ribbon = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[1]/div')
         global first_products_slide
         first_products_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/ol/li[1]')
         global second_products_slide
@@ -25,19 +25,19 @@ class HomePage:
         global third_products_slide
         third_products_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/ol/li[3]')
         global shop_bottn_second_slide
-        shop_bottn_second_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/div/div[2]/div[2]/a')
+        shop_bottn_second_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/div/div[2]/div/a')
         global shop_bottn_third_slide
-        shop_bottn_third_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/div/div[3]/div[2]/a')
+        shop_bottn_third_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/div/div[3]/div/a')
         global footer_copyright
-        footer_copyright = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[1]/div[1]')
+        footer_copyright = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[1]/div[1]')
         global footer_privacyterms
-        footer_privacyterms = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[2]/div[1]/a')
+        footer_privacyterms = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[2]/div[1]/a')
         global footer_codeofconduct
-        footer_codeofconduct = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[3]/div[1]/a')
+        footer_codeofconduct = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[3]/div[1]/a')
         global footer_phonenumber
-        footer_phonenumber = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[1]/div[2]/a')
+        footer_phonenumber = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[1]/div[2]/a')
         global footer_serviceemail
-        footer_serviceemail = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[6]/div/div[2]/div[2]/a')
+        footer_serviceemail = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[2]/div[2]/a')
 
     # explicit wait until presence of configurable element
     def home_page_load(self, time_to_wait, by_method, locator):
@@ -205,9 +205,23 @@ class HomePage:
         action.key_up(Keys.SHIFT)
         action.perform()
 
-    def findproductandclick(self, item):
+    def findproductandclick(self, x):
         try:
-            productitem = self._driver.find_element_by_link_text(item)
-            productitem.click()
+            action = ActionChains(self._driver)
+
+            res = []
+            elem = WebDriverWait(driver=self._driver, timeout=5).until(
+                EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
+            res.append(elem[x].text)
+            action.key_down(Keys.SHIFT)
+            product_link = self._driver.find_element_by_link_text(elem[x].text)
+            action.click(product_link)
+            action.key_up(Keys.SHIFT)
+            action.perform()
         except:
             raise Exception("Product Not Found")
+
+    def get_product_count(self):
+        elem = WebDriverWait(driver=self._driver, timeout=5).until(EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
+        prod_count = len(elem)
+        return prod_count

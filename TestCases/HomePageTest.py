@@ -234,15 +234,17 @@ class HomePageTest(unittest.TestCase):
 
         homepage = HomePage(self.driver)
 
-        res = []
         for x in range(0, homepage.get_product_count()):
-            elem = WebDriverWait(driver=self.driver, timeout=5).until(
-                EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
-            res.append(elem[x].text)
-            self.driver.find_element_by_link_text(elem[x].text).click()
-            self.driver.implicitly_wait(2)
-            self.assertEqual(self.driver.current_url, DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1))
-            self.driver.back()
+            homepage.findproductandclick(x)
+            self.driver.implicitly_wait(20)
+            # Switch to the newly opened window
+            self.driver.switch_to.window(self.driver.window_handles[1])
+            # the following locator is temp and needs to be placed in array
+            locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
+            if homepage.home_page_load_special(40, By.XPATH, locator3):
+                url_name = self.driver.current_url
+                self.assertEqual(url_name, DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1))
+            self.driver.close()
             self.driver.refresh()
             self.driver.implicitly_wait(5)
 

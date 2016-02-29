@@ -2,7 +2,7 @@ import xlrd
 from selenium.webdriver.common.by import By
 
 class DataReader:
-    def get_data(file_name):
+    def get_data(self, file_name, row, column):
         try:
             # create an empty list to store rows
             rows = []
@@ -10,9 +10,6 @@ class DataReader:
             book = xlrd.open_workbook(file_name)
             # get the first sheet
             sheet = book.sheet_by_index(0)
-            # iterate through the sheet and get data from rows in list
-            for row_idx in range(1, sheet.nrows):
-                rows.append(list(sheet.row_values(row_idx, 0, sheet.ncols)))
-            return rows
+            return sheet.cell(row, column)
         except:
             raise Exception("The file is incorrect")
