@@ -7,7 +7,9 @@ from builtins import classmethod
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from PageObjects.ExcelDataReader import DataReader
+import xlrd
 import time
+
 
 class HomePageTest(unittest.TestCase):
     @classmethod
@@ -227,6 +229,22 @@ class HomePageTest(unittest.TestCase):
         time.sleep(10)
         availableproducts.findproductandclick(products[0])
         time.sleep(10)
+
+    def test_go_to_product(self):
+
+        homepage = HomePage(self.driver)
+
+        res = []
+        for x in range(0, homepage.get_product_count()):
+            elem = WebDriverWait(driver=self.driver, timeout=5).until(
+                EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
+            res.append(elem[x].text)
+            self.driver.find_element_by_link_text(elem[x].text).click()
+            self.driver.implicitly_wait(2)
+            self.assertEqual(self.driver.current_url, DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1))
+            self.driver.back()
+            self.driver.refresh()
+            self.driver.implicitly_wait(5)
 
     @classmethod
     def tearDown(cls):
