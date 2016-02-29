@@ -241,7 +241,7 @@ class HomePageTest(unittest.TestCase):
             locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
             if homepage.home_page_load_special(40, By.XPATH, locator3):
                 url_name = self.driver.current_url
-                url_name_from_excel = str(DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1))
+                url_name_from_excel = DataReader.get_data(self, "C:\\Users\\kmohamed\\PycharmProjects\\Mokingjay_Olyve\\Products.xlsx", x+1, 1)
                 self.assertEqual(url_name, url_name_from_excel)
             self.driver.back()
             self.driver.refresh()

@@ -10,6 +10,6 @@ class DataReader:
             book = xlrd.open_workbook(file_name)
             # get the first sheet
             sheet = book.sheet_by_index(0)
-            return sheet.cell(row, column)
+            return (sheet.cell(row, column)).value
         except:
             raise Exception("The file is incorrect")
