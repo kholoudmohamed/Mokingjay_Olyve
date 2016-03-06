@@ -3,7 +3,7 @@ from TestCases.HTMLTestRunner import HTMLTestRunner
 import os
 from TestCases.HomePageTest import HomePageTest
 
-# Get the directory path to output report file
+# Get the directory path to output report files
 dir = os.getcwd()
 
 # Get all the test cases from HomePageTest file
