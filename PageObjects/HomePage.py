@@ -205,17 +205,19 @@ class HomePage:
         action.key_up(Keys.SHIFT)
         action.perform()
 
-    def findproductandclick(self, x):
+    # Find available Products in Olyve and make sure that all products are clickable
+    def findproductandclick(self, Index):
         try:
             res = []
             elem = WebDriverWait(driver=self._driver, timeout=5).until(
                 EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
-            res.append(elem[x].text)
-            product_link = self._driver.find_element_by_link_text(elem[x].text)
+            res.append(elem[Index].text)
+            product_link = self._driver.find_element_by_link_text(elem[Index].text)
             product_link.click()
         except:
             raise Exception("Product Not Found")
 
+    # Get count of all available Products in Olyve
     def get_product_count(self):
         elem = WebDriverWait(driver=self._driver, timeout=5).until(EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
         prod_count = len(elem)

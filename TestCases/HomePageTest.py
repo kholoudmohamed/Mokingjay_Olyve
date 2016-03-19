@@ -15,7 +15,7 @@ class HomePageTest(unittest.TestCase):
     @classmethod
     def setUp(cls):
         # create a new Chrome session and maximize the window
-        cls.driver = webdriver.Chrome()
+        cls.driver = webdriver.Firefox()
         cls.driver.maximize_window()
 
         # Open Olyve website
@@ -142,7 +142,7 @@ class HomePageTest(unittest.TestCase):
                 if homepage.home_page_load_special(40, By.ID, locator2):
                     url_name = self.driver.current_url
                     # Verify that the URL of the newly opened page is the URL of Olyve Facebook Social Link
-                    self.assertEqual('https://www.facebook.com/OlyveFlowers/', url_name, "Error in asserting the Facebook link")
+                    self.assertEqual(DataReader.get_data('Home', 7, 1), url_name, "Error in asserting the Facebook link")
         except:
             raise Exception("Facebook link not correct")
 
@@ -161,14 +161,14 @@ class HomePageTest(unittest.TestCase):
                 # Call the instgram_social_info function
                 homepage.instgram_social_info()
                 # Wait till home page is loaded after clicking on Instgram link
-                self.driver.implicitly_wait(30)
+                self.driver.implicitly_wait(40)
                 # Switch to the newly opened window
                 self.driver.switch_to.window(self.driver.window_handles[1])
                 # Make sure the newly opened window is loaded in order to get the URL
                 if homepage.home_page_load_special(40,By.XPATH, locator2):
                     url_name = self.driver.current_url
                     # Verify that the URL of the newly opened page is the URL of Olyve Instgram Social Link
-                    self.assertEqual('https://www.instagram.com/olyveflowers/', self.driver.current_url, "Error in asserting the Instgram link")
+                    self.assertEqual(DataReader.get_data('Home', 8, 1), self.driver.current_url, "Error in asserting the Instgram link")
         except:
             raise Exception("Instgram link not correct")
 
@@ -194,7 +194,7 @@ class HomePageTest(unittest.TestCase):
                 if homepage.home_page_load_special(40,By.XPATH, locator2):
                     url_name = self.driver.current_url
                     # Verify that the URL of the newly opened page is the URL of Olyve Pinterest Social Link
-                    self.assertEqual('https://www.pinterest.com/olyveflowers', self.driver.current_url, "Error in asserting the Pinterest link")
+                    self.assertEqual(DataReader.get_data('Home', 9, 1), self.driver.current_url, "Error in asserting the Pinterest link")
         except:
             raise Exception("Pinterest link not correct")
 
@@ -220,7 +220,7 @@ class HomePageTest(unittest.TestCase):
                 if homepage.home_page_load_special(40,By.XPATH, locator2):
                     url_name = self.driver.current_url
                     # Verify that the URL of the newly opened page is the URL of Olyve Twitter Social Link
-                    self.assertEqual('https://twitter.com/olyveflowers', self.driver.current_url, "Error in asserting the Twitter link")
+                    self.assertEqual(DataReader.get_data('Home', 10, 1), self.driver.current_url, "Error in asserting the Twitter link")
         except:
             raise Exception("Twitter link not correct")
 
@@ -228,15 +228,15 @@ class HomePageTest(unittest.TestCase):
         homepage = HomePage(self.driver)
 
         # Get the number of products
-        for x in range(0, homepage.get_product_count()):
-            homepage.findproductandclick(x)
+        for Index in range(0, homepage.get_product_count()):
+            homepage.findproductandclick(Index)
             self.driver.implicitly_wait(20)
 
             # Following locator is for Pick Me button.
             locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
             if homepage.home_page_load_special(40, By.XPATH, locator3):
                 url_name = self.driver.current_url
-                url_name_from_excel = DataReader.get_data("Products", x+1, 1)
+                url_name_from_excel = DataReader.get_data("Products", Index+1, 1)
                 self.assertEqual(url_name, url_name_from_excel)
             self.driver.back()
             self.driver.refresh()
