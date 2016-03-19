@@ -35,7 +35,7 @@ class HomePageTest(unittest.TestCase):
             self.assertEqual(True, homepage.is_header_track_button_enabled)
 
             # Fetch the expected header from the excel sheet
-            expected_header_message_ribbon = DataReader.get_data(self, "Home", 1, 1)
+            expected_header_message_ribbon = DataReader.get_data("Home", 1, 1)
             self.assertEqual(expected_header_message_ribbon, homepage.get_header_ribbon_message)
 
         except:
@@ -60,17 +60,17 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception("There is an issue in navigating between the slides")
 
-    # The following test case verifies footer items(copyright text, privacy terms, conde of conduct, phone number and email).
+    # The following test case verifies footer items(copyright text, privacy terms, code of conduct, phone number and email).
     def test_footer_items_text(self):
         try:
             homepage = HomePage(self.driver)
 
             # Fetch All the text values from the excel sheet
-            expected_footer_copyright_text = DataReader.get_data(self, "Home", 2, 1)
-            expected_footer_privacyterms_text = DataReader.get_data(self, "Home", 3, 1)
-            expected_footer_codeofconducts_text = DataReader.get_data(self, "Home", 4, 1)
-            expected_footer_phonenumber_text = DataReader.get_data(self, "Home", 5, 1)
-            expected_footer_servicemail_text = DataReader.get_data(self, "Home", 6, 1)
+            expected_footer_copyright_text = DataReader.get_data("Home", 2, 1)
+            expected_footer_privacyterms_text = DataReader.get_data("Home", 3, 1)
+            expected_footer_codeofconducts_text = DataReader.get_data("Home", 4, 1)
+            expected_footer_phonenumber_text = DataReader.get_data("Home", 5, 1)
+            expected_footer_servicemail_text = DataReader.get_data("Home", 6, 1)
 
             # Footer text assertions
             self.assertEqual(expected_footer_copyright_text, homepage.get_footer_copyright_text)
@@ -180,7 +180,7 @@ class HomePageTest(unittest.TestCase):
 
             # Variables
             locator1 = "html/body/div/div/div/div[4]/div/div/div/div[5]/a/olv-image/div/img"
-            locator2 = "html/body/div[1]/div[1]/div/div[2]/div[2]"
+            locator2 = "html/body/div[1]/div[3]/div[1]/div[2]/div[2]/div/div/div[3]/div/div/h1/div"
 
             # Wait till home page is loaded before clicking on Pinterest link
             if homepage.home_page_load_special(40, By.XPATH, locator1):
@@ -236,7 +236,7 @@ class HomePageTest(unittest.TestCase):
             locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
             if homepage.home_page_load_special(40, By.XPATH, locator3):
                 url_name = self.driver.current_url
-                url_name_from_excel = DataReader.get_data(self, "Products", x+1, 1)
+                url_name_from_excel = DataReader.get_data("Products", x+1, 1)
                 self.assertEqual(url_name, url_name_from_excel)
             self.driver.back()
             self.driver.refresh()

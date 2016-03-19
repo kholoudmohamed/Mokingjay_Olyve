@@ -29,15 +29,15 @@ class HomePage:
         global shop_bottn_third_slide
         shop_bottn_third_slide = self._driver.find_element_by_xpath('//*[@id="products-slider"]/div/div/div/div[3]/div/a')
         global footer_copyright
-        footer_copyright = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[1]/div[1]')
+        footer_copyright = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div/div[1]/div[1]/div')
         global footer_privacyterms
-        footer_privacyterms = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[2]/div[1]/a')
+        footer_privacyterms = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div/div[1]/div[2]/div/a')
         global footer_codeofconduct
-        footer_codeofconduct = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[3]/div[1]/a')
+        footer_codeofconduct = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div/div[1]/div[3]/div/a')
         global footer_phonenumber
-        footer_phonenumber = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[1]/div[2]/a')
+        footer_phonenumber = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div/div[3]/div[1]/div/a')
         global footer_serviceemail
-        footer_serviceemail = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div[2]/div[2]/a')
+        footer_serviceemail = self._driver.find_element_by_xpath('html/body/div[1]/div/olv-footer/div/div/div[3]/div[2]/div/a')
 
     # explicit wait until presence of configurable element
     def home_page_load(self, time_to_wait, by_method, locator):
