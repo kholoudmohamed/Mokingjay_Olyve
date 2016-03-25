@@ -3,9 +3,11 @@ from selenium import webdriver
 from PageObjects.PlaceOrder import PlaceOrder
 from builtins import classmethod
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
 from PageObjects.ExcelDataReader import DataReader
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.action_chains import ActionChains
 
 class PlaceOrderTest(unittest.TestCase):
     @classmethod
@@ -14,7 +16,7 @@ class PlaceOrderTest(unittest.TestCase):
         cls.driver = webdriver.Firefox()
         cls.driver.maximize_window()
 
-
+        # Open Olyve website
         cls.driver.get("https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com")
 
         # Wait till the Home page is loaded
@@ -66,10 +68,9 @@ class PlaceOrderTest(unittest.TestCase):
                     current_url = self.driver.current_url
                     # Check if the current page is message page
                     if current_url == DataReader.get_data("General Info", 2, 1):
-                        print("we are here")
+                        placeorder.fill_gift_message(DataReader.get_data("OrderInfo", 5, 1),DataReader.get_data("OrderInfo", 6, 1),DataReader.get_data("OrderInfo", 7, 1), DataReader.get_data("OrderInfo", 8, 1))
                     else:
                         raise Exception("Invalid Page")
-
 
     @classmethod
     def tearDown(cls):

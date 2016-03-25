@@ -2,6 +2,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 class PlaceOrder:
     def __init__(self, driver):
@@ -68,3 +71,29 @@ class PlaceOrder:
     def get_accessory_price(self):
         accessoryprice = self._driver.find_element_by_xpath('html/body/div/div/div/div[2]/div[2]/div[2]/div/div')
         return accessoryprice.text
+
+    def fill_gift_message(self, message, signature, photolocation, videolocation):
+        # Write Gift Message if required
+        if message != "":
+            self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div/div/textarea").send_keys(message)
+        # Sign the Gift Message if required
+        if signature != "":
+            self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div/div/input").send_keys(signature)
+        # Upload Photo in case that Photo Location is not empty
+        if photolocation != "":
+            self._driver.find_element_by_xpath("html/body/div/div/div/div[5]/div[1]/div[2]/div/div/div[1]").click()
+
+            locator1 = "html/body/div/div/div/div[5]/div[2]/div[2]/div/div/div"
+            element1 = WebDriverWait(self._driver, 100).until(EC.presence_of_element_located((By.XPATH, locator1)))
+        # Upload Video  in case that Photo Location is not empty
+        if videolocation != "":
+            self._driver.find_element_by_xpath("html/body/div/div/div/div[5]/div[1]/div[3]/div/div/div").click()
+
+            #self._driver.find_element_by_css_selector('input[type="file"]').clear()
+            #self._driver.find_element_by_css_selector('input[type="file"]').send_keys(videolocation)
+
+            locator2 = "html/body/div/div/div/div[5]/div[2]/div[2]/div/div/div"
+            element2 = WebDriverWait(self._driver, 100).until(EC.presence_of_element_located((By.XPATH, locator2)))
+
+        # Click on Review and Checkout button
+        self._driver.find_element_by_xpath("html/body/div/div/div/div[6]/div/a").click()
