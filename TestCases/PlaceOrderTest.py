@@ -14,7 +14,7 @@ class PlaceOrderTest(unittest.TestCase):
         cls.driver = webdriver.Firefox()
         cls.driver.maximize_window()
 
-        # Open Olyve website
+
         cls.driver.get("https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com")
 
         # Wait till the Home page is loaded
