@@ -1,6 +1,7 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 
 class PlaceOrder:
     def __init__(self, driver):
@@ -18,6 +19,8 @@ class PlaceOrder:
     # Find Product in Olyve and make sure that this product is clickable
     def findproductandclick(self, product):
         try:
+            WebDriverWait(driver=self._driver, timeout=5).until(
+                EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
             doubleqoute = '"'
             productxpath = ".//div[1]/div/a[contains(@href," + doubleqoute + product + doubleqoute + ")]"
             # Find the product
@@ -40,22 +43,19 @@ class PlaceOrder:
     # Check if the Pick me pop up exists
     def pickmepopupexists(self):
         try:
-            self._driver.find_element_by_xpath (".//*[@id='ngdialog2']/div/div[1]/form/div[5]/div/a")
+            self._driver.find_element_by_xpath(".//*[@id='ngdialog2']/div/div[1]/form/div[5]/div/a")
         except NoSuchElementException:
             return False
         return True
 
     # Fill info from the excel sheet into the pick me pop up
-    def fill_pickme_popup (self, name, zipcode):
-        firstandlastname = self._driver.find_element_by_xpath(".//*[@id='ngdialog2']/div/div[1]/form/div[2]/div/div[2]/div/input")
-        zipcodefield = self._driver.find_element_by_xpath(".//*[@id='ngdialog2']/div/div[1]/form/div[4]/div/div[2]/div/input")
-        go = self._driver.find_element_by_xpath(".//*[@id='ngdialog2']/div/div[1]/form/div[5]/div/a")
-        firstandlastname.send_keys(name)
-        zipcodefield.send_keys(zipcode)
-        go.click()
+    def fill_pickme_popup(self, name, zipcode):
+        self._driver.find_element_by_name('recipientName').send_keys(name)
+        self._driver.find_element_by_name('recipientzipCode').send_keys(zipcode)
+        self._driver.find_element_by_xpath(".//*[@id='ngdialog1']/div/div[1]/form/div[5]/div/a").click()
 
     # Click on Yes, Please button in the Accessory Page
-    def click_yesplease (self):
+    def click_yesplease(self):
         yesplease = self._driver.find_element_by_xpath('html/body/div/div/div/div[2]/div[2]/div[3]/div')
         yesplease.click()
 
@@ -64,7 +64,7 @@ class PlaceOrder:
         nothanks = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[2]/div[2]/div[4]/div')
         nothanks.click()
 
-    # Get Accessory Price
+    # Get the price of the selected accessory
     def get_accessory_price(self):
         accessoryprice = self._driver.find_element_by_xpath('html/body/div/div/div/div[2]/div[2]/div[2]/div/div')
         return accessoryprice.text
