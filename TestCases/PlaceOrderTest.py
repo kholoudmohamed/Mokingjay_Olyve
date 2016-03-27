@@ -70,6 +70,7 @@ class PlaceOrderTest(unittest.TestCase):
                     # Check if the current page is message page
                     if current_url == DataReader.get_data("General Info", 2, 1):
                         placeorder.fill_gift_message(DataReader.get_data("OrderInfo", 5, 1),DataReader.get_data("OrderInfo", 6, 1),DataReader.get_data("OrderInfo", 7, 1), DataReader.get_data("OrderInfo", 8, 1))
+                        print("we are here")
                     else:
                         raise Exception("Invalid Page")
 

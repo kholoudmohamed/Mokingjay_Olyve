@@ -81,19 +81,21 @@ class PlaceOrder:
             self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div/div/input").send_keys(signature)
         # Upload Photo in case that Photo Location is not empty
         if photolocation != "":
-            self._driver.find_element_by_xpath("html/body/div/div/div/div[5]/div[1]/div[2]/div/div/div[1]").click()
+            self._driver.execute_script("document.getElementById('photoFile').style.display='block'")
+            self._driver.find_element_by_id("photoFile").send_keys(photolocation)
+            self._driver.execute_script("document.getElementById('photoFile').style.display='none'")
 
-            locator1 = "html/body/div/div/div/div[5]/div[2]/div[2]/div/div/div"
-            element1 = WebDriverWait(self._driver, 100).until(EC.presence_of_element_located((By.XPATH, locator1)))
+            imagelocator = 'html/body/div[1]/div/div/div[5]/div[2]/div[2]/div/div/img'
+            WebDriverWait(self._driver, 500).until(EC.visibility_of_element_located((By.XPATH, imagelocator)))
+
         # Upload Video  in case that Photo Location is not empty
         if videolocation != "":
-            self._driver.find_element_by_xpath("html/body/div/div/div/div[5]/div[1]/div[3]/div/div/div").click()
+            self._driver.execute_script("document.getElementById('videoFile').style.display='block'")
+            self._driver.find_element_by_id("videoFile").send_keys(videolocation)
+            self._driver.execute_script("document.getElementById('videoFile').style.display='none'")
 
-            #self._driver.find_element_by_css_selector('input[type="file"]').clear()
-            #self._driver.find_element_by_css_selector('input[type="file"]').send_keys(videolocation)
-
-            locator2 = "html/body/div/div/div/div[5]/div[2]/div[2]/div/div/div"
-            element2 = WebDriverWait(self._driver, 100).until(EC.presence_of_element_located((By.XPATH, locator2)))
+            videolocator = './/*[@id="azureplayer"]'
+            WebDriverWait(self._driver, 800).until(EC.visibility_of_element_located((By.XPATH, videolocator)))
 
         # Click on Review and Checkout button
         self._driver.find_element_by_xpath("html/body/div/div/div/div[6]/div/a").click()
