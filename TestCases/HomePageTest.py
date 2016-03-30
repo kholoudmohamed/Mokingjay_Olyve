@@ -86,8 +86,9 @@ class HomePageTest(unittest.TestCase):
     def test_footer_privacyterms_navigation(self):
         try:
             homepage = HomePage(self.driver)
-            expected_privacyterms_url = "https://test%40olyveinc.com:Amr%3C3skype@olyve.olyveinc.com/privacy"
+            expected_privacyterms_url = "https://olyve.olyveinc.com/privacy"
             self.assertEqual(expected_privacyterms_url, homepage.get_privacyterms_url)
+            self.assertTrue(expected_privacyterms_url in homepage.get_privacyterms_url)
 
         except:
             raise Exception("Privacy Terms Navigation Failed")
@@ -96,7 +97,7 @@ class HomePageTest(unittest.TestCase):
     def test_footer_codeofconduct_navigtion(self):
         try:
             homepage = HomePage(self.driver)
-            expected_codeofconduct_url = "https://test%40olyveinc.com:Amr%3C3skype@olyve.olyveinc.com/codeofconduct"
+            expected_codeofconduct_url = "https://olyve.olyveinc.com/codeofconduct"
             self.assertEqual(expected_codeofconduct_url, homepage.get_codeofconduct_url)
 
         except:
