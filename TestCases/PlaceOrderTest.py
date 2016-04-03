@@ -70,7 +70,23 @@ class PlaceOrderTest(unittest.TestCase):
                     # Check if the current page is message page
                     if current_url == DataReader.get_data("General Info", 2, 1):
                         placeorder.fill_gift_message(DataReader.get_data("OrderInfo", 5, 1),DataReader.get_data("OrderInfo", 6, 1),DataReader.get_data("OrderInfo", 7, 1), DataReader.get_data("OrderInfo", 8, 1))
-                        print("we are here")
+                        locator6 = ".//*[@id='completeForm']/div[11]/div/a"
+                        if placeorder.page_load_special(100, By.XPATH, locator6):
+                            current_url = self.driver.current_url
+                            if current_url == DataReader.get_data("General Info", 3, 1):
+                                    placeorder.checkout((DataReader.get_data("OrderInfo"), 4, 1), (DataReader.get_data("OrderInfo"), 9, 1), (DataReader.get_data("OrderInfo"), 11, 1),
+                                                        (DataReader.get_data("OrderInfo"), 12, 1), (DataReader.get_data("OrderInfo"), 13, 1), (DataReader.get_data("OrderInfo"), 14, 1),
+                                                        (DataReader.get_data("OrderInfo"), 15, 1), (DataReader.get_data("OrderInfo"), 16, 1), (DataReader.get_data("OrderInfo"), 17, 1),
+                                                        (DataReader.get_data("OrderInfo"), 18, 1), (DataReader.get_data("OrderInfo"), 19, 1), (DataReader.get_data("OrderInfo"), 20, 1),
+                                                        (DataReader.get_data("OrderInfo"), 21, 1), (DataReader.get_data("OrderInfo"), 22, 1), (DataReader.get_data("OrderInfo"), 23, 1),
+                                                        (DataReader.get_data("OrderInfo"), 24, 1), (DataReader.get_data("OrderInfo"), 25, 1), (DataReader.get_data("OrderInfo"), 26, 1))
+                                    locator7 = "html/body/div[1]/div/div/div[2]/div[1]/div"
+                                    if placeorder.page_load_special(100, By.XPATH, locator7):
+                                        current_url = self.driver.current_url
+                                        if current_url == DataReader.get_data("General Info", 4, 1):
+                                            placeorder.checkorderdetails((DataReader.get_data("OrderInfo"), 2, 1), (DataReader.get_data("OrderInfo"), 13, 1), (DataReader.get_data("OrderInfo"), 14, 1),
+                                                                         (DataReader.get_data("OrderInfo"), 3, 1), (DataReader.get_data("OrderInfo"), 15, 1), (DataReader.get_data("OrderInfo"), 28, 1),
+                                                                         (DataReader.get_data("OrderInfo"), 29, 1))
                     else:
                         raise Exception("Invalid Page")
 
