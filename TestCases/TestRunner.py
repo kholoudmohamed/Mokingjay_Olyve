@@ -15,11 +15,8 @@ PlaceOrder_test = unittest.TestLoader().loadTestsFromTestCase(PlaceOrderTest)
 # Create a test suite
 All_tests = unittest.TestSuite([HomePage_tests, PlaceOrder_test])
 
-# Create Test Report Name
-report_name = '\TestReport_'+dt.datetime.now().strftime("%y-%m-%d_%H %M %S")+'.html'
-
 # Open the report file
-outfile = open(dir + report_name, "w")
+outfile = open(dir + "\AllTestsReport.html", "w")
 
 # Configure HTMLTestRunner options
 runner = HTMLTestRunner(stream=outfile, title='Test Report', description='Olyve Tests')

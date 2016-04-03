@@ -88,7 +88,6 @@ class HomePageTest(unittest.TestCase):
             homepage = HomePage(self.driver)
             expected_privacyterms_url = "https://olyve.olyveinc.com/privacy"
             self.assertEqual(expected_privacyterms_url, homepage.get_privacyterms_url)
-            self.assertTrue(expected_privacyterms_url in homepage.get_privacyterms_url)
 
         except:
             raise Exception("Privacy Terms Navigation Failed")

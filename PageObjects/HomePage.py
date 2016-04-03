@@ -87,7 +87,7 @@ class HomePage:
     # Verify slides class tag contains "active"
     def verify_slide_is_active(self,selected_slide):
         slide_class = selected_slide.get_attribute('class')
-        active_class = "ng-scope active"
+        active_class = "active"
         if active_class == slide_class:
             return True
         else:
