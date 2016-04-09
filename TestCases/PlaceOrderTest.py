@@ -1,58 +1,66 @@
 import unittest
-from selenium import webdriver
-from PageObjects.PlaceOrder import PlaceOrder
 from builtins import classmethod
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from PageObjects.ExcelDataReader import DataReader
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.action_chains import ActionChains
+from PageObjects.PlaceOrder import PlaceOrder
+from Utilities import FileLocator
+from Utilities.Browser import Browser
+from Utilities.PageActions import BasicActions
+from Utilities.ExcelDataReader import ExcelDataReader
+from Configurations import ConfigReader
+import time
 
 
 class PlaceOrderTest(unittest.TestCase):
+
+    # Get the file location of the Excel Input File
+    _fileLocation = FileLocator.read_config_get_file_location('ExcelConfiguration', 'DataSourcefileLocation')
+
+    # In the Configuration File with the Key 'ExcelConfiguration' - Sheet Name 'OrderInfoSheetName'
+    orderinfo_sheetName = ConfigReader.readconfig('ExcelConfiguration', 'OrderInfoSheetName')
+    # Fill the result of the selected sheet in the 2 dimensional array with the values in 'OrderInfoSheetName'
+    OrderInforesult = ExcelDataReader.get_data(_fileLocation, orderinfo_sheetName, HDR=True)
+
+    # In the Configuration File with the Key 'ExcelConfiguration' - Sheet Name 'GeneralInfoSheetName'
+    generalinfo_sheetName = ConfigReader.readconfig('ExcelConfiguration', 'GeneralInfoSheetName')
+    # Fill the result of the selected sheet in the 2 dimensional array with the values in 'GeneralInfoSheetName'
+    GeneralInforesult = ExcelDataReader.get_data(_fileLocation, generalinfo_sheetName, HDR=True)
+
     @classmethod
     def setUp(cls):
-        # create a new Chrome session and maximize the window
-        cls.driver = webdriver.Firefox()
-        cls.driver.maximize_window()
+        # Create a new Browser session and maximize the window
+        Browser.initialize_driver()  # default FireFox
+        BasicActions.maximize_window()
 
-        # Open Olyve website
-        cls.driver.get("https://test@olyveinc.com:Amr<3skype@olyve.olyveinc.com")
+        # Go to Olyve Home Page URL
+        BasicActions.navigate(ConfigReader.readconfig('ConfigurationSettings','OlyveHomeURL'))
 
         # Wait till the Home page is loaded
-        locator = "html/body/div/div/olv-header/nav/div[1]/div[2]/a/img"
-        placeorder = PlaceOrder(cls.driver)
-        placeorder.page_load(40, By.XPATH, locator)
+        placeorder = PlaceOrder(Browser._driver)
+        placeorder.wait_for_header_olyve_logo()
 
-    # Place Order for Product
+    # The following test case order a selected product
     def test_place_product_order(self):
-        placeorder = PlaceOrder(self.driver)
-        # Get the number of products
-        placeorder.findproductandclick(DataReader.get_data("OrderInfo", 1, 1))
-        self.driver.implicitly_wait(50)
-        # Following locator is for Pick Me button.
-        locator3 = "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div"
-        if placeorder.page_load_special(40, By.XPATH, locator3):
+        placeorder = PlaceOrder(Browser._driver)
+        # Find the selected proudct and click on it
+        placeorder.findproductandclick(self.OrderInforesult[0][0])
+        # Wait till the Proudct Details page is loaded
+        BasicActions.implicit_wait(50)
+        if placeorder.wait_for_product_page():
             # Get Price of the Product as it will be required in the Review page
             product_price = placeorder.get_product_price()
             # Click on the Pick Me button
             placeorder.click_on_pickme_button()
             # Wait till The "WHO ARE WE DELIVERING TO" popup is displayed
-            self.driver.implicitly_wait(20)
+            BasicActions.implicit_wait(20)
             # Fill the "WHO ARE WE DELIVERING TO" popup with data set in the input excel file
-            placeorder.fill_pickme_popup(DataReader.get_data("OrderInfo", 2, 1), DataReader.get_data("OrderInfo", 3, 1))
-            # locators to be used in the explicit wait in order to proceed with the Order
-            locator4 = "html/body/div/div/div/div[2]/div[1]/div[1]/div/olv-image/div/img"
-            locator5 = "html/body/div/div/div/div[6]/div/a"
+            placeorder.fill_pickme_popup(self.OrderInforesult[1][0], self.OrderInforesult[2][0])
             # Wait until the next page is opened
-            if (placeorder.page_load_special(100, By.XPATH, locator4))or (placeorder.page_load_special(100, By.XPATH, locator5)):
+            if (placeorder.wait_for_accessory_page())or (placeorder.wait_for_message_page()):
                 # Get the URL of the current page
-                current_url = self.driver.current_url
+                current_url = Browser._driver.current_url
                 # Check if the Page opened is the Accessory page
-                if current_url == DataReader.get_data("General Info", 1, 1):
+                if current_url == self.GeneralInforesult[1][0]:
                     # Check if the user required to click on yes button if accessory is required
-                    if DataReader.get_data("OrderInfo", 4, 1) == 'Yes':
+                    if self.OrderInforesult[3][0] == 'Yes':
                         # Get the Accessory Price from the page as it will be required in the Review Order Page
                         accessory_price = placeorder.get_accessory_price()
                         # Click on Yes Please button
@@ -63,37 +71,135 @@ class PlaceOrderTest(unittest.TestCase):
                         accessory_price = 0
                         # Click on No Thanks button
                         placeorder.click_nothanks()
-                self.driver.implicitly_wait(30)
-                if placeorder.page_load_special(100, By.XPATH, locator5):
+                else:
+                    raise Exception("Invalid Page")
+                # Wait till the Message page is loaded
+                BasicActions.implicit_wait(30)
+                if placeorder.wait_for_message_page():
                     # Get the URL of the current page
-                    current_url = self.driver.current_url
+                    current_url = Browser._driver.current_url
                     # Check if the current page is message page
-                    if current_url == DataReader.get_data("General Info", 2, 1):
-                        placeorder.fill_gift_message(DataReader.get_data("OrderInfo", 5, 1),DataReader.get_data("OrderInfo", 6, 1),DataReader.get_data("OrderInfo", 7, 1), DataReader.get_data("OrderInfo", 8, 1))
-                        locator6 = ".//*[@id='completeForm']/div[11]/div/a"
-                        if placeorder.page_load_special(100, By.XPATH, locator6):
-                            current_url = self.driver.current_url
-                            if current_url == DataReader.get_data("General Info", 3, 1):
-                                    placeorder.checkout((DataReader.get_data("OrderInfo"), 4, 1), (DataReader.get_data("OrderInfo"), 9, 1), (DataReader.get_data("OrderInfo"), 11, 1),
-                                                        (DataReader.get_data("OrderInfo"), 12, 1), (DataReader.get_data("OrderInfo"), 13, 1), (DataReader.get_data("OrderInfo"), 14, 1),
-                                                        (DataReader.get_data("OrderInfo"), 15, 1), (DataReader.get_data("OrderInfo"), 16, 1), (DataReader.get_data("OrderInfo"), 17, 1),
-                                                        (DataReader.get_data("OrderInfo"), 18, 1), (DataReader.get_data("OrderInfo"), 19, 1), (DataReader.get_data("OrderInfo"), 20, 1),
-                                                        (DataReader.get_data("OrderInfo"), 21, 1), (DataReader.get_data("OrderInfo"), 22, 1), (DataReader.get_data("OrderInfo"), 23, 1),
-                                                        (DataReader.get_data("OrderInfo"), 24, 1), (DataReader.get_data("OrderInfo"), 25, 1), (DataReader.get_data("OrderInfo"), 26, 1))
-                                    locator7 = "html/body/div[1]/div/div/div[2]/div[1]/div"
-                                    if placeorder.page_load_special(100, By.XPATH, locator7):
-                                        current_url = self.driver.current_url
-                                        if current_url == DataReader.get_data("General Info", 4, 1):
-                                            placeorder.checkorderdetails((DataReader.get_data("OrderInfo"), 2, 1), (DataReader.get_data("OrderInfo"), 13, 1), (DataReader.get_data("OrderInfo"), 14, 1),
-                                                                         (DataReader.get_data("OrderInfo"), 3, 1), (DataReader.get_data("OrderInfo"), 15, 1), (DataReader.get_data("OrderInfo"), 28, 1),
-                                                                         (DataReader.get_data("OrderInfo"), 29, 1))
+                    if current_url == self.GeneralInforesult[1][1]:
+                        # Fill the gift Message and Signature
+                        placeorder.fill_gift_message(self.OrderInforesult[4][0], self.OrderInforesult[5][0])
+                        # Upload the Photo from given location
+                        placeorder.upload_photo(self.OrderInforesult[6][0])
+                        # Upload Video from given location
+                        placeorder.upload_video(self.OrderInforesult[7][0])
+                        # Click on the Review and Checkout button
+                        placeorder.click_review_and_checkout()
+                        # Wait till the Checkout page is loaded
+                        if placeorder.wait_for_checkout_page():
+                            current_url = Browser._driver.current_url
+                            if current_url == self.GeneralInforesult[1][2]:
+                                    # Verified the Product Name
+                                    self.assertEqual(True, placeorder.check_product_name(self.OrderInforesult[0][0]), "Product Name doesn't match the selected product name")
+                                    self.assertEqual(True, placeorder.check_product_name_review(self.OrderInforesult[0][0]), "Product Name doesn't match the selected product name")
+                                    # Verify the Product Price
+                                    self.assertEqual(True, placeorder.check_product_price(product_price), "Product Price doesn't match the selected product")
+                                    self.assertEqual(True, placeorder.check_product_price_review(product_price), "Product Price doesn't match the selected product")
+                                    # Verify the Accessory Message
+                                    self.assertEqual(True, placeorder.check_accessory_details(self.OrderInforesult[3][0], self.OrderInforesult[8][0], accessory_price),"Accessory Text or Accessory Price is not correct")
+                                    self.assertEqual(True, placeorder.check_accessory_details_review(self.OrderInforesult[3][0], self.OrderInforesult[8][0], accessory_price),"Accessory Text or Accessory Price is not correct")
+                                    # Verify the Notification Message
+                                    self.assertEqual(True, placeorder.check_notification_text(self.OrderInforesult[9][0]),"Notification Text is not correct")
+                                    self.assertEqual(True, placeorder.check_notification_text_review(self.OrderInforesult[9][0]),"Notification Text is not correct")
+                                    # Verify the Price of the product + accessory if requested
+                                    self.assertEqual(True, placeorder.check_subtotal(accessory_price, product_price),"Subtotal is not correct")
+                                    self.assertEqual(True, placeorder.check_sales_taxes(self.OrderInforesult[10][0]),"Sales Tax is not correct")
+                                    # Verify the Sales Tax on the selected Product
+                                    self.assertEqual(True, placeorder.check_sales_taxes_review(self.OrderInforesult[10][0]),"Sales Tax is not correct")
+                                    self.assertEqual(True, placeorder.check_total_price(self.OrderInforesult[10][0],accessory_price, product_price), "Total is not correct")
+                                    # Verify the Total Price
+                                    self.assertEqual(True, placeorder.check_total_price_review(self.OrderInforesult[10][0],accessory_price, product_price), "Total is not correct")
+                                    # Verify the Customer Name ordering the selected Product
+                                    placeorder.check_name(self.OrderInforesult[1][0])
+                                    self.assertEqual(True, placeorder.check_name_review(self.OrderInforesult[1][0]), "Customer Name is not correct")
+                                    # Verify The Phone number of the customer odering the selected Product
+                                    placeorder.fill_phone_number(self.OrderInforesult[11][0])
+                                    self.assertEqual(True, placeorder.check_phone_number_review(self.OrderInforesult[11][0]), "Phone Number doesn't match the entered phone number")
+                                    # Verify the Address of the Customer ordering the selected Product
+                                    placeorder.fill_address_optional(self.OrderInforesult[12][0], self.OrderInforesult[13][0])
+                                    self.assertEqual(True, placeorder.check_address_optional(self.OrderInforesult[12][0], self.OrderInforesult[13][0]), "Optional Address doesn't match the selected Optional Address")
+                                    # Verify the Zip Code of the Customer ordering the selected Product
+                                    placeorder.check_zip_code(self.OrderInforesult[2][0])
+                                    self.assertEqual(True, placeorder.check_zip_code_review(self.OrderInforesult[2][0]), "Zip Code doesn't match the entered Zip Code")
+                                    # Verify the details address Line1 of the Customer ordering the selected Product
+                                    placeorder.fill_address_line1(self.OrderInforesult[14][0])
+                                    self.assertEqual(True, placeorder.check_address_line1_review(self.OrderInforesult[14][0]), "Address Line 1 doesn't match the entered Address Line 1")
+                                    # Verify the details address Line2 of the Customer ordering the selected Product
+                                    placeorder.fill_address_line2(self.OrderInforesult[15][0])
+                                    self.assertEqual(True, placeorder.check_address_line2_review(self.OrderInforesult[15][0]), "Address Line 2 doesn't match the entered Address Line 2")
+                                    # Verify the delivery date of the order of the selected Product
+                                    placeorder.fill_delivery_date(self.OrderInforesult[16][0])
+                                    self.assertEqual(True, placeorder.check_delivery_date_review(self.OrderInforesult[16][0]), "Delivery Date doesn't match the selected Delivery Date")
+                                    # Verify the first and last name of the recipient of  the selected Product
+                                    placeorder.fill_first_and_last_name(self.OrderInforesult[17][0])
+                                    self.assertEqual(True, placeorder.check_first_and_last_name_review(self.OrderInforesult[17][0]), "First  and last names don't match the entered first and last names")
+                                    # Verify the Zip Code of the recipient of  the selected Product
+                                    placeorder.fill_billing_zip_code(self.OrderInforesult[18][0])
+                                    self.assertEqual(True, placeorder.check_billing_zip_code_review(self.OrderInforesult[18][0]), "Billing Zip Code doesn't match the entered billing Zip Code")
+                                    # Verify the detailed address line 1 of the recipient of  the selected Product
+                                    placeorder.fill_billing_address_l1(self.OrderInforesult[19][0])
+                                    self.assertEqual(True, placeorder.check_billing_address_l1(self.OrderInforesult[19][0]), "Billing Address Line 1 doesn't match the entered Billing Address Line 1")
+                                    # Verify the detailed address line 2 of the recipient of  the selected Product
+                                    placeorder.fill_billing_address_l2(self.OrderInforesult[20][0])
+                                    self.assertEqual(True, placeorder.check_billing_address_l2(self.OrderInforesult[20][0]), "Billing Address Line 2 doesn't match the entered Billing Address Line 2")
+                                    # Verify the email of the customer ordering the selected Product
+                                    placeorder.fill_email_address(self.OrderInforesult[21][0])
+                                    self.assertEqual(True, placeorder.check_email_address(self.OrderInforesult[21][0]), "The email address doesn't match the entered email address")
+                                    # Verify the phone number of the customer ordering the selected Product
+                                    placeorder.fill_billing_phone_number(self.OrderInforesult[22][0])
+                                    self.assertEqual(True, placeorder.check_billing_phone_number(self.OrderInforesult[22][0]), "The Billing Phone number doesn't match the entered Billing Phone number")
+                                    # Verify if the customer required notification via sms for the order of the selected Product
+                                    placeorder.check_sms_notification(self.OrderInforesult[23][0])
+                                    # Verify if the customer has a promotion code for the order of the selected Product
+                                    placeorder.fill_olyve_premiere_code(self.OrderInforesult[24][0])
+                                    # Verify The creddit card of customer ordering the selected Product
+                                    placeorder.fill_credit_card_details(self.OrderInforesult[25][0], self.OrderInforesult[26][0], self.OrderInforesult[27][0], self.OrderInforesult[28][0])
+                                    # Verify the message sent with the order of the selected Product
+                                    self.assertEqual(True, placeorder.check_message_review(self.OrderInforesult[4][0]), "The Message doesn't match the entered message")
+                                    # Verify the signature of the message sent with the order of the selected Product
+                                    self.assertEqual(True, placeorder.check_signature_review(self.OrderInforesult[4][0]), "The Signature doesn't match the entered signature")
+                                    # Verify the Video/Photo sent with the order of the selected Product
+                                    self.assertEqual(True, placeorder.check_videophoto_review(self.OrderInforesult[6][0], self.OrderInforesult[7][0], self.GeneralInforesult[1][4]), "The Video/Photo uploaded not found")
+                                    # Returns back to the Checkout Page
+                                    BasicActions.go_back()
+                                    placeorder.wait_for_checkout_page()
+                                    # Click on the Buy button to proceed to the Order Details Page
+                                    placeorder.Buy_click(self.OrderInforesult[4][0], self.OrderInforesult[16][0])
+                                    # Problem in waiting for Order Details Screen, Use time.sleep instead
+                                    time.sleep(60)
+                                    if placeorder.wait_for_order_details_page:
+                                        current_url = Browser._driver.current_url
+                                        if current_url == self.GeneralInforesult[1][3]:
+                                            # Check the Order ID
+                                            placeorder.check_confirmation_number()
+                                            # Verify the customer name ordering of the selected Product
+                                            self.assertEqual(True, placeorder.check_name_order_details(self.OrderInforesult[1][0]), "Customer Name is not correct")
+                                            # Verify the detailed address line 1 of the recipient of the selected Product
+                                            self.assertEqual(True, placeorder.check_address_line1_order_details(self.OrderInforesult[14][0]), "Address Line 1 doesn't match the entered Address Line 1")
+                                            # Verify the detailed address line 2 of the recipient of the selected Product
+                                            self.assertEqual(True, placeorder.check_address_line2_order_details(self.OrderInforesult[15][0]), "Address Line 2 doesn't match the entered Address Line 2")
+                                            # Verify Zip Code of the the customer ordering of the selected Product
+                                            self.assertEqual(True, placeorder.check_zip_code_order_details(self.OrderInforesult[2][0]), "Zip Code doesn't match the entered Zip Code")
+                                            # Verify the Delivery Date of the order
+                                            self.assertEqual(True, placeorder.check_delivery_date_order_details(self.OrderInforesult[16][0]), "Delivery Date doesn't match the selected Delivery Date")
+                                            # Verify the Questions and Concerns Contacts for OLYVE
+                                            self.assertEqual(True, placeorder.check_questions_and_concerns_oder_details(self.OrderInforesult[29][0]), "The number of Questions and Concerns is not correct")
+                                            # Updates via text using PIN the order if required
+                                            placeorder.check_updates_via_text_order_details(self.OrderInforesult[30][0])
+                                        else:
+                                            raise Exception("Invalid Page")
+                        else:
+                            raise Exception("Invalid Page")
                     else:
                         raise Exception("Invalid Page")
 
     @classmethod
     def tearDown(cls):
-        # close the browser window
-        cls.driver.quit()
+        # close the browser window(s)
+        Browser.quit_driver()
 
 if __name__ == '__main__':
     unittest.main()

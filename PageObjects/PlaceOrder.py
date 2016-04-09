@@ -1,246 +1,807 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+from datetime import date
+from Utilities import PageActions
 
 
-class PlaceOrder:
+class PlaceOrder(object):
+    # Olyve Logo located in the Header of the Home page
+    header_olyve_logo = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[2]/a/img')
+    # Pick Me button located in the selected Product
+    pick_me_button = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div")
+    # Explicit Wait Objects to be loaded
+    accessory_load = (By.XPATH, "html/body/div/div/div/div[2]/div[1]/div[1]/div/olv-image/div/img")
+    message_load = (By.XPATH, "html/body/div/div/div/div[6]/div/a")
+    checkout_load = (By.XPATH, ".//*[@id='completeForm']/div[11]/div/a")
+    orderdetails_load = (By.XPATH, ".//*[@id='ordernumber']")
+    videophoto_load = (By.XPATH, "html/body/div[1]/div/div/div[4]/div/img")
+    # Product Price located in the selected Product
+    product_price = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[3]/div/div')
+    # The Name of the customer ordering the Product located in the pick me pop-up
+    customer_name = (By.XPATH, ".//*[@id='ngdialog1']/div/div[1]/form/div[2]/div/div[2]/div/input")
+    # The Zip Code of the customer that will oder the Product located in the pick me pop-up
+    zip_code = (By.XPATH, ".//*[@id='ngdialog1']/div/div[1]/form/div[4]/div/div[2]/div/input")
+    # The GO button that will be clicked to continue the order of the selected Product located in the pick me pop-up
+    go_button = (By.XPATH, ".//*[@id='ngdialog1']/div/div[1]/form/div[5]/div/a")
+    # The option to click on the YES button to add Accessory to the selected Product
+    yes_please_button = (By.XPATH, 'html/body/div/div/div/div[2]/div[2]/div[3]/div')
+    # The option to click on the NO button to order the selected Product ONLY
+    no_thanks_button = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[4]/div')
+    # The price of the accessory requested with the selected product
+    accessory_price = (By.XPATH, 'html/body/div/div/div/div[2]/div[2]/div[2]/div/div')
+    # The option to send a message with the selected Product
+    message_body = (By.XPATH, "html/body/div[1]/div/div/div[2]/div/div/textarea")
+    # The option to sign the message sent with the selected Product
+    message_sign = (By.XPATH, "html/body/div[1]/div/div/div[2]/div/div/input")
+    # The option to add a photo to be send with the selected Product
+    # The location of the Photo File
+    photo_file = (By.ID, "photoFile")
+    # The field that will be filled with the Photo File Location
+    imagelocator = (By.XPATH, 'html/body/div[1]/div/div/div[5]/div[2]/div[2]/div/div/img')
+    # The option to add a video to be send with the selected Product
+    # The location of the Video  File
+    video_file = (By.ID, "videoFile")
+    # The field that will be filled with the Video File Location
+    videolocator = (By.XPATH, './/*[@id="azureplayer"]')
+    # The review and Checkout button to be clicked to proceed to the Checkout page with the order
+    review_and_checkout_button = (By.CSS_SELECTOR, '.col-xs-12.text-center>a')
+    # The name of the selected Product
+    product_name = (By.XPATH, ".//*[@id='completeForm']/div[1]/div[2]/span[1]")
+    # The review of the name of the selected Product
+    product_name_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[2]/div[1]")
+    # The price of the selected Product
+    product_price_review1 = (By.XPATH, ".//*[@id='completeForm']/div[1]/div[2]/span[2]")
+    # The review of the price of the selected Product
+    product_price_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[2]/div[2]")
+    # The accessory text "Olyve + Elbow Chocolates"
+    accessory_text = (By.XPATH, ".//*[@id='completeForm']/div[2]/div[2]/span[1]")
+    # The price of the selected accessory
+    accessory_price_review1 = (By.XPATH, ".//*[@id='completeForm']/div[2]/div[2]/span[2]")
+    # The review of the price of the selected accessory at the top of the Checkout page
+    accessory_text_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[3]/div[1]")
+    # The review of the price of the selected accessory at the bottom of the Checkout page
+    accessory_price_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[3]/div[2]")
+    # The notification message "gift box and delivery included"
+    notification_text = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/span")
+    # The review of the notification message "gift box and delivery included"
+    notification_text_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[5]/div")
+    # The price of the accessory if requested + the price of the selected Product
+    subtotal = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/div/div[1]")
+    # The taxes applied on this product in the region of the selected Zip Code
+    sales_taxes = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/div/div[2]")
+    # The review of taxes applied on this product in the region of the selected Zip Code
+    sales_taxes_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[6]/div[2]")
+    # The total price of the product selected + accessory if request + taxes
+    total_price = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/div/div[3]")
+    # The review of total price of the product selected + accessory if request + taxes
+    total_price_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[7]/div")
+    # The name of the customer that will order the Product
+    name_review1 = (By.XPATH, ".//*[@id='completeForm']/div[7]/div/div[2]/div/div/input")
+    # The review of the name of the customer ordering the Product
+    name_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[2]/div")
+    # The Phone number of the customer ordering the selected Product
+    phone_number = (By.XPATH, ".//*[@id='completeForm']/div[7]/div/div[3]/div/div/input")
+    # The review of the phone number of the customer ordering the selected Product
+    phone_number_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[6]/div")
+    # The address tag of the customer ordering the selected Product
+    address_optional = (By.XPATH, ".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a")
+    # The review of the address tag of the customer ordering the selected Product
+    address_optional_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[8]/div")
+    # The Zip Code of the customer ordering the selected Product
+    zip_code_review1 = (By.XPATH, ".//*[@id='recipientZipcode']")
+    # The review of the Zip Code of the customer ordering the selected Product
+    zip_code_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[5]/div")
+    # The detailed address line 1 of the customer ordering the selected Product
+    address_line1 = (By.XPATH, ".//*[@id='recipientAddressLine1']")
+    # The review of detailed address of the customer ordering the selected Product
+    address_line1_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[3]/div")
+    # The detailed address line 2 of the customer ordering the selected Product
+    address_line2 = (By.XPATH, ".//*[@id='recipientAdressLine2']")
+    # The review of detailed address line 2 of the customer ordering the selected Product
+    address_line2_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[4]/div")
+    # The review of the delivery date of the order
+    delivery_date_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[7]/div")
+    # The First and Last Name of the recipient
+    first_and_last_name = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[2]/div/div/input")
+    # The review of the First and Last Name of the recipient
+    first_and_last_name_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[2]/div")
+    # The Zip Code of the recipient
+    billing_zip_code = (By.XPATH, ".//*[@id='billingZipcode']")
+    # The review of the Zip Code of the recipient
+    billing_zip_code_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[5]/div")
+    # The detailed address line 1 of the recipient
+    billing_address_l1 = (By.XPATH, ".//*[@id='billingAddressLine1']")
+    # The review of detailed address line 1 of the recipient
+    billing_address_l1_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[3]/div")
+    # The detailed address line 2 of the recipient
+    billing_address_l2 = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[5]/div/div/input")
+    # The review of detailed address line 2 of the recipient
+    billing_address_l2_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[4]/div")
+    # The email address of the customer ordering the selected Product
+    email_address = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[6]/div/div/input")
+    # The review of the email address of the customer ordering the selected Product
+    email_address_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[7]/div")
+    # The phone number of the customer ordering the selected Product
+    billing_phone_number = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[7]/div/div/input")
+    # The review of the phone number of the customer ordering the selected Product
+    billing_phone_number_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[6]/div")
+    # If an sms is required to be send to the customer ordering the selected Product
+    sms_notification = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[8]/div/div/div[1]/button")
+    # If there is a promotion code for the customer ordering the selected Product
+    olyve_premiere_code = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[9]/div/div[1]/div/a/i")
+    # The code provided to get a discount on the order of the selected Product
+    code = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[9]/div/div[2]/div[1]/input")
+    # The apply button to apply the discount on the order of the selected Product
+    apply_olyve_premeier_code = (By.XPATH, ".//*[@id='promo-code']/a")
+    # The credit card number used to pay the order of the selected Product
+    credit_card_number = (By.XPATH, ".//*[@id='creditCardNumberRow']/div/div/input")
+    # The credit card expiry month of the credit card used to pay the order of the selected Product
+    credit_card_month = (By.XPATH, ".//*[@id='creditCardNumberDetailsRow']/div[1]/div/input")
+    # The credit card expiry year of the credit card used to pay the order of the selected Product
+    credit_card_year = (By.XPATH, ".//*[@id='creditCardExpYearId']")
+    # The credit card CCV number of the credit card used to pay the order of the selected Product
+    credit_card_ccv = (By.XPATH, ".//*[@id='creditCardNumberDetailsRow']/div[3]/div/input")
+    # The review of the message sent with the order
+    message_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[3]/div[2]")
+    # The review of the signature of the customer ordering the selected Product
+    signature_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[3]/div[3]/div")
+    # In the Checkout Page there should be a link to detect if a photo/video is sent with the order of the selected Product
+    gift_image_video = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[3]/div[4]/div/a")
+    # The video is displayed in the page that check video uploaded is sent with the order
+    video_upload_review = (By.XPATH, "xhtml:html/xhtml:body/xhtml:video")
+    # The image is displayed in the page that check image uploaded is sent with the order
+    image_upload_review = (By.XPATH, "html/body/div[1]/div/div/div[3]/div/img")
+    # The Buy button that should be clicked to proceed to the Order Details Page
+    Buy_button = (By.XPATH, ".//*[@id='completeForm']/div[11]/div/a")
+    # The Alert displayed if there is no message sent with the order and to make sure that the user didn't forgot to add it
+    CardMessageDialog = (By.XPATH, ".//*[@id='ngdialog2-aria-describedby']")
+    # The Alert displayed if the selected delivery date is not available
+    DeliveryDateNotAvailable = (By.XPATH, ".//*[@id='ngdialog3']/div[2]/div/div/div[1]/div")
+    # The Order ID displayed in the Order Details Page
+    confirmation_number = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[2]/div")
+    # The Customer Name ordering the Product displayed in the Order Details Page
+    name_review_order_details = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[3]/div")
+    # The detailed address line 1 of the recipient of the order in the Order Details Page
+    address_line1_review_order_details = (By.XPATH, ".//*[@id='recipientaddressLine1']")
+    # The City of the recipient of the order in the Order Details Page
+    address_line1_review_order_details_city = (By.XPATH, ".//*[@id='recipientcity']")
+    # The State of the recipient of the order in the Order Details Page
+    address_line1_review_order_details_state = (By.XPATH, ".//*[@id='recipientstate']")
+    # The detailed address line 2 of the recipient of the order in the Order Details Page
+    address_line2_review_order_details = (By.XPATH, ".//*[@id='recipientaddressLine2']")
+    # The Zip Code of the customer ordering the Product in the Order Details Page
+    zip_code_review_order_details = (By.XPATH, ".//*[@id='recipientzipcode']")
+    # The delivery date of the order in the Order Details Page
+    delivery_date_review_order_details = (By.XPATH, ".//*[@id='deliverydate']")
+    # The Contact information for OLYVE
+    questions_and_concenrs = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[10]/div")
+    # If and upates required via text
+    updates_via_text = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[13]/div/input")
+    # Submit the updates required using PIN
+    submit = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[14]/div/input")
+    # Click to return to the Home Page after completion of the oder
+    return_home = (By.XPATH, "html/body/div[1]/div/olv-header/nav/div[1]/a[1]/i")
+
     def __init__(self, driver):
         self._driver = driver
 
-    # explicit wait until presence of configurable element
-    def page_load(self, time_to_wait, by_method, locator):
-        element = WebDriverWait(self._driver, time_to_wait).until(EC.presence_of_element_located((by_method, locator)))
-
-    # explicit wait until presence of configurable element with return as conditional action dependency
-    def page_load_special(self, time_to_wait, by_method, locator):
-        element = WebDriverWait(self._driver, time_to_wait).until(EC.presence_of_element_located((by_method, locator)))
-        return True
-
-    # Find Product in Olyve and make sure that this product is clickable
+    # The following function finds a Product in Olyve and make sure that this product is clickable
     def findproductandclick(self, product):
         try:
             WebDriverWait(driver=self._driver, timeout=5).until(
                 EC.presence_of_all_elements_located(locator=(By.CLASS_NAME, "name")))
-            doubleqoute = '"'
-            productxpath = ".//div[1]/div/a[contains(@href," + doubleqoute + product + doubleqoute + ")]"
-            # Find the product
-            product_link = self._driver.find_element_by_xpath(productxpath)
-            # Click on the Product found
+            changeproductnamereview = product.replace("-", " + ").upper()
+            product_link = self._driver.find_element_by_link_text(changeproductnamereview)
             product_link.click()
         except:
             raise Exception("Product Not Found")
 
-    # Click on Pick Me button inside the selected Product
+    # The following function clicks on Pick Me button inside the selected Product
     def click_on_pickme_button(self):
-        pick_me = self._driver.find_element_by_xpath('html/body/div/div/div/div[2]/div[2]/div[5]/div/div')
-        pick_me.click()
+        self._driver.find_element(*PlaceOrder.pick_me_button).click()
 
-    # Get the price of the selected product
+    # The following function gets the price of the selected product
     def get_product_price(self):
-        product_price = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[2]/div[2]/div[3]/div/div')
-        return product_price.text
+        return self._driver.find_element(*PlaceOrder.product_price).text
 
-    # Check if the Pick me pop up exists
-    def pickmepopupexists(self):
-        try:
-            self._driver.find_element_by_xpath(".//*[@id='ngdialog2']/div/div[1]/form/div[5]/div/a")
-        except NoSuchElementException:
-            return False
-        return True
+    # The following function fills info of the pick me pop up
+    def fill_pickme_popup(self, Name, Zipcode):
+        # Fill Customer Name
+        self._driver.find_element(*PlaceOrder.customer_name).clear()
+        self._driver.find_element(*PlaceOrder.customer_name).send_keys(Name)
+        # Fill Zip Code
+        self._driver.find_element(*PlaceOrder.zip_code).send_keys(Zipcode)
+        self._driver.find_element(*PlaceOrder.zip_code).send_keys(Zipcode)
+        # Click Go Button
+        self._driver.find_element(*PlaceOrder.go_button).click()
 
-    # Fill info from the excel sheet into the pick me pop up
-    def fill_pickme_popup(self, name, zipcode):
-        self._driver.find_element_by_name('recipientName').send_keys(name)
-        self._driver.find_element_by_name('recipientzipCode').send_keys(zipcode)
-        self._driver.find_element_by_xpath(".//*[@id='ngdialog1']/div/div[1]/form/div[5]/div/a").click()
-
-    # Click on Yes, Please button in the Accessory Page
+    # The following function clicks on Yes, Please button to add Accessory to the order
     def click_yesplease(self):
-        yesplease = self._driver.find_element_by_xpath('html/body/div/div/div/div[2]/div[2]/div[3]/div')
-        yesplease.click()
+        self._driver.find_element(*PlaceOrder.yes_please_button).click()
 
-    # Click on No, Thanks button in the Accessory Page
-    def click_nothanks (self):
-        nothanks = self._driver.find_element_by_xpath('html/body/div[1]/div/div/div[2]/div[2]/div[4]/div')
-        nothanks.click()
+    # The following function clicks on No, Thanks button and the Accessory won't be added to the order
+    def click_nothanks(self):
+        self._driver.find_element(*PlaceOrder.no_thanks_button).click()
 
-    # Get the price of the selected accessory
+    # The following function gets the price of the selected accessory
     def get_accessory_price(self):
-        accessoryprice = self._driver.find_element_by_xpath('html/body/div/div/div/div[2]/div[2]/div[2]/div/div')
-        return accessoryprice.text
+        return self._driver.find_element(*PlaceOrder.accessory_price).text
 
-    # Fill the required data in the message page
-    def fill_gift_message(self, message, signature, photolocation, videolocation):
+    # The following function fills the required data in the message page
+    def fill_gift_message(self, message, signature):
         # Write Gift Message if required
-        if message != "":
-            self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div/div/textarea").send_keys(message)
+        if message is not None:
+            self._driver.find_element(*PlaceOrder.message_body).clear()
+            self._driver.find_element(*PlaceOrder.message_body).send_keys(message)
+
         # Sign the Gift Message if required
-        if signature != "":
-            self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div/div/input").send_keys(signature)
-        # Upload Photo in case that Photo Location is not empty
-        if photolocation != "":
+        if signature is not None:
+            self._driver.find_element(*PlaceOrder.message_sign).clear()
+            self._driver.find_element(*PlaceOrder.message_sign).send_keys(signature)
+
+    # The following function uploads Photo in case that Photo Location is not empty
+    def upload_photo(self, photolocation):
+        if photolocation is not None:
             self._driver.execute_script("document.getElementById('photoFile').style.display='block'")
-            self._driver.find_element_by_id("photoFile").send_keys(photolocation)
+            self._driver.find_element(*PlaceOrder.photo_file).send_keys(photolocation)
             self._driver.execute_script("document.getElementById('photoFile').style.display='none'")
+            WebDriverWait(self._driver, 500).until(EC.visibility_of_element_located(locator=self.imagelocator))
+            # (image_location).locator
 
-            imagelocator = 'html/body/div[1]/div/div/div[5]/div[2]/div[2]/div/div/img'
-            WebDriverWait(self._driver, 500).until(EC.visibility_of_element_located((By.XPATH, imagelocator)))
-
-        # Upload Video  in case that Photo Location is not empty
-        if videolocation != "":
+    # The following function uploads Video  in case that Photo Location is not empty
+    def upload_video(self, videolocation):
+        if videolocation is not None:
             self._driver.execute_script("document.getElementById('videoFile').style.display='block'")
-            self._driver.find_element_by_id("videoFile").send_keys(videolocation)
+            self._driver.find_element(*PlaceOrder.video_file).send_keys(videolocation)
             self._driver.execute_script("document.getElementById('videoFile').style.display='none'")
+            WebDriverWait(self._driver, 800).until(EC.visibility_of_element_located(locator=self.videolocator))
 
-            videolocator = './/*[@id="azureplayer"]'
-            WebDriverWait(self._driver, 800).until(EC.visibility_of_element_located((By.XPATH, videolocator)))
+    # The following function clicks on Review and Checkout button
+    def click_review_and_checkout(self):
+        self._driver.find_element(*PlaceOrder.review_and_checkout_button).click()
 
-        # Click on Review and Checkout button
-        self._driver.find_element_by_xpath("html/body/div/div/div/div[6]/div/a").click()
+    # The following function verifies that the name of the product at the checkout page is name of the selected product
+    def check_product_name(self, productname):
+        # Get Proudct Name
+        changeproductname = productname.replace("-", " + ").upper()
+        if self._driver.find_element(*PlaceOrder.product_name).text == changeproductname:
+            return True
+        else:
+            return False
 
-    # Fill and check the data in the checkout page
-    def checkout(self, accessory, notification, phonenumber, addressoptional, addressline1, addressline2, deliverydate, firstandlastname,
-                 billingzipcode, billingaddressl1, billingaddressl2, emailaddress, billingphonenumber, smsnotification,olyvepremierecode,
-                 creditcardnumber, creditcardmonth, creditcardyear, creditcardccv):
-        #Proudct Name
-        element1 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[1]/div[2]/span[1]")
-        #Also the product name down
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[1]/div[2]/div[1]")
+    # The following function verifies that of the product name at the checkout page review section is name of the selected product
+    def check_product_name_review(self, productname):
+        # Also the Product name in the review section
+        changeproductnamereview = productname.replace("-", " + ").upper()
+        if self._driver.find_element(*PlaceOrder.product_name_review).text == changeproductnamereview:
+            return True
+        else:
+            return False
+
+    # The following function verifies the price of the product at the checkout page is the price of the selected product
+    def check_product_price(self, productprice):
         # Product Price
-        element2 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[1]/div[2]/span[2]")
-        # Also Product Price down
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[1]/div[2]/div[2]")
+        changeproductprice = productprice+".00"
+        if self._driver.find_element(*PlaceOrder.product_price_review1).text == changeproductprice:
+            return True
+        else:
+            return False
+
+    # The following function verifies the price of the product at the checkout page review section is the price of the selected product
+    def check_product_price_review(self, productprice):
+        # Also the Product price in the review section
+        changeproductprice = productprice+".00"
+        if self._driver.find_element(*PlaceOrder.product_price_review2).text == changeproductprice:
+            return True
+        else:
+            return False
+
+    # The following function verifies the accessory details at the checkout page is the accessory details of the selected product
+    def check_accessory_details(self, accessory, accessorytext, accessoryprice):
         # The following part is checked only if accessory is selected and available for the product
         if accessory == "Yes":
+            changeaccessoryprice = accessoryprice+".00"
+            changeaccessorytext = accessorytext.upper()
             # Accesorry Text
-            element3 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[2]/div[2]/span[1]")
-            #Also the Accessory Text down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[1]/div[3]/div[1]")
-            # Accessory Price
-            element4 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[2]/div[2]/span[2]")
-            #Also the Accessory Price down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[1]/div[3]/div[2]")
+            if self._driver.find_element(*PlaceOrder.accessory_text).text == changeaccessorytext:
+                # Accessory Price
+                if self._driver.find_element(*PlaceOrder.accessory_price_review1).text == changeaccessoryprice:
+                    return True
+            else:
+                return False
+
+    # The following function verifies the accessory details at the checkout page is the accessory details in the review section of the selected product
+    def check_accessory_details_review(self, accessory, accessorytext, accessoryprice):
+        if accessory == "Yes":
+            changeaccessoryprice = accessoryprice+".00"
+            changeaccessorytext = accessorytext.upper()
+            # Also the Accessory Text in the review section
+            if self._driver.find_element(*PlaceOrder.accessory_text_review).text == changeaccessorytext:
+                # Also the Accessory Price in the review section
+                if self._driver.find_element(*PlaceOrder.accessory_price_review2).text == changeaccessoryprice:
+                    return True
+            else:
+                return False
+
+    # The following function verifies the notification text at the checkout page is the notification text of the selected product
+    def check_notification_text(self, notificationtext):
         # Notification Text
-        element5 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[3]/div[2]/span")
-        # Also the notification text down
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[1]/div[5]/div")
-        # Subtotal
-        element6 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[3]/div[2]/div/div[1]")
-        # Sales Taxes
-        element7 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[3]/div[2]/div/div[2]")
-        # Also Sales Taxes down
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[1]/div[6]/div[2]")
-        # Total
-        element8 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[3]/div[2]/div/div[3]")
-        # Also Subtotal down
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[1]/div[7]/div")
-        # Name
-        element9 = self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[2]/div/div/input")
-        # Also name down
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[2]/div[2]/div")
-        # Phone Number
-        if phonenumber != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[3]/div/div/input").send_keys(phonenumber)
-            # Also Phone Number down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[2]/div[6]/div")
-        # Address Optional
-        if addressoptional != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(addressoptional)
-            # Also optional address down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[2]/div[8]/div")
-        # Zip Code
-        element12 = self._driver.find_element_by_xpath(".//*[@id='recipientZipcode']")
-        # Also Zip Code down
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[2]/div[5]/div")
-        # Address Line 1
-        if addressline1 != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(addressline1)
-            # Also Address Line 1 down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[2]/div[3]/div")
-        # Address Line 2
-        if addressline2 != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(addressline2)
-            # Also Address Line 2 down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[2]/div[4]/div")
-        # Delivery Date
-        if deliverydate != "":
-            # Send the Delivery Date
+        changenotificationtext = notificationtext.upper()
+        if self._driver.find_element(*PlaceOrder.notification_text).text == changenotificationtext:
             return True
-            # Also Delivery Date Down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[2]/div[7]/div")
-        if firstandlastname != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(firstandlastname)
-            # Also first and last name down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[4]/div[2]/div")
-        if billingzipcode != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(billingzipcode)
-            # Also billing Zip Code down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[4]/div[5]/div")
-        if billingaddressl1 != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(billingaddressl1)
-            # Also billing address 1 down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[4]/div[3]/div")
-        if billingaddressl2 != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(billingaddressl2)
-            # Also billing address 2 down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[4]/div[4]/div")
-        if emailaddress != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(emailaddress)
-            # Also billing email address
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[4]/div[7]/div")
-        if billingphonenumber != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a").send_keys(billingphonenumber)
-            # Also billing phone number down
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[4]/div[6]/div")
+        else:
+            return False
+
+    # The following function verifies the notification text at the checkout page is the notification text in the review section of the selected product
+    def check_notification_text_review(self, notificationtext):
+        # Also the notification text in the review section
+        changenotificationtext = notificationtext.upper()
+        if self._driver.find_element(*PlaceOrder.notification_text_review).text == changenotificationtext:
+            return True
+        else:
+            return False
+
+    # The following function verifies the subtotal at the checkout page is the subtotal of the selected product
+    def check_subtotal(self, accessoryprice, productprice):
+        changeaccessoryprice = accessoryprice.split("$")
+        changeproductprice = productprice.split("$")
+        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        subtotal = "SUBTOTAL $" + str(subtotalnumber) + ".00"
+        if self._driver.find_element(*PlaceOrder.subtotal).text == subtotal:
+            return True
+        else:
+            return False
+
+    # The following function verifies the sales tax at the checkout page is the sales tax of the selected product
+    def check_sales_taxes(self, salestax):
+        # Sales Taxes
+        changesalestax = "SALES TAX: $" + str(salestax)
+        if self._driver.find_element(*PlaceOrder.sales_taxes).text == changesalestax:
+            return True
+        else:
+            return False
+
+    # The following function verifies the sales tax at the checkout page is the sales tax in the review section of the selected product
+    def check_sales_taxes_review(self, salestax):
+        # Also Sales Taxes in the review section
+        changesalestax = "$" + str(salestax)
+        if self._driver.find_element(*PlaceOrder.sales_taxes_review).text == changesalestax:
+            return True
+        else:
+            return False
+
+    # The following function verifies the total price at the checkout page is the total price of the selected product
+    def check_total_price(self, salestax, accessoryprice, productprice):
+        # Total
+        changeaccessoryprice = accessoryprice.split("$")
+        changeproductprice = productprice.split("$")
+        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        Totalnumber = salestax + subtotalnumber
+        Total = "TOTAL: $" + str(Totalnumber)
+        if self._driver.find_element(*PlaceOrder.total_price).text == Total:
+            return True
+        else:
+            return False
+
+    # The following function verifies the total price at the checkout page is the total price in the review section of the selected product
+    def check_total_price_review(self, salestax, accessoryprice, productprice):
+        # Also total in the review section
+        changeaccessoryprice = accessoryprice.split("$")
+        changeproductprice = productprice.split("$")
+        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        Totalnumber = salestax + subtotalnumber
+        Total = "TOTAL: $" + str(Totalnumber)
+        if self._driver.find_element(*PlaceOrder.total_price_review).text == Total:
+            return True
+        else:
+            return False
+
+    # The following function fills the customer name at the checkout page
+    def check_name(self, customername):
+        # Name
+        self._driver.find_element(*PlaceOrder.name_review1).clear()
+        self._driver.find_element(*PlaceOrder.name_review1).send_keys(customername)
+
+    # The following function verifies the customer name at the checkout page is the customer name in the review section of the selected product
+    def check_name_review(self, customername):
+        # Also name in the review section
+        if self._driver.find_element(*PlaceOrder.name_review2).text == customername.upper():
+            return True
+        else:
+            return False
+
+    # The following function fills the phone number at the checkout page
+    def fill_phone_number(self, phonenumber):
+        # Phone Number
+        if phonenumber is not None:
+            self._driver.find_element(*PlaceOrder.phone_number).clear()
+            self._driver.find_element(*PlaceOrder.phone_number).send_keys(phonenumber)
+
+    # The following function verifies the phone number at the checkout page is the phone number in the review section of the selected product
+    def check_phone_number_review(self, phonenumber):
+        # Phone Number in the review section
+        if phonenumber is not None:
+            # Also Phone Number down
+            if self._driver.find_element(*PlaceOrder.phone_number_review).text == phonenumber:
+                return True
+            else:
+                return False
+
+    # The following function fills the address at the checkout page
+    def fill_address_optional(self, addressoptional, addressoptionalvalue):
+        # Address Optional
+        if addressoptional is not None:
+            self._driver.find_element(*PlaceOrder.address_optional).click()
+            addressoptionalvalue_link = self._driver.find_element_by_link_text(addressoptionalvalue)
+            addressoptionalvalue_link.click()
+
+    # The following function verifies the address at the checkout page is the address of the selected product
+    def check_address_optional(self, addressoptional, addressoptionalvalue):
+        # Address Optional
+        if addressoptional is not None:
+            # Also optional address in the review section
+            changeaddressoptional = "address type: " + addressoptionalvalue
+            if self._driver.find_element(*PlaceOrder.address_optional_review).text == changeaddressoptional.lower():
+                return True
+            else:
+                return False
+
+    # The following function fills the Zip Code at the checkout page
+    def check_zip_code(self, zipcode):
+        # Zip Code
+        if zipcode is not None:
+            self._driver.find_element(*PlaceOrder.zip_code_review1).clear()
+            self._driver.find_element(*PlaceOrder.zip_code_review1).send_keys(str(zipcode))
+
+    # The following function verifies the Zip Code at the checkout page is the Zip Code in the review section of the selected product
+    def check_zip_code_review(self, zipcode):
+        # Also Zip Code in the review section
+        if self._driver.find_element(*PlaceOrder.zip_code_review2).text == str(zipcode):
+            return True
+        else:
+            return False
+
+    # The following function fills the address line 1 at the checkout page
+    def fill_address_line1(self, addressline1):
+        # Address Line 1
+        if addressline1 is not None:
+            self._driver.find_element(*PlaceOrder.address_line1).clear()
+            self._driver.find_element(*PlaceOrder.address_line1).send_keys(addressline1)
+            action = ActionChains(self._driver)
+            action.send_keys(Keys.ESCAPE)
+            action.perform()
+
+    # The following function verifies the address line 1 at the checkout page is the address line 1 in the review section of the selected product
+    def check_address_line1_review(self, addressline1):
+        if addressline1 is not None:
+            # Also Address Line 1 in the review section
+            if self._driver.find_element(*PlaceOrder.address_line1_review).text == addressline1:
+                return True
+            else:
+                return False
+
+    # The following function fills the address line 2 at the checkout page
+    def fill_address_line2(self, addressline2):
+        # Address Line 2
+        if addressline2 is not None:
+            self._driver.find_element(*PlaceOrder.address_line2).clear()
+            self._driver.find_element(*PlaceOrder.address_line2).send_keys(addressline2)
+
+    # The following function verifies the address line 2 at the checkout page is the address line 2 in the review section of the selected product
+    def check_address_line2_review(self, addressline2):
+        # Address Line 2
+        if addressline2 is not None:
+            # Also Address Line 2 in the review section
+            if self._driver.find_element(*PlaceOrder.address_line2_review).text == addressline2:
+                return True
+            else:
+                return False
+
+    # The following function fills the delivery day at the checkout page of the selected product
+    def fill_delivery_date(self, deliveryday):
+        # Delivery Date
+        if deliveryday is not None:
+            Calendar_days = self._driver.find_elements_by_tag_name("span")
+            for dayselected in Calendar_days:
+                if dayselected.text == str(deliveryday):
+                    parentdayselect = dayselected.find_element(By.XPATH, "..")
+                    if parentdayselect.get_attribute("disabled") != "disabled":
+                        dayselected.click()
+                        break
+                    else:
+                        deliveryday += 1
+
+    # The following function verifies the delivery date at the checkout page is the delivery date in the review section of the selected product
+    def check_delivery_date_review(self, deliveryday):
+        # Delivery Date
+        if deliveryday is not None:
+            dateoftoday = date.today()
+            changedeliverydate = "delivery date: " + dateoftoday.strftime("%B") + " " + str(deliveryday)
+            # Also Delivery Date in the review section
+            if self._driver.find_element(*PlaceOrder.delivery_date_review).text == changedeliverydate:
+                return True
+            else:
+                return False
+
+    # The following function fills the first and last names at the checkout page
+    def fill_first_and_last_name(self, firstandlastname):
+        if firstandlastname is not None:
+            self._driver.find_element(*PlaceOrder.first_and_last_name).clear()
+            self._driver.find_element(*PlaceOrder.first_and_last_name).send_keys(firstandlastname)
+
+    # The following function verifies the first and last names at the checkout page are the first and last names in the review section of the selected product
+    def check_first_and_last_name_review(self, firstandlastname):
+        if firstandlastname is not None:
+            # Also first and last name in the review section
+            if self._driver.find_element(*PlaceOrder.first_and_last_name_review).text == firstandlastname.upper():
+                return True
+            else:
+                return False
+
+    # The following function fills the delivery Zip Code at the checkout page
+    def fill_billing_zip_code(self, billingzipcode):
+        # Zip Code
+        if billingzipcode is not None:
+            self._driver.find_element(*PlaceOrder.billing_zip_code).clear()
+            self._driver.find_element(*PlaceOrder.billing_zip_code).send_keys(billingzipcode)
+
+    # The following function verifies the delivery Zip Code at the checkout page is the delivery Zip Code in the review section of the selected product
+    def check_billing_zip_code_review(self, billingzipcode):
+        # Zip Code
+        if billingzipcode is not None:
+            # Also billing Zip Code in the review section
+            if self._driver.find_element(*PlaceOrder.billing_zip_code_review).text == str(billingzipcode):
+                return True
+            else:
+                return False
+
+    # The following function fills the delivery address line 1 at the checkout page
+    def fill_billing_address_l1(self, billingaddressl1):
+        if billingaddressl1 is not None:
+            self._driver.find_element(*PlaceOrder.billing_address_l1).clear()
+            self._driver.find_element(*PlaceOrder.billing_address_l1).send_keys(billingaddressl1)
+
+    # The following function verifies the delivery address line 1 at the checkout page is the delivery address line 1 in the review section of the selected product
+    def check_billing_address_l1(self, billingaddressl1):
+        if billingaddressl1 is not None:
+            # Also billing address 1 in the review section
+            if self._driver.find_element(*PlaceOrder.billing_address_l1_review).text == billingaddressl1:
+                return True
+            else:
+                return False
+
+    # The following function fills the delivery address line 2 at the checkout page
+    def fill_billing_address_l2(self, billingaddressl2):
+        if billingaddressl2 is not None:
+            self._driver.find_element(*PlaceOrder.billing_address_l2).clear()
+            self._driver.find_element(*PlaceOrder.billing_address_l2).send_keys(billingaddressl2)
+
+    # The following function verifies the delivery address line 2 at the checkout page is the delivery address line 2 in the review section of the selected product
+    def check_billing_address_l2(self, billingaddressl2):
+        if billingaddressl2 is not None:
+            # Also billing address 2 in the review section
+            if self._driver.find_element(*PlaceOrder.billing_address_l2_review).text == billingaddressl2:
+                return True
+            else:
+                return False
+
+    # The following function fills the email address at the checkout page
+    def fill_email_address(self, emailaddress):
+        # Billing Email Address
+        if emailaddress is not None:
+            self._driver.find_element(*PlaceOrder.email_address).clear()
+            self._driver.find_element(*PlaceOrder.email_address).send_keys(emailaddress)
+
+    # The following function verifies the email address at the checkout page is the email address in the review section of the selected product
+    def check_email_address(self, emailaddress):
+        if emailaddress is not None:
+            # Also billing email address in the review section
+            if self._driver.find_element(*PlaceOrder.email_address_review).text == emailaddress:
+                return True
+            else:
+                return False
+
+    # The following function fills the phone number at the checkout page
+    def fill_billing_phone_number(self, billingphonenumber):
+        # Billing Phone Number
+        if billingphonenumber is not None:
+            self._driver.find_element(*PlaceOrder.billing_phone_number).clear()
+            self._driver.find_element(*PlaceOrder.billing_phone_number).send_keys(billingphonenumber)
+
+    # The following function verifies the phone number at the checkout page is the phone number in the review section of the selected product
+    def check_billing_phone_number(self, billingphonenumber):
+        if billingphonenumber is not None:
+            # Also billing phone number in the review section
+            if self._driver.find_element(*PlaceOrder.billing_phone_number_review).text == billingphonenumber:
+                return True
+            else:
+                return False
+
+    # The following function verifies if the sms notification required and check it at the checkout page
+    def check_sms_notification(self, smsnotification):
         if smsnotification == "Yes":
             # Check the checkbox
-            return True
-        if olyvepremierecode != "":
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[9]/div/div[9]/div/div[1]/div/a/i").click
-            self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[9]/div/div[9]/div/div[2]/div[1]/input").send_keys(olyvepremierecode)
-        if creditcardnumber != "":
-            if creditcardmonth != "":
-                if creditcardyear != "":
-                    if creditcardccv != "":
-                        self._driver.find_element_by_xpath(".//*[@id='creditCardNumberRow']/div/div/input").send_keys(creditcardnumber)
-                        self._driver.find_element_by_xpath(".//*[@id='creditCardNumberDetailsRow']/div[1]/div/input").send_keys(creditcardmonth)
-                        self._driver.find_element_by_xpath(".//*[@id='creditCardExpYearId']").send_keys(creditcardyear)
-                        self._driver.find_element_by_xpath(".//*[@id='creditCardNumberDetailsRow']/div[3]/div/input").send_keys(creditcardccv)
-        # Also check the message
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[3]/div[2]")
-        # Also check the signature
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[3]/div[3]/div")
-        # Also check the image and video
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[10]/div[3]/div[4]/div/a").click()
-        # Need to call special function to check the video
-        self._driver.find_element_by_xpath("xhtml:html/xhtml:body/xhtml:video")
-        # How could we check the content of the video?????
-        self._driver.find_element_by_xpath(".//*[@id='completeForm']/div[11]/div/a").click()
+            self._driver.find_element(*PlaceOrder.sms_notification).click()
 
-    # Check Order Details
-    def checkorderdetails(self, name, addressline1, addressline2, zipcode, deliverydate, questionsandconcerns, updatesviatext):
+    # The following function verifies if there is a promotion code and apply it  at the checkout page
+    def fill_olyve_premiere_code(self, olyvepremierecode):
+        if olyvepremierecode is not None:
+            self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
+            self._driver.find_element(*PlaceOrder.code).send_keys(olyvepremierecode)
+            self._driver.find_element(*PlaceOrder.apply_olyve_premeier_code).click()
+
+    # The following function fills the Credit Card Number, Month, Year, CCV at the checkout page
+    def fill_credit_card_details(self, creditcardnumber, creditcardmonth, creditcardyear, creditcardccv):
+        if creditcardnumber is not None and creditcardmonth is not None and creditcardyear is not None and creditcardccv is not None:
+            self._driver.find_element(*PlaceOrder.credit_card_number).clear()
+            self._driver.find_element(*PlaceOrder.credit_card_number).send_keys(creditcardnumber)
+
+            self._driver.find_element(*PlaceOrder.credit_card_month).clear()
+            self._driver.find_element(*PlaceOrder.credit_card_month).send_keys(creditcardmonth)
+
+            self._driver.find_element(*PlaceOrder.credit_card_year).clear()
+            self._driver.find_element(*PlaceOrder.credit_card_year).send_keys(creditcardyear)
+
+            self._driver.find_element(*PlaceOrder.credit_card_ccv).clear()
+            self._driver.find_element(*PlaceOrder.credit_card_ccv).send_keys(creditcardccv)
+
+    # The following function verifies the message at the checkout page is the message in the review section of the selected product
+    def check_message_review(self, message):
+        # Also check the message in the review section
+        if self._driver.find_element(*PlaceOrder.message_review).text == message:
+            return True
+        else:
+            return False
+
+    # The following function verifies the message signature at the checkout page is the message signature in the review section of the selected product
+    def check_signature_review(self, signature):
+        # Also check the signature in the review section
+        if self._driver.find_element(*PlaceOrder.message_review).text == signature:
+            return True
+        else:
+            return False
+
+    # The following function verifies the Video/Photo uploaded at the checkout page
+    def check_videophoto_review(self, videolocation, photolocation, videophotopageurl):
+        # Also check the image and video in the review section
+        if videolocation is not None or photolocation is not None:
+            # Clicks the Link of the Photo/Video uploaded in the checkout page
+            self._driver.find_element(*PlaceOrder.gift_image_video).click()
+            # Wait for the Gift Photo/Video Page to load
+            PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.videophoto_load)
+            current_url = self._driver.current_url
+            if current_url == videophotopageurl:
+                # Check the video uploaded in the Message Page is the Video displayed in the Gift Photo/Video Page
+                if videolocation is not None:
+                    iframe = self._driver.find_elements_by_tag_name('iframe')[0]
+                    self._driver.switch_to_frame(iframe)
+                    if self._driver.find_element(*PlaceOrder.video_upload_review).is_displayed():
+                        self._driver.switch_to_default_content()
+                        return True
+                    else:
+                        return False
+                else:
+                    # Check the photo uploaded in the Message Page is the photo displayed in the Gift Photo/Video Page
+                    if photolocation is not None:
+                        if self._driver.find_element(*PlaceOrder.image_upload_review).is_displayed():
+                            return True
+                        else:
+                            return False
+            else:
+                return False
+        else:
+            return True
+
+    # The following function clicks on the Buy button and check the alerts that could be displayed
+    def Buy_click(self, message, deliveryday):
+        self._driver.find_element(*PlaceOrder.Buy_button).click()
+        # Check if the message is empty an alert is displayed and the user in this case is not forgotting the message
+        if message is None:
+            if self._driver.find_element(*PlaceOrder.CardMessageDialog).is_displayed():
+                self._driver.switch_to_alert()
+                PageActions.BasicActions.dismiss_alert()
+                PageActions.BasicActions.implicit_wait(50)
+            # Commented for now the check on unavailable day of the calendar to click on another available one
+            #if self._driver.find_element(*PlaceOrder.DeliveryDateNotAvailable).is_displayed():
+             #   self._driver.switch_to_alert()
+              #  PageActions.BasicActions.accept_alert()
+               # self.fill_delivery_date(deliveryday+1)
+
+    # The following function verifies that there is an Order ID generated
+    def check_confirmation_number(self):
         # Confirmation Number
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[2]/div")
+        self._driver.find_element(*PlaceOrder.confirmation_number)
+
+    # The following function verifies the customer name ordering the selected product in the Order Details Page
+    def check_name_order_details(self, name):
         # Name
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[3]/div")
-        # Address Line 1
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[4]/div")
-        # Address Line 2
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[5]/div")
-        # Zip Code
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[8]/div")
-        # Delivery Date
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[9]/div")
+        if self._driver.find_element(*PlaceOrder.name_review_order_details).text == name:
+            return True
+        else:
+            return False
+
+    # The following function verifies the detailed address line 1 for recipient of the selected product in the Order Details Page
+    def check_address_line1_order_details(self, addressline1):
+        changeaddressline1 = addressline1.split(",")
+        # Address doesn't contain any comma
+        if len(changeaddressline1) == 1:
+            if self._driver.find_element(*PlaceOrder.address_line1_review_order_details).text == addressline1:
+                return True
+            else:
+                return False
+        # Address Contains 3 Commas and we only check on the first part of the address
+        if len(changeaddressline1) == 4:
+            if self._driver.find_element(*PlaceOrder.address_line1_review_order_details).text == changeaddressline1[0]:
+                return True
+            else:
+                return False
+
+    # The following function verifies the detailed address line 2 for recipient of the selected product in the Order Details Page
+    def check_address_line2_order_details(self, addressline2):
+        if self._driver.find_element(*PlaceOrder.address_line2_review_order_details).text == addressline2:
+            return True
+        else:
+            return False
+
+    # The following function verifies the Zip Code for the order of the selected product in the Order Details Page
+    def check_zip_code_order_details(self, zipcode):
+        if self._driver.find_element(*PlaceOrder.zip_code_review_order_details).text == str(zipcode):
+            return True
+        else:
+            return False
+
+    # The following function verifies the delivery date for the order of the selected product in the Order Details Page
+    def check_delivery_date_order_details(self, deliveryday):
+        dateoftoday = date.today()
+        changedeliverydate = "Delivery Date: " + dateoftoday.strftime("%B") + " " + str(deliveryday) + ", " + dateoftoday.strftime("%G")
+        if self._driver.find_element(*PlaceOrder.delivery_date_review_order_details).text == changedeliverydate:
+            return True
+        else:
+            return False
+
+    # The following function verifies the Questions/Concerns Contact of OLYVE
+    def check_questions_and_concerns_oder_details(self, questionsandconcerns):
         # Questions & Concerns
-        self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[10]/div")
+        changequestionsandconcerns = "Questions/Concerns: " + questionsandconcerns
+        if self._driver.find_element(*PlaceOrder.questions_and_concenrs).text == changequestionsandconcerns:
+            return True
+        else:
+            return False
+
+    # The following function verifies if and updates required via text using PIN for the order of the selected product in the Order Details Page
+    def check_updates_via_text_order_details (self, updatesviatext):
         if updatesviatext == "Yes":
             # Updates Via Text
-            self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[13]/div/input")
+            self._driver.find_element(*PlaceOrder.updates_via_text)
             # Submit
-            self._driver.find_element_by_xpath("html/body/div[1]/div/div/div[2]/div[14]/div/input").click()
+            self._driver.find_element(*PlaceOrder.submit).click()
         else:
             # Return to Home Page
-            self._driver.find_element_by_xpath("html/body/div[1]/div/olv-header/nav/div[1]/a[1]/i").click()
+            self._driver.find_element(*PlaceOrder.return_home).click()
+
+    # Home Page Load should wait for Header Olyve Logo to be loaded in the Home Page
+    def wait_for_header_olyve_logo(self):
+        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.header_olyve_logo)
+
+    # Product check should wait for Product Page to be loaded
+    def wait_for_product_page(self):
+        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.pick_me_button)
+
+    # Accessory check should wait for Accessory Page to be loaded
+    def wait_for_accessory_page(self):
+        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.accessory_load)
+
+    # Message check should wait for Message Page to be loaded
+    def wait_for_message_page(self):
+        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.message_load)
+
+    # Checkout check should wait for Checkout Page to be loaded
+    def wait_for_checkout_page(self):
+        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.checkout_load)
+
+    # Order Details check should wait for Order Details Page to be loaded
+    def wait_for_order_details_page(self):
+        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.orderdetails_load)
