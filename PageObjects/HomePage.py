@@ -9,11 +9,21 @@ from Utilities import PageActions
 class HomePage(object):
     # Olyve Logo located in the Header of the Home page
     header_olyve_logo = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[2]/a/img')
-    # Olyve Shop Button located in the Header of the Home page
-    header_shop_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li/a')
-    # Olyve Track Button located in the Header of the Home page
-    header_track_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li/a')
-    # Olyve Message Ribbon located under the Olyve Logo "gift box & delivery always included"
+    # Shop Button located in the Header of the Home page
+    header_shop_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li[1]/a')
+    # From Our Customers Button located in the Header of the Home page
+    header_fromOurCustomers_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li[2]/a')
+    # The Olyve Experience Button located in the Header of the Home page
+    header_theOlyveExperience_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li[3]/a')
+    # Track Button located in the Header of the Home page
+    header_track_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[4]/a')
+    # Service Button located in the Header of the Home page
+    header_service_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[3]/a')
+    # Workshops Button located in the Header of the Home page
+    header_workshops_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[2]/a')
+    # Social Button located in the Header of the Home page
+    header_social_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[1]/a')
+    # Message Ribbon located under the Olyve Logo "gift box & delivery always included"
     header_message_ribbon = (By.XPATH, 'html/body/div[1]/div/div/div[1]/div')
     # Olyve 3 Slides located at the top of the Home page
     first_products_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/ol/li[1]')
@@ -56,9 +66,29 @@ class HomePage(object):
     def is_header_shop_button_enabled(self):
         return self._driver.find_element(*HomePage.header_shop_button).is_enabled()
 
+    # The following function checks if header From Our Customers button is enabled
+    def is_header_fromourcustomers_button_enabled(self):
+        return self._driver.find_element(*HomePage.header_fromOurCustomers_button).is_enabled()
+
+    # The following function checks if header The Olyve Experience button is enabled
+    def is_header_theolyveexperience_button_enabled(self):
+        return self._driver.find_element(*HomePage.header_theOlyveExperience_button).is_enabled()
+
     # The following function checks if Track button is enabled
     def is_header_track_button_enabled(self):
         return self._driver.find_element(*HomePage.header_track_button).is_enabled()
+
+    # The following function checks if header Service button is enabled
+    def is_header_service_button_enabled(self):
+        return self._driver.find_element(*HomePage.header_service_button).is_enabled()
+
+    # The following function checks if header Workshops button is enabled
+    def is_header_workshops_button_enabled(self):
+        return self._driver.find_element(*HomePage.header_workshops_button).is_enabled()
+
+    # The following function checks if header Social button is enabled
+    def is_header_social_button_enabled(self):
+        return self._driver.find_element(*HomePage.header_social_button).is_enabled()
 
     # The following function returns header ribbon message
     def get_header_ribbon_message(self):

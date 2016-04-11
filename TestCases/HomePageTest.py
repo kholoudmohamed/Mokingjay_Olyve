@@ -23,7 +23,6 @@ class HomePageTest(unittest.TestCase):
     # Fill the result of the selected sheet in the 2 dimensional array with the values in 'ProductsSheetName'
     Productresult = ExcelDataReader.get_data(_fileLocation, product_sheetName, HDR=True)
 
-
     @classmethod
     def setUp(cls):
 
@@ -32,24 +31,29 @@ class HomePageTest(unittest.TestCase):
         BasicActions.maximize_window()
 
         # Go to Olyve Home Page URL
-        BasicActions.navigate(ConfigReader.readconfig('ConfigurationSettings','OlyveHomeURL'))
+        BasicActions.navigate(ConfigReader.readconfig('ConfigurationSettings', 'OlyveHomeURL'))
 
         # Wait till the Home page is loaded
         homepage = HomePage(Browser._driver)
         homepage.wait_for_header_olyve_logo()
 
-    # The following test case verifies header items(logo, shop button, track button and ribbon message).
+    # The following test case verifies that Olyve logo is displayed, all header buttons are enabled and Ribbon Message Text is correct.
     def test_header_items(self):
         try:
             homepage = HomePage(Browser._driver)
 
-            self.assertEqual(True, homepage.is_logo_displayed())
-            self.assertEqual(True, homepage.is_header_shop_button_enabled())
-            self.assertEqual(True, homepage.is_header_track_button_enabled())
+            self.assertTrue(homepage.is_logo_displayed(), "Olyve Header Logo is not displayed")
+            self.assertTrue(homepage.is_header_shop_button_enabled(), "Header Shop Button is not enabled")
+            self.assertTrue(homepage.is_header_fromourcustomers_button_enabled(), "Header From Our Customers Button is not enabled")
+            self.assertTrue(homepage.is_header_theolyveexperience_button_enabled(), "Header The Olyve Experience Button is not enabled")
+            self.assertTrue(homepage.is_header_track_button_enabled(), "Header Track Button is not enabled")
+            self.assertTrue(homepage.is_header_service_button_enabled(), "Header Service Button is not enabled")
+            self.assertTrue(homepage.is_header_workshops_button_enabled(), "Header Workshops Button is not enabled")
+            self.assertTrue(homepage.is_header_social_button_enabled(), "Header Social Button is not enabled")
 
             # Fetch the expected header from the excel sheet
             expected_header_message_ribbon = self.Homeresult[1][0]
-            self.assertEqual(expected_header_message_ribbon, homepage.get_header_ribbon_message())
+            self.assertEqual(expected_header_message_ribbon, homepage.get_header_ribbon_message(), "Header Ribbon Message is not correct")
 
         except:
             raise Exception("Header Assertions Failed")
@@ -60,16 +64,16 @@ class HomePageTest(unittest.TestCase):
 
             homepage = HomePage(Browser._driver)
             selected_slide = homepage.click_on_second_slide()
-            self.assertEqual(True, homepage.verify_slide_is_active(selected_slide), "Second Slide is not active")
+            self.assertTrue(homepage.verify_slide_is_active(selected_slide), "Second Slide is not active")
 
             BasicActions.implicit_wait(20)
             selected_slide = homepage.click_on_third_slide()
-            self.assertEqual(True, homepage.verify_slide_is_active(selected_slide), "Third Slide is not active")
+            self.assertTrue(homepage.verify_slide_is_active(selected_slide), "Third Slide is not active")
 
             BasicActions.implicit_wait(30)
             selected_slide = homepage.click_on_first_slide()
             BasicActions.implicit_wait(5)
-            self.assertEqual(True, homepage.verify_slide_is_active(selected_slide), "First Slide is not active")
+            self.assertTrue(homepage.verify_slide_is_active(selected_slide), "First Slide is not active")
 
         except:
             raise Exception("There is an issue in navigating between the slides")
@@ -111,7 +115,7 @@ class HomePageTest(unittest.TestCase):
     def test_assert_phonenumber_href(self):
         try:
             homepage = HomePage(Browser._driver)
-            self.assertEqual(True, homepage.verify_phonenumber_href())
+            self.assertTrue(homepage.verify_phonenumber_href())
 
         except:
             raise Exception ("Phone number href is not correct")
@@ -120,7 +124,7 @@ class HomePageTest(unittest.TestCase):
     def test_assert_servicemail_href(self):
         try:
             homepage = HomePage(Browser._driver)
-            self.assertEqual(True, homepage.verify_serviceamil_href())
+            self.assertTrue(homepage.verify_serviceamil_href())
 
         except:
             raise Exception ("Service email href is not correct")
