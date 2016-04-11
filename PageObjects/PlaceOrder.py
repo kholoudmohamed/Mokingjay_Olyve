@@ -805,3 +805,7 @@ class PlaceOrder(object):
     # Order Details check should wait for Order Details Page to be loaded
     def wait_for_order_details_page(self):
         return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.orderdetails_load)
+
+    # Go to Home Page.
+    def go_to_hompage(self):
+        self._driver.find_element(*PlaceOrder.return_home).click()
