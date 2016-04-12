@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import exceptions
 from Utilities.Browser import Browser
+from selenium.common.exceptions import TimeoutException
 
 
 class BasicActions(Browser):
@@ -55,5 +56,9 @@ class BasicActions(Browser):
     # The following common function is used in different classes to explicit wait until presence of configurable element
     # With return as conditional action dependency
     def explicit_wait(self, time_to_wait, locator):
-        element = WebDriverWait(self._driver, time_to_wait).until(EC.presence_of_element_located(locator))
+        try:
+            element = WebDriverWait(self._driver, time_to_wait).until(EC.presence_of_element_located(locator))
+        except TimeoutException:
+            return False
         return True
+

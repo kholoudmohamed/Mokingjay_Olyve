@@ -72,8 +72,6 @@ class PlaceOrderTest(unittest.TestCase):
                             accessory_price = 0
                             # Click on No Thanks button
                             placeorder.click_nothanks()
-                    else:
-                        raise Exception("Invalid Page")
                     # Wait till the Message page is loaded
                     BasicActions.implicit_wait(30)
                     if placeorder.wait_for_message_page():
