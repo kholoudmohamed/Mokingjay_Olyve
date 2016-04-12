@@ -1,0 +1,13 @@
+configobj==5.0.6
+datatables==0.4.9
+et-xmlfile==1.0.1
+excel==1.0.0
+openpyxl==2.3.2
+Pillow==3.1.0
+pyexcel==0.2.0
+pyexcel-io==0.1.0
+pyexcel-xlsx==0.1.0
+selenium==2.52.0
+requests==2.9.1
+ddt==1.0.1
+
