@@ -15,7 +15,7 @@ class PlaceOrder(object):
     # Explicit Wait Objects to be loaded
     accessory_load = (By.XPATH, "html/body/div/div/div/div[2]/div[1]/div[1]/div/olv-image/div/img")
     message_load = (By.XPATH, "html/body/div/div/div/div[6]/div/a")
-    checkout_load = (By.XPATH, ".//*[@id='completeForm']/div[11]/div/a")
+    checkout_load = (By.ID, "buy-loader")
     orderdetails_load = (By.XPATH, ".//*[@id='ordernumber']")
     videophoto_load = (By.XPATH, "html/body/div[1]/div/div/div[4]/div/img")
     # Product Price located in the selected Product
@@ -51,11 +51,11 @@ class PlaceOrder(object):
     # The name of the selected Product
     product_name = (By.XPATH, ".//*[@id='completeForm']/div[1]/div[2]/span[1]")
     # The review of the name of the selected Product
-    product_name_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[2]/div[1]")
+    product_name_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[1]/div[2]/div[1]")
     # The price of the selected Product
     product_price_review1 = (By.XPATH, ".//*[@id='completeForm']/div[1]/div[2]/span[2]")
     # The review of the price of the selected Product
-    product_price_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[2]/div[2]")
+    product_price_review2 = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[1]/div[2]/div[2]")
     # The accessory text "Olyve + Elbow Chocolates"
     accessory_text = (By.XPATH, ".//*[@id='completeForm']/div[2]/div[2]/span[1]")
     # The price of the selected accessory
@@ -805,6 +805,10 @@ class PlaceOrder(object):
     # Order Details check should wait for Order Details Page to be loaded
     def wait_for_order_details_page(self):
         return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.orderdetails_load)
+
+    # Wait for Accessory text in checkout Page in case order has accessory
+    def wait_for_accessory_text(self):
+        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.accessory_text)
 
     # Go to Home Page.
     def go_to_hompage(self):

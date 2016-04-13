@@ -98,8 +98,9 @@ class PlaceOrderTest(unittest.TestCase):
                                         self.assertTrue(placeorder.check_product_price(product_price), "Product Price doesn't match the selected product")
                                         self.assertTrue(placeorder.check_product_price_review(product_price), "Product Price doesn't match the selected product")
                                         # Verify the Accessory Message
-                                        self.assertTrue(placeorder.check_accessory_details(self.OrderInforesult[3][row_index], self.OrderInforesult[8][row_index], accessory_price),"Accessory Text or Accessory Price is not correct")
-                                        self.assertTrue(placeorder.check_accessory_details_review(self.OrderInforesult[3][row_index], self.OrderInforesult[8][row_index], accessory_price),"Accessory Text or Accessory Price is not correct")
+                                        if placeorder.wait_for_accessory_text() and self.OrderInforesult[3][row_index] == 'Yes':
+                                            self.assertTrue(placeorder.check_accessory_details(self.OrderInforesult[3][row_index], self.OrderInforesult[8][row_index], accessory_price),"Accessory Text or Accessory Price is not correct")
+                                            self.assertTrue(placeorder.check_accessory_details_review(self.OrderInforesult[3][row_index], self.OrderInforesult[8][row_index], accessory_price),"Accessory Text or Accessory Price is not correct")
                                         # Verify the Notification Message
                                         self.assertTrue(placeorder.check_notification_text(self.OrderInforesult[9][row_index]),"Notification Text is not correct")
                                         self.assertTrue(placeorder.check_notification_text_review(self.OrderInforesult[9][row_index]),"Notification Text is not correct")
