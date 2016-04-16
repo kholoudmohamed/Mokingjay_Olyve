@@ -9,7 +9,7 @@ from Utilities import PageActions
 
 class PlaceOrder(object):
     # Olyve Logo located in the Header of the Home page
-    header_olyve_logo = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[2]/a/img')
+    header_olyve_logo = (By.ID, 'header-logo')
     # Pick Me button located in the selected Product
     pick_me_button = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div")
     # Explicit Wait Objects to be loaded
@@ -704,11 +704,6 @@ class PlaceOrder(object):
                 self._driver.switch_to_alert()
                 PageActions.BasicActions.dismiss_alert()
                 PageActions.BasicActions.implicit_wait(50)
-            # Commented for now the check on unavailable day of the calendar to click on another available one
-            #if self._driver.find_element(*PlaceOrder.DeliveryDateNotAvailable).is_displayed():
-             #   self._driver.switch_to_alert()
-              #  PageActions.BasicActions.accept_alert()
-               # self.fill_delivery_date(deliveryday+1)
 
     # The following function verifies that there is an Order ID generated
     def check_confirmation_number(self):

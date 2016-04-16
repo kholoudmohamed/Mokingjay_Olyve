@@ -62,3 +62,15 @@ class BasicActions(Browser):
             return False
         return True
 
+    @staticmethod
+    # The following common function is used to get the scroll top value of the window
+    def window_scroll_top(self):
+        """
+        Gets the top of the scrolling area for ``window``.
+
+        :returns: The top of the scrolling area.
+        """
+        return self._driver.execute_script("""
+        return window.scrollY;
+        """)
+

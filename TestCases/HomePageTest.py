@@ -58,6 +58,55 @@ class HomePageTest(unittest.TestCase):
         except:
             raise Exception("Header Assertions Failed")
 
+    # The following test case verifies the functionality of the Header items when clickec
+    def test_shop_button_click(self):
+        homepage = HomePage(Browser._driver)
+        self.assertTrue(homepage.shop_button_click(), "By clicking on the Header Shop button, the user was not navigated to Products")
+
+    def test_olyve_exprience_button_click(self):
+        homepage = HomePage(Browser._driver)
+        self.assertEqual(self.Homeresult[1][12], homepage.olyve_experience_button_click(), "Error in asserting the From Our Customer Page")
+
+    def test_from_our_customer_button_click(self):
+        homepage = HomePage(Browser._driver)
+        self.assertEqual(self.Homeresult[1][13], homepage.from_our_customer_button_click(), "Error in asserting the From Our Customer Page")
+
+    def test_track_button_click(self):
+        homepage = HomePage(Browser._driver)
+        self.assertEqual(self.Homeresult[1][14], homepage.track_button_click(self.Homeresult[1][15]), "Error in asserting the Track Page")
+
+    def test_service_button_click(self):
+        homepage = HomePage(Browser._driver)
+        self.assertEqual(self.Homeresult[1][16], homepage.service_button_click(self.Homeresult[1][15], self.Homeresult[1][17]), "Error in asserting the Service Page")
+
+    def test_workshop_button_click(self):
+        homepage = HomePage(Browser._driver)
+        self.assertEqual(self.Homeresult[1][18], homepage.workshop_button_click(), "Error in asserting the Workshop Page")
+
+    def test_social_button_click(self):
+        homepage = HomePage(Browser._driver)
+        self.assertTrue(homepage.social_button_click(), "By clicking on the Social button, the user was not navigated to Social links")
+
+    def test_shop_button_second_slide_click(self):
+        homepage = HomePage(Browser._driver)
+        selected_slide = homepage.click_on_second_slide()
+        if homepage.verify_slide_is_active(selected_slide)== True:
+            homepage.shop_button_second_slide_click()
+            BasicActions.implicit_wait(40)
+            # Switch to the newly opened window
+            Browser._driver.switch_to.window(Browser._driver.window_handles[1])
+            # Make sure the newly opened window is loaded in order to get the URL
+            if homepage.wait_for_instgram_page_load():
+                url_name = Browser._driver.current_url
+                # Verify that the URL of the newly opened page is the URL of Olyve Instgram Social Link
+                self.assertEqual(self.Homeresult[1][7], Browser._driver.current_url, "Error in asserting the Instgram link")
+
+    def test_shop_button_third_slide_click(self):
+        homepage = HomePage(Browser._driver)
+        selected_slide = homepage.click_on_third_slide()
+        if homepage.verify_slide_is_active(selected_slide) == True:
+            self.assertTrue(homepage.shop_button_third_slide_click(), "By clicking on the Shop button of the third slide, the user was not navigated to Products")
+
     # The following test case verifies navigating between products slides
     def test_navigating_between_products_slide(self):
         try:

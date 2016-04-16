@@ -8,30 +8,46 @@ from Utilities import PageActions
 
 class HomePage(object):
     # Olyve Logo located in the Header of the Home page
-    header_olyve_logo = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[2]/a/img')
+    header_olyve_logo = (By.ID, 'header-logo')
     # Shop Button located in the Header of the Home page
-    header_shop_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li[1]/a')
+    header_shop_button = (By.CSS_SELECTOR, '.olyve-nav.nav-left>ul>li:first-child')
+     # The Olyve Experience Button located in the Header of the Home page
+    header_theOlyveExperience_button = (By.CSS_SELECTOR, '.olyve-nav.nav-left>ul>li:nth-child(2n)')
+    # From Our Customer Button in the Olyve Exprience Page
+    from_our_customer_button = (By.XPATH, 'html/body/div[1]/div[5]/div/div/a[1]/div')
+    # Shop Collection button in the Olyve Exprience Page
+    shop_the_collection_button = (By.XPATH, 'html/body/div[1]/div[5]/div/div/a[2]/div')
+    # Shop Collection button in the From Our Customer Page
+    shop_the_collection_button_customer = (By.XPATH, 'html/body/div/div[6]/div/div/a[2]/div')
     # From Our Customers Button located in the Header of the Home page
-    header_fromOurCustomers_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li[2]/a')
-    # The Olyve Experience Button located in the Header of the Home page
-    header_theOlyveExperience_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[1]/ul/li[3]/a')
+    header_fromOurCustomers_button = (By.CSS_SELECTOR, '.olyve-nav.nav-left>ul>li:nth-child(3n)')
     # Track Button located in the Header of the Home page
-    header_track_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[4]/a')
+    header_track_button = (By.CSS_SELECTOR, '.olyve-nav.nav-right>ul>li:last-child')
+    # The Order ID field located in Track Page
+    order_id_track = (By.CSS_SELECTOR, '.ng-pristine.ng-untouched.ng-invalid.ng-invalid-required.ng-valid-maxlength')
     # Service Button located in the Header of the Home page
-    header_service_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[3]/a')
+    header_service_button = (By.CSS_SELECTOR, '.olyve-nav.nav-right>ul>li:nth-child(3n)')
+    # The verify button located in the Service page
+    verify_order_id = (By.XPATH, 'html/body/div[1]/div/div/div/div[3]/div[1]/div[2]/div/a')
+    # The Order ID field located in Service Page
+    order_id_service = (By.XPATH, 'html/body/div[1]/div/div/div/div[3]/div[1]/div[1]/div/input')
+    # The Pin Code field located in Service Page
+    pin_code_service = (By.XPATH, 'html/body/div[1]/div/div/div/div[3]/div[2]/div[1]/div/input')
+    # The Confirm button located in Service Page
+    confirm_order_id_service = (By.XPATH, 'html/body/div[1]/div/div/div/div[3]/div[2]/div[2]/div/a')
     # Workshops Button located in the Header of the Home page
-    header_workshops_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[2]/a')
+    header_workshops_button = (By.CSS_SELECTOR, '.olyve-nav.nav-right>ul>li:nth-child(3n+2)')
     # Social Button located in the Header of the Home page
-    header_social_button = (By.XPATH, 'html/body/div[1]/div/olv-header/nav/div[1]/div[4]/ul/li[1]/a')
+    header_social_button = (By.CSS_SELECTOR, '.olyve-nav.nav-right>ul>li:first-child')
     # Message Ribbon located under the Olyve Logo "gift box & delivery always included"
     header_message_ribbon = (By.XPATH, 'html/body/div[1]/div/div/div[1]/div')
     # Olyve 3 Slides located at the top of the Home page
-    first_products_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/ol/li[1]')
-    second_products_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/ol/li[2]')
-    third_products_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/ol/li[3]')
+    first_products_slide = (By.CSS_SELECTOR, '.carousel-indicators>li:first-child')
+    second_products_slide = (By.CSS_SELECTOR, '.carousel-indicators>li:nth-child(2n)')
+    third_products_slide = (By.CSS_SELECTOR, '.carousel-indicators>li:last-child')
     # Shop Button located at the Home page's sildes
-    shop_bottn_second_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/div/div[2]/div/a')
-    shop_bottn_third_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/div/div[3]/div/a')
+    shop_button_second_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/div/div[2]/div/a')
+    shop_button_third_slide = (By.XPATH, '//*[@id="products-slider"]/div/div/div/div[3]/div/a')
     # Olyve Copyrigth link located at the bottom of the Home page
     footer_copyright = (By.XPATH, 'html/body/div[1]/div/olv-footer/div/div[2]/div/div[1]/div[1]/div')
     # Olyve Privacy Terms link located at the bottom of the Home page
@@ -43,17 +59,20 @@ class HomePage(object):
     # Olyve Contact Service Email located at the bottom of the Home page
     footer_serviceemail = (By.XPATH, 'html/body/div[1]/div/olv-footer/div/div[2]/div/div[2]/div[2]/div/a')
     # Olyve Social Links located at the bottom of the Home page
-    facebook_link = (By.XPATH, "html/body/div[1]/div/olv-social/div/div[2]/div/a[1]")
-    instgram_link = (By.XPATH, "html/body/div[1]/div/olv-social/div/div[2]/div/a[2]/i")
-    pinterest_link = (By.XPATH, "html/body/div[1]/div/olv-social/div/div[2]/div/a[3]/i")
-    twitter_link = (By.XPATH, "html/body/div[1]/div/olv-social/div/div[2]/div/a[4]/i")
+    facebook_link = (By.CSS_SELECTOR, '.col-xs-12.text-center>a:first-child')
+    instgram_link = (By.CSS_SELECTOR, '.col-xs-12.text-center>a:nth-child(3n+2)')
+    pinterest_link = (By.CSS_SELECTOR, '.col-xs-12.text-center>a:nth-child(2n+3)')
+    twitter_link = (By.CSS_SELECTOR, '.col-xs-12.text-center>a:last-child')
     # Explicit Wait Objects to be loaded
     product_image = (By.XPATH, "html/body/div/div/div/div[4]/div/div/div/div[5]/a/olv-image/div/img")
-    facebook_load = (By.ID, "pagelet_bluebar")
-    instgram_load = (By.XPATH, ".//*[@id='react-root']/section/main/article/header/div[2]/div[1]/span/button")
-    pinterest_load = (By.XPATH, "html/body/div[1]/div[3]/div[1]/div[2]/div[2]/div/div/div[3]/div/div/h1/div")
-    twitter_load = (By.XPATH, ".//*[@id='page-container']/div[1]/div/div[1]/div[2]/div[1]/div/a/img")
+    facebook_load = (By.ID, 'pagelet_bluebar')
+    instgram_load = (By.CSS_SELECTOR, '._jvpff._k2yal._csba8._i46jh._nv5lf')
+    pinterest_load = (By.CSS_SELECTOR, '.nameInner')
+    twitter_load = (By.CSS_SELECTOR, '.ProfileAvatar-image')
     pick_me_button = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div")
+    track_load = (By.CSS_SELECTOR, '.goContainer>a')
+    workshop_load = (By.CSS_SELECTOR, '#submitNewsletter')
+    service_load = (By.XPATH, 'html/body/div[1]/div/div/div/div[3]/div[1]/div[2]/div/a')
 
     def __init__(self, driver):
         self._driver = driver
@@ -66,13 +85,13 @@ class HomePage(object):
     def is_header_shop_button_enabled(self):
         return self._driver.find_element(*HomePage.header_shop_button).is_enabled()
 
-    # The following function checks if header From Our Customers button is enabled
-    def is_header_fromourcustomers_button_enabled(self):
-        return self._driver.find_element(*HomePage.header_fromOurCustomers_button).is_enabled()
-
     # The following function checks if header The Olyve Experience button is enabled
     def is_header_theolyveexperience_button_enabled(self):
         return self._driver.find_element(*HomePage.header_theOlyveExperience_button).is_enabled()
+
+    # The following function checks if header From Our Customers button is enabled
+    def is_header_fromourcustomers_button_enabled(self):
+        return self._driver.find_element(*HomePage.header_fromOurCustomers_button).is_enabled()
 
     # The following function checks if Track button is enabled
     def is_header_track_button_enabled(self):
@@ -89,6 +108,72 @@ class HomePage(object):
     # The following function checks if header Social button is enabled
     def is_header_social_button_enabled(self):
         return self._driver.find_element(*HomePage.header_social_button).is_enabled()
+
+    # The following function check if the page scroll down when click on Header Shop button in order to select a Product
+    def shop_button_click(self):
+        self._driver.find_element(*HomePage.header_shop_button).click()
+        if PageActions.BasicActions.window_scroll_top(self) > 0:
+            return True
+
+    # The following function returns URL of the Olyve Exprience page opened
+    def olyve_experience_button_click(self):
+        self._driver.find_element(*HomePage.header_theOlyveExperience_button).click()
+        PageActions.BasicActions.explicit_wait(self, 40,HomePage.shop_the_collection_button)
+        return self._driver.current_url
+
+    # The following function returns URL of the Our Customer page opened
+    def from_our_customer_button_click(self):
+        self._driver.find_element(*HomePage.header_fromOurCustomers_button).click()
+        PageActions.BasicActions.explicit_wait(self, 40,HomePage.shop_the_collection_button_customer)
+        return self._driver.current_url
+
+    # The following function returns URL of the Track page opened and track an Order ID
+    def track_button_click(self, OrderID):
+        self._driver.find_element(*HomePage.header_track_button).click()
+        if PageActions.BasicActions.explicit_wait(self, 40,HomePage.track_load):
+            curent_url = self._driver.current_url
+            self._driver.find_element(*HomePage.order_id_track).send_keys(OrderID)
+            self._driver.find_element(*HomePage.track_load).click()
+            return curent_url
+
+    # The following function returns URL of the Service page opened
+    def service_button_click(self, OrderID, PinCode):
+        self._driver.find_element(*HomePage.header_service_button).click()
+        PageActions.BasicActions.explicit_wait(self, 40, HomePage.service_load)
+        curent_url = self._driver.current_url
+        self._driver.find_element(*HomePage.order_id_service).send_keys(OrderID)
+        self._driver.find_element(*HomePage.verify_order_id).click()
+        #self._driver.find_element(*HomePage.pin_code_service).send_keys(PinCode)
+        #self._driver.find_element(*HomePage.confirm_order_id_service).click()
+        return curent_url
+
+    # The following function returns URL of the Workshop page opened
+    def workshop_button_click(self):
+        self._driver.find_element(*HomePage.header_workshops_button).click()
+        PageActions.BasicActions.explicit_wait(self, 40,HomePage.workshop_load)
+        return self._driver.current_url
+
+    # The following function check if the page scroll down when click on Header Social button in order to navigate to social links at the bottom of the page
+    def social_button_click(self):
+        self._driver.find_element(*HomePage.header_social_button).click()
+        if PageActions.BasicActions.window_scroll_top(self) > 0:
+            return True
+
+    # The following function returns URL of the Ingram page opened when clicked on Shop button of the second slide
+    def shop_button_second_slide_click(self):
+        self._driver.find_element(*HomePage.second_products_slide).click()
+        action = ActionChains(self._driver)
+        action.key_down(Keys.SHIFT)
+        action.click(self._driver.find_element(*HomePage.shop_button_second_slide))
+        action.key_up(Keys.SHIFT)
+        action.perform()
+
+    # The following function check if the page scroll down when click on Shop button of the third slide in order to select a Product
+    def shop_button_third_slide_click(self):
+        self._driver.find_element(*HomePage.third_products_slide).click()
+        self._driver.find_element(*HomePage.shop_button_third_slide).click()
+        if PageActions.BasicActions.window_scroll_top(self) > 0:
+            return True
 
     # The following function returns header ribbon message
     def get_header_ribbon_message(self):
