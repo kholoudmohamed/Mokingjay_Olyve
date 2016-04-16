@@ -5,6 +5,10 @@ from TestCases.PlaceOrderTest import PlaceOrderTest
 from Utilities import HTMLTestRunner
 from Utilities import FileLocator as FL
 
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 
 # get all test from  HomePageTest and PlaceOrderTest
 home_page_tests = unittest.TestLoader().loadTestsFromTestCase(HomePageTest)
