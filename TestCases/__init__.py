@@ -1,0 +1,3 @@
+from builtins import classmethod
+from TestCases.HomePageTest import HomePageTest
+from TestCases.PlaceOrderTest import PlaceOrderTest
