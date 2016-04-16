@@ -1,7 +1,5 @@
 import unittest
 import datetime as dt
-import sys
-sys.path.append("/Mokingjay_Olyve/")
 from TestCases.HomePageTest import HomePageTest
 from TestCases.PlaceOrderTest import PlaceOrderTest
 from Utilities import HTMLTestRunner
