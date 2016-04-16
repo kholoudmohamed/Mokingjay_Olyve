@@ -1,4 +1,2 @@
 from builtins import classmethod
-import TestCases
-from TestCases.HomePageTest import HomePageTest
-from TestCases.PlaceOrderTest import PlaceOrderTest
+from TestCases import *
