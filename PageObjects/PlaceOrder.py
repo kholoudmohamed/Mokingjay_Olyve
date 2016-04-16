@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 from datetime import date
 from Utilities import PageActions
+from Utilities import FileLocator
 
 
 class PlaceOrder(object):
@@ -136,6 +137,12 @@ class PlaceOrder(object):
     code = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[9]/div/div[2]/div[1]/input")
     # The apply button to apply the discount on the order of the selected Product
     apply_olyve_premeier_code = (By.XPATH, ".//*[@id='promo-code']/a")
+    # The promotion code 'Premiere discount was applied!'
+    promo_code_applied = (By.CSS_SELECTOR, '.col-xs-12.text-center.codeMessage')
+    # Discount in the Review Section
+    discount_review = (By.XPATH, 'html/body/div[1]/div/div/form/div[10]/div[1]/div[4]/div[1]')
+    # Discount Value in the Review Section
+    discount_value_review = (By.XPATH, 'html/body/div[1]/div/div/form/div[10]/div[1]/div[4]/div[2]')
     # The credit card number used to pay the order of the selected Product
     credit_card_number = (By.XPATH, ".//*[@id='creditCardNumberRow']/div/div/input")
     # The credit card expiry month of the credit card used to pay the order of the selected Product
@@ -243,8 +250,9 @@ class PlaceOrder(object):
             self._driver.find_element(*PlaceOrder.message_sign).send_keys(signature)
 
     # The following function uploads Photo in case that Photo Location is not empty
-    def upload_photo(self, photolocation):
-        if photolocation is not None:
+    def upload_photo(self, filephotolocation):
+        if filephotolocation is not None:
+            photolocation = FileLocator.get_file_location(filephotolocation)
             self._driver.execute_script("document.getElementById('photoFile').style.display='block'")
             self._driver.find_element(*PlaceOrder.photo_file).send_keys(photolocation)
             self._driver.execute_script("document.getElementById('photoFile').style.display='none'")
@@ -252,8 +260,9 @@ class PlaceOrder(object):
             # (image_location).locator
 
     # The following function uploads Video  in case that Photo Location is not empty
-    def upload_video(self, videolocation):
-        if videolocation is not None:
+    def upload_video(self, filevideolocation):
+        if filevideolocation is not None:
+            videolocation = FileLocator.get_file_location(filevideolocation)
             self._driver.execute_script("document.getElementById('videoFile').style.display='block'")
             self._driver.find_element(*PlaceOrder.video_file).send_keys(videolocation)
             self._driver.execute_script("document.getElementById('videoFile').style.display='none'")
@@ -356,18 +365,26 @@ class PlaceOrder(object):
             return False
 
     # The following function verifies the sales tax at the checkout page is the sales tax of the selected product
-    def check_sales_taxes(self, salestax):
+    def check_sales_taxes(self, salestax, accessoryprice, productprice):
         # Sales Taxes
-        changesalestax = "SALES TAX: $" + str(salestax)
+        changeaccessoryprice = accessoryprice.split("$")
+        changeproductprice = productprice.split("$")
+        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        changesalestax = subtotalnumber * (salestax / 100)
+        changesalestax = "SALES TAX: $" + str(changesalestax)
         if self._driver.find_element(*PlaceOrder.sales_taxes).text == changesalestax:
             return True
         else:
             return False
 
     # The following function verifies the sales tax at the checkout page is the sales tax in the review section of the selected product
-    def check_sales_taxes_review(self, salestax):
+    def check_sales_taxes_review(self, salestax, accessoryprice, productprice):
         # Also Sales Taxes in the review section
-        changesalestax = "$" + str(salestax)
+        changeaccessoryprice = accessoryprice.split("$")
+        changeproductprice = productprice.split("$")
+        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        changesalestax = subtotalnumber * (salestax/100)
+        changesalestax = "$" + str(changesalestax)
         if self._driver.find_element(*PlaceOrder.sales_taxes_review).text == changesalestax:
             return True
         else:
@@ -379,7 +396,8 @@ class PlaceOrder(object):
         changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
         subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-        Totalnumber = salestax + subtotalnumber
+        changesalestax = subtotalnumber * (salestax/100)
+        Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
         if self._driver.find_element(*PlaceOrder.total_price).text == Total:
             return True
@@ -392,7 +410,8 @@ class PlaceOrder(object):
         changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
         subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-        Totalnumber = salestax + subtotalnumber
+        changesalestax = subtotalnumber * (salestax / 100)
+        Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
         if self._driver.find_element(*PlaceOrder.total_price_review).text == Total:
             return True
@@ -508,11 +527,12 @@ class PlaceOrder(object):
             for dayselected in Calendar_days:
                 if dayselected.text == str(deliveryday):
                     parentdayselect = dayselected.find_element(By.XPATH, "..")
-                    if parentdayselect.get_attribute("disabled") != "disabled":
+                    if not parentdayselect.get_attribute("disabled"):
                         dayselected.click()
                         break
                     else:
-                        deliveryday += 1
+                        deliveryday = deliveryday +1
+            return deliveryday
 
     # The following function verifies the delivery date at the checkout page is the delivery date in the review section of the selected product
     def check_delivery_date_review(self, deliveryday):
@@ -625,6 +645,67 @@ class PlaceOrder(object):
         if smsnotification == "Yes":
             # Check the checkbox
             self._driver.find_element(*PlaceOrder.sms_notification).click()
+
+
+
+    # The following function verifies if there is a promotion code and apply it  at the checkout page
+    def fill_olyve_premiere_code(self, olyvepremierecode, promotioncodetext, accessoryprice, salestax, productprice, discounttext):
+        if olyvepremierecode is not None and (olyvepremierecode == 'nope' or olyvepremierecode == 'beauty10' or olyvepremierecode == 'Bonkers!'):
+            changeaccessoryprice = accessoryprice.split("$")
+            changeproductprice = productprice.split("$")
+            subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+            changesalestax = subtotalnumber * (salestax / 100)
+            Totalnumber = changesalestax + subtotalnumber
+            Total = "TOTAL: $" + str(Totalnumber)
+            self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
+            self._driver.find_element(*PlaceOrder.code).send_keys(olyvepremierecode)
+            self._driver.find_element(*PlaceOrder.apply_olyve_premeier_code).click()
+            if olyvepremierecode == 'nope':
+                if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
+                    if self._driver.find_element(*PlaceOrder.total_price_review).text == Total:
+                        return True
+                    else:
+                        return False
+                else:
+                    return True
+            elif olyvepremierecode == 'beauty10':
+                if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
+                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext:
+                        discountvalue = subtotalnumber * 0.1
+                        salestaxafterdiscount = changesalestax * 0.9
+                        subtotalnumberafterdiscount = subtotalnumber - discountvalue
+                        totalnumberafterdiscount = subtotalnumberafterdiscount + salestaxafterdiscount
+                        changesubtotalnumber = '- $' + str(discountvalue)
+                        if self._driver.find_element(*PlaceOrder.discount_value_review).text == changesubtotalnumber:
+                            changetotalafterdiscount = "TOTAL: $" + str(totalnumberafterdiscount)
+                            if self._driver.find_element(*PlaceOrder.total_price_review).text == changetotalafterdiscount:
+                                return True
+                            else:
+                                return False
+                        return False
+                    return False
+                return False
+            else:
+                if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
+                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext:
+                        discountvalue = subtotalnumber
+                        changesubtotalnumber = '- $' + str(discountvalue)
+                        if self._driver.find_element(*PlaceOrder.discount_value_review).text == changesubtotalnumber:
+                            changeTotalvalue = Totalnumber - discountvalue
+                            changeTotal = "TOTAL: $" + str(changeTotalvalue)
+                            if self._driver.find_element(*PlaceOrder.total_price_review).text == changeTotal:
+                                if not (self._driver.find_element(*PlaceOrder.credit_card_number).is_displayed() and
+                                        self._driver.find_element(*PlaceOrder.credit_card_month).is_displayed() and
+                                        self._driver.find_element(*PlaceOrder.credit_card_year).is_displayed() and
+                                        self._driver.find_element(*PlaceOrder.credit_card_ccv).is_displayed()):
+                                    return True
+                                else:
+                                    return False
+                            else:
+                                return False
+                        return False
+                    return False
+                return False
 
     # The following function verifies if there is a promotion code and apply it  at the checkout page
     def fill_olyve_premiere_code(self, olyvepremierecode):

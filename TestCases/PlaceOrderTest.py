@@ -106,12 +106,12 @@ class PlaceOrderTest(unittest.TestCase):
                                         self.assertTrue(placeorder.check_notification_text_review(self.OrderInforesult[9][row_index]),"Notification Text is not correct")
                                         # Verify the Price of the product + accessory if requested
                                         self.assertTrue(placeorder.check_subtotal(accessory_price, product_price),"Subtotal is not correct")
-                                        self.assertTrue(placeorder.check_sales_taxes(self.OrderInforesult[10][row_index]),"Sales Tax is not correct")
+                                        self.assertTrue(placeorder.check_sales_taxes(self.OrderInforesult[10][row_index], accessory_price, product_price), "Sales Tax is not correct")
                                         # Verify the Sales Tax on the selected Product
-                                        self.assertTrue(placeorder.check_sales_taxes_review(self.OrderInforesult[10][row_index]),"Sales Tax is not correct")
-                                        self.assertTrue(placeorder.check_total_price(self.OrderInforesult[10][row_index],accessory_price, product_price), "Total is not correct")
+                                        self.assertTrue(placeorder.check_sales_taxes_review(self.OrderInforesult[10][row_index], accessory_price, product_price), "Sales Tax is not correct")
+                                        self.assertTrue(placeorder.check_total_price(self.OrderInforesult[10][row_index], accessory_price, product_price), "Total is not correct")
                                         # Verify the Total Price
-                                        self.assertTrue(placeorder.check_total_price_review(self.OrderInforesult[10][row_index],accessory_price, product_price), "Total is not correct")
+                                        self.assertTrue(placeorder.check_total_price_review(self.OrderInforesult[10][row_index], accessory_price, product_price), "Total is not correct")
                                         # Verify the Customer Name ordering the selected Product
                                         placeorder.check_name(self.OrderInforesult[1][row_index])
                                         self.assertTrue(placeorder.check_name_review(self.OrderInforesult[1][row_index]), "Customer Name is not correct")
@@ -131,8 +131,8 @@ class PlaceOrderTest(unittest.TestCase):
                                         placeorder.fill_address_line2(self.OrderInforesult[15][row_index])
                                         self.assertTrue(placeorder.check_address_line2_review(self.OrderInforesult[15][row_index]), "Address Line 2 doesn't match the entered Address Line 2")
                                         # Verify the delivery date of the order of the selected Product
-                                        placeorder.fill_delivery_date(self.OrderInforesult[16][row_index])
-                                        self.assertTrue(placeorder.check_delivery_date_review(self.OrderInforesult[16][row_index]), "Delivery Date doesn't match the selected Delivery Date")
+                                        newdeliveryday = placeorder.fill_delivery_date(self.OrderInforesult[16][row_index])
+                                        self.assertTrue(placeorder.check_delivery_date_review(newdeliveryday), "Delivery Date doesn't match the selected Delivery Date")
                                         # Verify the first and last name of the recipient of  the selected Product
                                         placeorder.fill_first_and_last_name(self.OrderInforesult[17][row_index])
                                         self.assertTrue(placeorder.check_first_and_last_name_review(self.OrderInforesult[17][row_index]), "First and last names don't match the entered first and last names")
@@ -154,7 +154,7 @@ class PlaceOrderTest(unittest.TestCase):
                                         # Verify if the customer required notification via sms for the order of the selected Product
                                         placeorder.check_sms_notification(self.OrderInforesult[23][row_index])
                                         # Verify if the customer has a promotion code for the order of the selected Product
-                                        placeorder.fill_olyve_premiere_code(self.OrderInforesult[24][row_index])
+                                        placeorder.fill_olyve_premiere_code(self.OrderInforesult[24][row_index], self.OrderInforesult[31][row_index], accessory_price, self.OrderInforesult[10][row_index], product_price, self.OrderInforesult[32][row_index])
                                         # Verify The creddit card of customer ordering the selected Product
                                         placeorder.fill_credit_card_details(self.OrderInforesult[25][row_index], self.OrderInforesult[26][row_index], self.OrderInforesult[27][row_index], self.OrderInforesult[28][row_index])
                                         # Verify the message sent with the order of the selected Product
@@ -162,7 +162,7 @@ class PlaceOrderTest(unittest.TestCase):
                                         # Verify the signature of the message sent with the order of the selected Product
                                         self.assertTrue(placeorder.check_signature_review(self.OrderInforesult[4][row_index]), "The Signature doesn't match the entered signature")
                                         # Verify the Video/Photo sent with the order of the selected Product
-                                        self.assertTrue(placeorder.check_videophoto_review(self.OrderInforesult[6][row_index], self.OrderInforesult[7][row_index], self.GeneralInforesult[1][4]), "The Video/Photo uploaded not found")
+                                        self.assertTrue(placeorder.check_videophoto_review(self.OrderInforesult[7][row_index], self.OrderInforesult[6][row_index], self.GeneralInforesult[1][4]), "The Video/Photo uploaded not found")
                                         # Returns back to the Checkout Page
                                         BasicActions.go_back()
                                         placeorder.wait_for_checkout_page()
@@ -184,7 +184,7 @@ class PlaceOrderTest(unittest.TestCase):
                                                 # Verify Zip Code of the the customer ordering of the selected Product
                                                 self.assertTrue(placeorder.check_zip_code_order_details(self.OrderInforesult[2][row_index]), "Zip Code doesn't match the entered Zip Code")
                                                 # Verify the Delivery Date of the order
-                                                self.assertTrue(placeorder.check_delivery_date_order_details(self.OrderInforesult[16][row_index]), "Delivery Date doesn't match the selected Delivery Date")
+                                                self.assertTrue(placeorder.check_delivery_date_order_details(newdeliveryday), "Delivery Date doesn't match the selected Delivery Date")
                                                 # Verify the Questions and Concerns Contacts for OLYVE
                                                 self.assertTrue(placeorder.check_questions_and_concerns_oder_details(self.OrderInforesult[29][row_index]), "The number of Questions and Concerns is not correct")
                                                 # Updates via text using PIN the order if required
