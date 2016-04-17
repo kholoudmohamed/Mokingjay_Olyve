@@ -1,5 +1,4 @@
 import unittest
-from builtins import classmethod
 from PageObjects.PlaceOrder import PlaceOrder
 from Utilities import FileLocator
 from Utilities.Browser import Browser
@@ -106,9 +105,9 @@ class PlaceOrderTest(unittest.TestCase):
                                         self.assertTrue(placeorder.check_notification_text_review(self.OrderInforesult[9][row_index]),"Notification Text is not correct")
                                         # Verify the Price of the product + accessory if requested
                                         self.assertTrue(placeorder.check_subtotal(accessory_price, product_price),"Subtotal is not correct")
-                                        self.assertTrue(placeorder.check_sales_taxes(self.OrderInforesult[10][row_index], accessory_price, product_price), "Sales Tax is not correct")
+                                        self.assertTrue(placeorder.check_sales_taxes(self.OrderInforesult[10][row_index], product_price), "Sales Tax is not correct")
                                         # Verify the Sales Tax on the selected Product
-                                        self.assertTrue(placeorder.check_sales_taxes_review(self.OrderInforesult[10][row_index], accessory_price, product_price), "Sales Tax is not correct")
+                                        self.assertTrue(placeorder.check_sales_taxes_review(self.OrderInforesult[10][row_index], product_price), "Sales Tax is not correct")
                                         self.assertTrue(placeorder.check_total_price(self.OrderInforesult[10][row_index], accessory_price, product_price), "Total is not correct")
                                         # Verify the Total Price
                                         self.assertTrue(placeorder.check_total_price_review(self.OrderInforesult[10][row_index], accessory_price, product_price), "Total is not correct")
@@ -154,7 +153,7 @@ class PlaceOrderTest(unittest.TestCase):
                                         # Verify if the customer required notification via sms for the order of the selected Product
                                         placeorder.check_sms_notification(self.OrderInforesult[23][row_index])
                                         # Verify if the customer has a promotion code for the order of the selected Product
-                                        placeorder.fill_olyve_premiere_code(self.OrderInforesult[24][row_index], self.OrderInforesult[31][row_index], accessory_price, self.OrderInforesult[10][row_index], product_price, self.OrderInforesult[32][row_index])
+                                        self.assertTrue(placeorder.fill_olyve_premiere_code(self.OrderInforesult[24][row_index], self.OrderInforesult[31][row_index], accessory_price, self.OrderInforesult[10][row_index], product_price, self.OrderInforesult[32][row_index]), "Promotion Code is not applied correctly")
                                         # Verify The creddit card of customer ordering the selected Product
                                         placeorder.fill_credit_card_details(self.OrderInforesult[25][row_index], self.OrderInforesult[26][row_index], self.OrderInforesult[27][row_index], self.OrderInforesult[28][row_index])
                                         # Verify the message sent with the order of the selected Product

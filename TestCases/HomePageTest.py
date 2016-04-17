@@ -1,5 +1,4 @@
 import unittest
-from builtins import classmethod
 from PageObjects.HomePage import HomePage
 from Utilities import FileLocator
 from Utilities.Browser import Browser

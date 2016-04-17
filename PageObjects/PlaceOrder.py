@@ -365,12 +365,11 @@ class PlaceOrder(object):
             return False
 
     # The following function verifies the sales tax at the checkout page is the sales tax of the selected product
-    def check_sales_taxes(self, salestax, accessoryprice, productprice):
+    def check_sales_taxes(self, salestax, productprice):
         # Sales Taxes
-        changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
-        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-        changesalestax = subtotalnumber * (salestax / 100)
+        subtotalnumber = int(float(changeproductprice[1]))
+        changesalestax = round((subtotalnumber * salestax),2)
         changesalestax = "SALES TAX: $" + str(changesalestax)
         if self._driver.find_element(*PlaceOrder.sales_taxes).text == changesalestax:
             return True
@@ -378,12 +377,11 @@ class PlaceOrder(object):
             return False
 
     # The following function verifies the sales tax at the checkout page is the sales tax in the review section of the selected product
-    def check_sales_taxes_review(self, salestax, accessoryprice, productprice):
+    def check_sales_taxes_review(self, salestax, productprice):
         # Also Sales Taxes in the review section
-        changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
-        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-        changesalestax = subtotalnumber * (salestax/100)
+        subtotalnumber = int(float(changeproductprice[1]))
+        changesalestax = round((subtotalnumber * salestax), 2)
         changesalestax = "$" + str(changesalestax)
         if self._driver.find_element(*PlaceOrder.sales_taxes_review).text == changesalestax:
             return True
@@ -396,7 +394,7 @@ class PlaceOrder(object):
         changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
         subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-        changesalestax = subtotalnumber * (salestax/100)
+        changesalestax = round((float(changeproductprice[1]) * salestax), 2)
         Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
         if self._driver.find_element(*PlaceOrder.total_price).text == Total:
@@ -410,7 +408,7 @@ class PlaceOrder(object):
         changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
         subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-        changesalestax = subtotalnumber * (salestax / 100)
+        changesalestax = round((float(changeproductprice[1]) * salestax), 2)
         Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
         if self._driver.find_element(*PlaceOrder.total_price_review).text == Total:
@@ -654,7 +652,7 @@ class PlaceOrder(object):
             changeaccessoryprice = accessoryprice.split("$")
             changeproductprice = productprice.split("$")
             subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-            changesalestax = subtotalnumber * (salestax / 100)
+            changesalestax = round((float(changeproductprice[1]) * salestax), 2)
             Totalnumber = changesalestax + subtotalnumber
             Total = "TOTAL: $" + str(Totalnumber)
             self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
@@ -667,12 +665,12 @@ class PlaceOrder(object):
                     else:
                         return False
                 else:
-                    return True
+                    return False
             elif olyvepremierecode == 'beauty10':
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
-                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext:
-                        discountvalue = subtotalnumber * 0.1
-                        salestaxafterdiscount = changesalestax * 0.9
+                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext.upper():
+                        discountvalue = float('{:.2f}'.format(subtotalnumber * 0.1))
+                        salestaxafterdiscount = float('{:.2f}'.format(changesalestax * 0.9))
                         subtotalnumberafterdiscount = subtotalnumber - discountvalue
                         totalnumberafterdiscount = subtotalnumberafterdiscount + salestaxafterdiscount
                         changesubtotalnumber = '- $' + str(discountvalue)
@@ -687,7 +685,7 @@ class PlaceOrder(object):
                 return False
             else:
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
-                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext:
+                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext.upper():
                         discountvalue = subtotalnumber
                         changesubtotalnumber = '- $' + str(discountvalue)
                         if self._driver.find_element(*PlaceOrder.discount_value_review).text == changesubtotalnumber:
@@ -706,13 +704,6 @@ class PlaceOrder(object):
                         return False
                     return False
                 return False
-
-    # The following function verifies if there is a promotion code and apply it  at the checkout page
-    def fill_olyve_premiere_code(self, olyvepremierecode):
-        if olyvepremierecode is not None:
-            self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
-            self._driver.find_element(*PlaceOrder.code).send_keys(olyvepremierecode)
-            self._driver.find_element(*PlaceOrder.apply_olyve_premeier_code).click()
 
     # The following function fills the Credit Card Number, Month, Year, CCV at the checkout page
     def fill_credit_card_details(self, creditcardnumber, creditcardmonth, creditcardyear, creditcardccv):
