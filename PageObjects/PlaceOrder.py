@@ -17,7 +17,7 @@ class PlaceOrder(object):
     accessory_load = (By.XPATH, "html/body/div/div/div/div[2]/div[1]/div[1]/div/olv-image/div/img")
     message_load = (By.XPATH, "html/body/div/div/div/div[6]/div/a")
     checkout_load = (By.ID, "buy-loader")
-    orderdetails_load = (By.XPATH, ".//*[@id='ordernumber']")
+    orderdetails_load = (By.ID, "ordernumber")
     videophoto_load = (By.XPATH, "html/body/div[1]/div/div/div[4]/div/img")
     # Product Price located in the selected Product
     product_price = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[3]/div/div')
@@ -708,6 +708,8 @@ class PlaceOrder(object):
                         return False
                     return False
                 return False
+        elif olyvepremierecode is None:
+            return True
 
     # The following function fills the Credit Card Number, Month, Year, CCV at the checkout page
     def fill_credit_card_details(self, creditcardnumber, creditcardmonth, creditcardyear, creditcardccv):
