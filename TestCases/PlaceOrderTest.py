@@ -152,10 +152,10 @@ class PlaceOrderTest(unittest.TestCase):
                                         self.assertTrue(placeorder.check_billing_phone_number(self.OrderInforesult[22][row_index]), "The Billing Phone number doesn't match the entered Billing Phone number")
                                         # Verify if the customer required notification via sms for the order of the selected Product
                                         placeorder.check_sms_notification(self.OrderInforesult[23][row_index])
-                                        # Verify if the customer has a promotion code for the order of the selected Product
-                                        self.assertTrue(placeorder.fill_olyve_premiere_code(self.OrderInforesult[24][row_index], self.OrderInforesult[31][row_index], accessory_price, self.OrderInforesult[10][row_index], product_price, self.OrderInforesult[32][row_index]), "Promotion Code is not applied correctly")
                                         # Verify The creddit card of customer ordering the selected Product
                                         placeorder.fill_credit_card_details(self.OrderInforesult[25][row_index], self.OrderInforesult[26][row_index], self.OrderInforesult[27][row_index], self.OrderInforesult[28][row_index])
+                                        # Verify if the customer has a promotion code for the order of the selected Product
+                                        self.assertTrue(placeorder.fill_olyve_premiere_code(self.OrderInforesult[24][row_index], self.OrderInforesult[31][row_index], accessory_price, self.OrderInforesult[10][row_index], product_price, self.OrderInforesult[32][row_index]), "Promotion Code is not applied correctly")
                                         # Verify the message sent with the order of the selected Product
                                         self.assertTrue(placeorder.check_message_review(self.OrderInforesult[4][row_index]), "The Message doesn't match the entered message")
                                         # Verify the signature of the message sent with the order of the selected Product

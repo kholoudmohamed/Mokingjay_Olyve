@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from datetime import date
 from Utilities import PageActions
 from Utilities import FileLocator
-
+from decimal import *
 
 class PlaceOrder(object):
     # Olyve Logo located in the Header of the Home page
@@ -649,10 +649,12 @@ class PlaceOrder(object):
     # The following function verifies if there is a promotion code and apply it  at the checkout page
     def fill_olyve_premiere_code(self, olyvepremierecode, promotioncodetext, accessoryprice, salestax, productprice, discounttext):
         if olyvepremierecode is not None and (olyvepremierecode == 'nope' or olyvepremierecode == 'beauty10' or olyvepremierecode == 'Bonkers!'):
+            getcontext().rounding = ROUND_DOWN
+            TWOPLACES = Decimal(10) ** -2
             changeaccessoryprice = accessoryprice.split("$")
             changeproductprice = productprice.split("$")
             subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
-            changesalestax = round((float(changeproductprice[1]) * salestax), 2)
+            changesalestax = Decimal(float(changeproductprice[1]) * salestax).quantize(TWOPLACES)
             Totalnumber = changesalestax + subtotalnumber
             Total = "TOTAL: $" + str(Totalnumber)
             self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
@@ -669,8 +671,9 @@ class PlaceOrder(object):
             elif olyvepremierecode == 'beauty10':
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
                     if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext.upper():
-                        discountvalue = float('{:.2f}'.format(subtotalnumber * 0.1))
-                        salestaxafterdiscount = float('{:.2f}'.format(changesalestax * 0.9))
+
+                        discountvalue = Decimal(subtotalnumber * 0.1).quantize(TWOPLACES)
+                        salestaxafterdiscount = Decimal(float(changesalestax) * 0.9).quantize(TWOPLACES)
                         subtotalnumberafterdiscount = subtotalnumber - discountvalue
                         totalnumberafterdiscount = subtotalnumberafterdiscount + salestaxafterdiscount
                         changesubtotalnumber = '- $' + str(discountvalue)
@@ -686,10 +689,11 @@ class PlaceOrder(object):
             else:
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
                     if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext.upper():
-                        discountvalue = subtotalnumber
+                        discountvalue = Decimal(subtotalnumber).quantize(TWOPLACES)
+                        discountvalueonsalestax = Decimal(changesalestax).quantize(TWOPLACES)
                         changesubtotalnumber = '- $' + str(discountvalue)
                         if self._driver.find_element(*PlaceOrder.discount_value_review).text == changesubtotalnumber:
-                            changeTotalvalue = Totalnumber - discountvalue
+                            changeTotalvalue = Totalnumber - discountvalue - discountvalueonsalestax
                             changeTotal = "TOTAL: $" + str(changeTotalvalue)
                             if self._driver.find_element(*PlaceOrder.total_price_review).text == changeTotal:
                                 if not (self._driver.find_element(*PlaceOrder.credit_card_number).is_displayed() and
