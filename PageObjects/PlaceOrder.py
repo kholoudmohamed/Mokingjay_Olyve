@@ -7,6 +7,7 @@ from datetime import date
 from Utilities import PageActions
 from Utilities import FileLocator
 from decimal import *
+import time
 
 class PlaceOrder(object):
     # Olyve Logo located in the Header of the Home page
@@ -19,6 +20,7 @@ class PlaceOrder(object):
     checkout_load = (By.ID, "buy-loader")
     orderdetails_load = (By.ID, "ordernumber")
     videophoto_load = (By.XPATH, "html/body/div[1]/div/div/div[4]/div/img")
+    promo_code_load = (By.CSS_SELECTOR, "#promo-code>a>olv-loader>img")
     # Product Price located in the selected Product
     product_price = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[3]/div/div')
     # The Name of the customer ordering the Product located in the pick me pop-up
@@ -644,8 +646,6 @@ class PlaceOrder(object):
             # Check the checkbox
             self._driver.find_element(*PlaceOrder.sms_notification).click()
 
-
-
     # The following function verifies if there is a promotion code and apply it  at the checkout page
     def fill_olyve_premiere_code(self, olyvepremierecode, promotioncodetext, accessoryprice, salestax, productprice, discounttext):
         if olyvepremierecode is not None and (olyvepremierecode == 'nope' or olyvepremierecode == 'beauty10' or olyvepremierecode == 'Bonkers!'):
@@ -660,6 +660,7 @@ class PlaceOrder(object):
             self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
             self._driver.find_element(*PlaceOrder.code).send_keys(olyvepremierecode)
             self._driver.find_element(*PlaceOrder.apply_olyve_premeier_code).click()
+            time.sleep(30)
             if olyvepremierecode == 'nope':
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
                     if self._driver.find_element(*PlaceOrder.total_price_review).text == Total:
@@ -671,7 +672,6 @@ class PlaceOrder(object):
             elif olyvepremierecode == 'beauty10':
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
                     if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext.upper():
-
                         discountvalue = Decimal(subtotalnumber * 0.1).quantize(TWOPLACES)
                         salestaxafterdiscount = Decimal(float(changesalestax) * 0.9).quantize(TWOPLACES)
                         subtotalnumberafterdiscount = subtotalnumber - discountvalue
@@ -708,7 +708,7 @@ class PlaceOrder(object):
                         return False
                     return False
                 return False
-        elif olyvepremierecode is None:
+        else:
             return True
 
     # The following function fills the Credit Card Number, Month, Year, CCV at the checkout page
