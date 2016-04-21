@@ -277,8 +277,7 @@ class PlaceOrder(object):
     # The following function verifies that the name of the product at the checkout page is name of the selected product
     def check_product_name(self, productname):
         # Get Proudct Name
-        changeproductname = productname.replace("-", " + ").upper()
-        if self._driver.find_element(*PlaceOrder.product_name).text == changeproductname:
+        if self._driver.find_element(*PlaceOrder.product_name).text == productname:
             return True
         else:
             return False
@@ -286,8 +285,7 @@ class PlaceOrder(object):
     # The following function verifies that of the product name at the checkout page review section is name of the selected product
     def check_product_name_review(self, productname):
         # Also the Product name in the review section
-        changeproductnamereview = productname.replace("-", " + ").upper()
-        if self._driver.find_element(*PlaceOrder.product_name_review).text == changeproductnamereview:
+        if self._driver.find_element(*PlaceOrder.product_name_review).text == productname:
             return True
         else:
             return False
@@ -737,7 +735,7 @@ class PlaceOrder(object):
     # The following function verifies the message signature at the checkout page is the message signature in the review section of the selected product
     def check_signature_review(self, signature):
         # Also check the signature in the review section
-        if self._driver.find_element(*PlaceOrder.message_review).text == signature:
+        if self._driver.find_element(*PlaceOrder.signature_review).text == signature:
             return True
         else:
             return False
@@ -774,7 +772,7 @@ class PlaceOrder(object):
             return True
 
     # The following function clicks on the Buy button and check the alerts that could be displayed
-    def Buy_click(self, message, deliveryday):
+    def Buy_click(self, message):
         self._driver.find_element(*PlaceOrder.Buy_button).click()
         # Check if the message is empty an alert is displayed and the user in this case is not forgotting the message
         if message is None:
