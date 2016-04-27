@@ -58,20 +58,21 @@ class PlaceOrderTest(unittest.TestCase):
                     if (placeorder.wait_for_accessory_page())or (placeorder.wait_for_message_page()):
                         # Get the URL of the current page
                         current_url = Browser._driver.current_url
-                        # Check if the Page opened is the Accessory page
-                        if current_url == self.GeneralInforesult[1][0]:
-                            # Check if the user required to click on yes button if accessory is required
-                            if self.OrderInforesult[3][row_index] == 'Yes':
-                                # Get the Accessory Price from the page as it will be required in the Review Order Page
-                                accessory_price = placeorder.get_accessory_price()
-                                # Click on Yes Please button
-                                placeorder.click_yesplease()
-                            # Check if the user required to click on No button if accessory is not required
-                            else:
-                                # Set accessory price to zero in case no accessory is required
-                                accessory_price = 0
-                                # Click on No Thanks button
-                                placeorder.click_nothanks()
+                        # Check if the Page opened is the Accessory page and accessory value is yes
+                        if current_url == self.GeneralInforesult[1][0] and self.OrderInforesult[3][row_index] == 'Yes':
+                            # Get the Accessory Price from the page as it will be required in the Review Order Page
+                            accessory_price = placeorder.get_accessory_price()
+                            # Click on Yes Please button
+                            placeorder.click_yesplease()
+                        # Check if this product has no accessory and user is directed to message page
+                        elif current_url == self.GeneralInforesult[1][1]:
+                            accessory_price = 0
+                        # Check if the user required to click on No button if accessory is not required
+                        else:
+                            # Set accessory price to zero in case no accessory is required
+                            accessory_price = 0
+                            # Click on No Thanks button
+                            placeorder.click_nothanks()
                         # Wait till the Message page is loaded
                         BasicActions.implicit_wait(30)
                         if placeorder.wait_for_message_page():
@@ -98,7 +99,7 @@ class PlaceOrderTest(unittest.TestCase):
                                             self.assertTrue(placeorder.check_product_price(product_price), "Product Price doesn't match the selected product")
                                             self.assertTrue(placeorder.check_product_price_review(product_price), "Product Price doesn't match the selected product")
                                             # Verify the Accessory Message
-                                            if placeorder.wait_for_accessory_text() and self.OrderInforesult[3][row_index] == 'Yes':
+                                            if placeorder.is_accessory_section_exist_checkout_page():
                                                 self.assertTrue(placeorder.check_accessory_details(self.OrderInforesult[3][row_index], self.OrderInforesult[8][row_index], accessory_price),"Accessory Text or Accessory Price is not correct")
                                                 self.assertTrue(placeorder.check_accessory_details_review(self.OrderInforesult[3][row_index], self.OrderInforesult[8][row_index], accessory_price),"Accessory Text or Accessory Price is not correct")
                                             # Verify the Notification Message
@@ -115,7 +116,7 @@ class PlaceOrderTest(unittest.TestCase):
                                             # Verify the Customer Name ordering the selected Product
                                             placeorder.check_name(self.OrderInforesult[1][row_index])
                                             self.assertTrue(placeorder.check_name_review(self.OrderInforesult[1][row_index]), "Customer Name is not correct")
-                                            # Verify The Phone number of the customer odering the selected Product
+                                            # Verify The Phone number of the customer ordering the selected Product
                                             placeorder.fill_phone_number(self.OrderInforesult[11][row_index])
                                             self.assertTrue(placeorder.check_phone_number_review(self.OrderInforesult[11][row_index]), "Phone Number doesn't match the entered phone number")
                                             # Verify the Address of the Customer ordering the selected Product
@@ -169,7 +170,7 @@ class PlaceOrderTest(unittest.TestCase):
                                             # Click on the Buy button to proceed to the Order Details Page
                                             placeorder.Buy_click(self.OrderInforesult[4][row_index], self.OrderInforesult[16][row_index])
                                             # Problem in waiting for Order Details Screen, Use time.sleep instead
-                                            time.sleep(60)
+                                            time.sleep(30)
                                             if placeorder.wait_for_order_details_page:
                                                 current_url = Browser._driver.current_url
                                                 if current_url == self.GeneralInforesult[1][3]:

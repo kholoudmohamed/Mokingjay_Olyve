@@ -59,6 +59,8 @@ class PlaceOrder(object):
     product_price_review1 = (By.XPATH, ".//*[@id='completeForm']/div[1]/div[2]/span[2]")
     # The review of the price of the selected Product
     product_price_review2 = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[1]/div[2]/div[2]")
+    # The accessory section in checkout page.
+    accessory_section = (By.XPATH,".//*[@id='completeForm']/div[2]")
     # The accessory text "Olyve + Elbow Chocolates"
     accessory_text = (By.XPATH, ".//*[@id='completeForm']/div[2]/div[2]/span[1]")
     # The price of the selected accessory
@@ -68,103 +70,101 @@ class PlaceOrder(object):
     # The review of the price of the selected accessory at the bottom of the Checkout page
     accessory_price_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[3]/div[2]")
     # The notification message "gift box and delivery included"
-    notification_text = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/span")
+    notification_text = (By.CSS_SELECTOR, ".name-container>span")
     # The review of the notification message "gift box and delivery included"
-    notification_text_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[5]/div")
+    notification_text_review = (By.CSS_SELECTOR, ".col-xs-12.text-center.address-line.up")
     # The price of the accessory if requested + the price of the selected Product
-    subtotal = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/div/div[1]")
     # The taxes applied on this product in the region of the selected Zip Code
-    sales_taxes = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/div/div[2]")
-    # The review of taxes applied on this product in the region of the selected Zip Code
-    sales_taxes_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[6]/div[2]")
     # The total price of the product selected + accessory if request + taxes
-    total_price = (By.XPATH, ".//*[@id='completeForm']/div[3]/div[2]/div/div[3]")
+    subtotal_And_salestaxes_And_totalprice = (By.CSS_SELECTOR, ".subtotal.desktop-view>div")
+    # The review of taxes applied on this product in the region of the selected Zip Code
+    sales_taxes_review = (By.CSS_SELECTOR, ".col-xs-4.text-right.address-line.up")
     # The review of total price of the product selected + accessory if request + taxes
-    total_price_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[1]/div[7]/div")
+    total_price_review = (By.CSS_SELECTOR, ".col-xs-12.text-center.address-line.up")
     # The name of the customer that will order the Product
-    name_review1 = (By.XPATH, ".//*[@id='completeForm']/div[7]/div/div[2]/div/div/input")
+    name_review1 = (By.XPATH, ".//*[contains(@class,'row recipient-info')]/div/div[2]/div/div/input")
     # The review of the name of the customer ordering the Product
-    name_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[2]/div")
+    name_review2 = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[2]/div[2]/div")
     # The Phone number of the customer ordering the selected Product
-    phone_number = (By.XPATH, ".//*[@id='completeForm']/div[7]/div/div[3]/div/div/input")
+    phone_number = (By.XPATH, ".//*[contains(@class,'row recipient-info')]/div/div[3]/div/div/input")
     # The review of the phone number of the customer ordering the selected Product
-    phone_number_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[6]/div")
+    phone_number_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[2]/div[6]/div")
     # The address tag of the customer ordering the selected Product
-    address_optional = (By.XPATH, ".//*[@id='completeForm']/div[7]/div/div[5]/div/span/a")
+    address_optional = (By.XPATH, ".//*[contains(@class,'row recipient-info')]/div/div[5]/div/span/a")
     # The review of the address tag of the customer ordering the selected Product
-    address_optional_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[8]/div")
+    address_optional_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[2]/div[8]/div")
     # The Zip Code of the customer ordering the selected Product
-    zip_code_review1 = (By.XPATH, ".//*[@id='recipientZipcode']")
+    zip_code_review1 = (By.ID, "recipientZipcode")
     # The review of the Zip Code of the customer ordering the selected Product
-    zip_code_review2 = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[5]/div")
+    zip_code_review2 = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[2]/div[5]/div")
     # The detailed address line 1 of the customer ordering the selected Product
-    address_line1 = (By.XPATH, ".//*[@id='recipientAddressLine1']")
+    address_line1 = (By.ID, "recipientAddressLine1")
     # The review of detailed address of the customer ordering the selected Product
-    address_line1_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[3]/div")
+    address_line1_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[2]/div[3]/div")
     # The detailed address line 2 of the customer ordering the selected Product
-    address_line2 = (By.XPATH, ".//*[@id='recipientAdressLine2']")
+    address_line2 = (By.ID, "recipientAdressLine2")
     # The review of detailed address line 2 of the customer ordering the selected Product
-    address_line2_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[4]/div")
+    address_line2_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[2]/div[4]/div")
     # The review of the delivery date of the order
-    delivery_date_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[2]/div[7]/div")
+    delivery_date_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[2]/div[7]/div")
     # The First and Last Name of the recipient
-    first_and_last_name = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[2]/div/div/input")
+    first_and_last_name = (By.XPATH, ".//*[contains(@class,'row billing-info')]/div/div[2]/div/div/input")
     # The review of the First and Last Name of the recipient
-    first_and_last_name_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[2]/div")
+    first_and_last_name_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[4]/div[2]/div")
     # The Zip Code of the recipient
-    billing_zip_code = (By.XPATH, ".//*[@id='billingZipcode']")
+    billing_zip_code = (By.ID, "billingZipcode")
     # The review of the Zip Code of the recipient
-    billing_zip_code_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[5]/div")
+    billing_zip_code_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[4]/div[5]/div")
     # The detailed address line 1 of the recipient
-    billing_address_l1 = (By.XPATH, ".//*[@id='billingAddressLine1']")
+    billing_address_l1 = (By.ID, "billingAddressLine1")
     # The review of detailed address line 1 of the recipient
-    billing_address_l1_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[3]/div")
+    billing_address_l1_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[4]/div[3]/div")
     # The detailed address line 2 of the recipient
-    billing_address_l2 = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[5]/div/div/input")
+    billing_address_l2 = (By.XPATH, ".//*[contains(@class,'row billing-info')]/div/div[5]/div/div/input")
     # The review of detailed address line 2 of the recipient
-    billing_address_l2_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[4]/div")
+    billing_address_l2_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[4]/div[4]/div")
     # The email address of the customer ordering the selected Product
-    email_address = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[6]/div/div/input")
+    email_address = (By.XPATH, ".//*[contains(@class,'row billing-info')]/div/div[6]/div/div/input")
     # The review of the email address of the customer ordering the selected Product
-    email_address_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[7]/div")
+    email_address_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[4]/div[7]/div")
     # The phone number of the customer ordering the selected Product
-    billing_phone_number = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[7]/div/div/input")
+    billing_phone_number = (By.XPATH, ".//*[contains(@class,'row billing-info')]/div/div[7]/div/div/input")
     # The review of the phone number of the customer ordering the selected Product
-    billing_phone_number_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[4]/div[6]/div")
+    billing_phone_number_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[4]/div[6]/div")
     # If an sms is required to be send to the customer ordering the selected Product
-    sms_notification = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[8]/div/div/div[1]/button")
+    sms_notification = (By.XPATH, ".//*[contains(@class,'row billing-info')]/div/div[8]/div/div/div[1]/button")
     # If there is a promotion code for the customer ordering the selected Product
-    olyve_premiere_code = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[9]/div/div[1]/div/a/i")
+    olyve_premiere_code = (By.XPATH, ".//*[contains(@class,'row promo-code')]/div/div[1]/div/a/i")
     # The code provided to get a discount on the order of the selected Product
-    code = (By.XPATH, ".//*[@id='completeForm']/div[9]/div/div[9]/div/div[2]/div[1]/input")
+    code = (By.XPATH, ".//*[contains(@class,'row promo-code')]/div/div[2]/div[1]/input")
     # The apply button to apply the discount on the order of the selected Product
     apply_olyve_premeier_code = (By.XPATH, ".//*[@id='promo-code']/a")
     # The promotion code 'Premiere discount was applied!'
     promo_code_applied = (By.CSS_SELECTOR, '.col-xs-12.text-center.codeMessage')
     # Discount in the Review Section
-    discount_review = (By.XPATH, 'html/body/div[1]/div/div/form/div[10]/div[1]/div[4]/div[1]')
+    discount_review = (By.CSS_SELECTOR, ".col-xs-8.address-line.up")
     # Discount Value in the Review Section
-    discount_value_review = (By.XPATH, 'html/body/div[1]/div/div/form/div[10]/div[1]/div[4]/div[2]')
+    discount_value_review = (By.CSS_SELECTOR, '.col-xs-4.text-right.address-line.up')
     # The credit card number used to pay the order of the selected Product
     credit_card_number = (By.XPATH, ".//*[@id='creditCardNumberRow']/div/div/input")
     # The credit card expiry month of the credit card used to pay the order of the selected Product
     credit_card_month = (By.XPATH, ".//*[@id='creditCardNumberDetailsRow']/div[1]/div/input")
     # The credit card expiry year of the credit card used to pay the order of the selected Product
-    credit_card_year = (By.XPATH, ".//*[@id='creditCardExpYearId']")
+    credit_card_year = (By.ID, "creditCardExpYearId")
     # The credit card CCV number of the credit card used to pay the order of the selected Product
     credit_card_ccv = (By.XPATH, ".//*[@id='creditCardNumberDetailsRow']/div[3]/div/input")
     # The review of the message sent with the order
-    message_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[3]/div[2]")
+    message_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[3]/div[2]")
     # The review of the signature of the customer ordering the selected Product
-    signature_review = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[3]/div[3]/div")
+    signature_review = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[3]/div[3]/div")
     # In the Checkout Page there should be a link to detect if a photo/video is sent with the order of the selected Product
-    gift_image_video = (By.XPATH, ".//*[@id='completeForm']/div[10]/div[3]/div[4]/div/a")
+    gift_image_video = (By.XPATH, ".//*[contains(@class,'row final-review')]/div[3]/div[4]/div/a")
     # The video is displayed in the page that check video uploaded is sent with the order
     video_upload_review = (By.XPATH, "xhtml:html/xhtml:body/xhtml:video")
     # The image is displayed in the page that check image uploaded is sent with the order
     image_upload_review = (By.XPATH, "html/body/div[1]/div/div/div[3]/div/img")
     # The Buy button that should be clicked to proceed to the Order Details Page
-    Buy_button = (By.XPATH, ".//*[@id='completeForm']/div[11]/div/a")
+    Buy_button = (By.XPATH, ".//*[contains(@class,'row buy')]/div/a")
     # The Alert displayed if there is no message sent with the order and to make sure that the user didn't forgot to add it
     CardMessageDialog = (By.XPATH, ".//*[@id='ngdialog2-aria-describedby']")
     # The Alert displayed if the selected delivery date is not available
@@ -174,17 +174,17 @@ class PlaceOrder(object):
     # The Customer Name ordering the Product displayed in the Order Details Page
     name_review_order_details = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[3]/div")
     # The detailed address line 1 of the recipient of the order in the Order Details Page
-    address_line1_review_order_details = (By.XPATH, ".//*[@id='recipientaddressLine1']")
+    address_line1_review_order_details = (By.ID, "recipientaddressLine1")
     # The City of the recipient of the order in the Order Details Page
-    address_line1_review_order_details_city = (By.XPATH, ".//*[@id='recipientcity']")
+    address_line1_review_order_details_city = (By.ID, "recipientcity")
     # The State of the recipient of the order in the Order Details Page
-    address_line1_review_order_details_state = (By.XPATH, ".//*[@id='recipientstate']")
+    address_line1_review_order_details_state = (By.ID, "recipientstate")
     # The detailed address line 2 of the recipient of the order in the Order Details Page
-    address_line2_review_order_details = (By.XPATH, ".//*[@id='recipientaddressLine2']")
+    address_line2_review_order_details = (By.ID, "recipientaddressLine2")
     # The Zip Code of the customer ordering the Product in the Order Details Page
-    zip_code_review_order_details = (By.XPATH, ".//*[@id='recipientzipcode']")
+    zip_code_review_order_details = (By.ID, "recipientzipcode")
     # The delivery date of the order in the Order Details Page
-    delivery_date_review_order_details = (By.XPATH, ".//*[@id='deliverydate']")
+    delivery_date_review_order_details = (By.ID, "deliverydate")
     # The Contact information for OLYVE
     questions_and_concenrs = (By.XPATH, "html/body/div[1]/div/div/div[2]/div[10]/div")
     # If and upates required via text
@@ -276,7 +276,7 @@ class PlaceOrder(object):
 
     # The following function verifies that the name of the product at the checkout page is name of the selected product
     def check_product_name(self, productname):
-        # Get Proudct Name
+        # Get Product Name
         changeproductname = productname.replace("-", " + ").upper()
         if self._driver.find_element(*PlaceOrder.product_name).text == changeproductname:
             return True
@@ -341,7 +341,7 @@ class PlaceOrder(object):
     def check_notification_text(self, notificationtext):
         # Notification Text
         changenotificationtext = notificationtext.upper()
-        if self._driver.find_element(*PlaceOrder.notification_text).text == changenotificationtext:
+        if self._driver.find_elements(*PlaceOrder.notification_text)[-1].text == changenotificationtext:
             return True
         else:
             return False
@@ -350,18 +350,21 @@ class PlaceOrder(object):
     def check_notification_text_review(self, notificationtext):
         # Also the notification text in the review section
         changenotificationtext = notificationtext.upper()
-        if self._driver.find_element(*PlaceOrder.notification_text_review).text == changenotificationtext:
+        if self._driver.find_elements(*PlaceOrder.notification_text_review)[0].text == changenotificationtext:
             return True
         else:
             return False
 
     # The following function verifies the subtotal at the checkout page is the subtotal of the selected product
     def check_subtotal(self, accessoryprice, productprice):
-        changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
-        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        if accessoryprice != 0:
+            changeaccessoryprice = accessoryprice.split("$")
+            subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        else:
+            subtotalnumber = int(float(changeproductprice[1]))
         subtotal = "SUBTOTAL $" + str(subtotalnumber) + ".00"
-        if self._driver.find_element(*PlaceOrder.subtotal).text == subtotal:
+        if self._driver.find_elements(*PlaceOrder.subtotal_And_salestaxes_And_totalprice)[0].text == subtotal:
             return True
         else:
             return False
@@ -373,7 +376,7 @@ class PlaceOrder(object):
         subtotalnumber = int(float(changeproductprice[1]))
         changesalestax = round((subtotalnumber * salestax),2)
         changesalestax = "SALES TAX: $" + str(changesalestax)
-        if self._driver.find_element(*PlaceOrder.sales_taxes).text == changesalestax:
+        if self._driver.find_elements(*PlaceOrder.subtotal_And_salestaxes_And_totalprice)[1].text == changesalestax:
             return True
         else:
             return False
@@ -385,21 +388,23 @@ class PlaceOrder(object):
         subtotalnumber = int(float(changeproductprice[1]))
         changesalestax = round((subtotalnumber * salestax), 2)
         changesalestax = "$" + str(changesalestax)
-        if self._driver.find_element(*PlaceOrder.sales_taxes_review).text == changesalestax:
+        if self._driver.find_elements(*PlaceOrder.sales_taxes_review)[-1].text == changesalestax:
             return True
         else:
             return False
 
     # The following function verifies the total price at the checkout page is the total price of the selected product
     def check_total_price(self, salestax, accessoryprice, productprice):
-        # Total
-        changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
-        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        if accessoryprice != 0:
+            changeaccessoryprice = accessoryprice.split("$")
+            subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        else:
+            subtotalnumber = int(float(changeproductprice[1]))
         changesalestax = round((float(changeproductprice[1]) * salestax), 2)
         Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
-        if self._driver.find_element(*PlaceOrder.total_price).text == Total:
+        if self._driver.find_elements(*PlaceOrder.subtotal_And_salestaxes_And_totalprice)[2].text == Total:
             return True
         else:
             return False
@@ -407,13 +412,16 @@ class PlaceOrder(object):
     # The following function verifies the total price at the checkout page is the total price in the review section of the selected product
     def check_total_price_review(self, salestax, accessoryprice, productprice):
         # Also total in the review section
-        changeaccessoryprice = accessoryprice.split("$")
         changeproductprice = productprice.split("$")
-        subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        if accessoryprice != 0:
+            changeaccessoryprice = accessoryprice.split("$")
+            subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+        else:
+            subtotalnumber = int(float(changeproductprice[1]))
         changesalestax = round((float(changeproductprice[1]) * salestax), 2)
         Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
-        if self._driver.find_element(*PlaceOrder.total_price_review).text == Total:
+        if self._driver.find_elements(*PlaceOrder.total_price_review)[1].text == Total:
             return True
         else:
             return False
@@ -651,19 +659,23 @@ class PlaceOrder(object):
         if olyvepremierecode is not None and (olyvepremierecode == 'nope' or olyvepremierecode == 'beauty10' or olyvepremierecode == 'Bonkers!'):
             getcontext().rounding = ROUND_DOWN
             TWOPLACES = Decimal(10) ** -2
-            changeaccessoryprice = accessoryprice.split("$")
             changeproductprice = productprice.split("$")
-            subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+            if accessoryprice != 0:
+                changeaccessoryprice = accessoryprice.split("$")
+                subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
+            else:
+                subtotalnumber = int(float(changeproductprice[1]))
+
             changesalestax = Decimal(float(changeproductprice[1]) * salestax).quantize(TWOPLACES)
             Totalnumber = changesalestax + subtotalnumber
             Total = "TOTAL: $" + str(Totalnumber)
             self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
             self._driver.find_element(*PlaceOrder.code).send_keys(olyvepremierecode)
             self._driver.find_element(*PlaceOrder.apply_olyve_premeier_code).click()
-            time.sleep(30)
+            time.sleep(15)
             if olyvepremierecode == 'nope':
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
-                    if self._driver.find_element(*PlaceOrder.total_price_review).text == Total:
+                    if self._driver.find_elements(*PlaceOrder.total_price_review)[1].text == Total:
                         return True
                     else:
                         return False
@@ -671,15 +683,15 @@ class PlaceOrder(object):
                     return False
             elif olyvepremierecode == 'beauty10':
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
-                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext.upper():
+                    if self._driver.find_elements(*PlaceOrder.discount_review)[-2].text == discounttext.upper():
                         discountvalue = Decimal(subtotalnumber * 0.1).quantize(TWOPLACES)
                         salestaxafterdiscount = Decimal(float(changesalestax) * 0.9).quantize(TWOPLACES)
                         subtotalnumberafterdiscount = subtotalnumber - discountvalue
                         totalnumberafterdiscount = subtotalnumberafterdiscount + salestaxafterdiscount
                         changesubtotalnumber = '- $' + str(discountvalue)
-                        if self._driver.find_element(*PlaceOrder.discount_value_review).text == changesubtotalnumber:
+                        if self._driver.find_elements(*PlaceOrder.discount_value_review)[-2].text == changesubtotalnumber:
                             changetotalafterdiscount = "TOTAL: $" + str(totalnumberafterdiscount)
-                            if self._driver.find_element(*PlaceOrder.total_price_review).text == changetotalafterdiscount:
+                            if self._driver.find_elements(*PlaceOrder.total_price_review)[1].text == changetotalafterdiscount:
                                 return True
                             else:
                                 return False
@@ -688,14 +700,14 @@ class PlaceOrder(object):
                 return False
             else:
                 if self._driver.find_element(*PlaceOrder.promo_code_applied).text == promotioncodetext:
-                    if self._driver.find_element(*PlaceOrder.discount_review).text == discounttext.upper():
+                    if self._driver.find_elements(*PlaceOrder.discount_review)[-2].text == discounttext.upper():
                         discountvalue = Decimal(subtotalnumber).quantize(TWOPLACES)
                         discountvalueonsalestax = Decimal(changesalestax).quantize(TWOPLACES)
                         changesubtotalnumber = '- $' + str(discountvalue)
-                        if self._driver.find_element(*PlaceOrder.discount_value_review).text == changesubtotalnumber:
+                        if self._driver.find_elements(*PlaceOrder.discount_value_review)[-2].text == changesubtotalnumber:
                             changeTotalvalue = Totalnumber - discountvalue - discountvalueonsalestax
                             changeTotal = "TOTAL: $" + str(changeTotalvalue)
-                            if self._driver.find_element(*PlaceOrder.total_price_review).text == changeTotal:
+                            if self._driver.find_elements(*PlaceOrder.total_price_review)[1].text == changeTotal:
                                 if not (self._driver.find_element(*PlaceOrder.credit_card_number).is_displayed() and
                                         self._driver.find_element(*PlaceOrder.credit_card_month).is_displayed() and
                                         self._driver.find_element(*PlaceOrder.credit_card_year).is_displayed() and
@@ -886,3 +898,9 @@ class PlaceOrder(object):
     # Go to Home Page.
     def go_to_hompage(self):
         self._driver.find_element(*PlaceOrder.return_home).click()
+
+
+    # This function checks if there is an accessory section in checkout page or not
+    def is_accessory_section_exist_checkout_page(self):
+        if self._driver.find_element(*PlaceOrder.accessory_section).get_attribute('data-item-is-accessory') == "true":
+            return True
