@@ -671,6 +671,7 @@ class PlaceOrder(object):
             Total = "TOTAL: $" + str(Totalnumber)
             self._driver.find_element(*PlaceOrder.olyve_premiere_code).click()
             self._driver.find_element(*PlaceOrder.code).send_keys(olyvepremierecode)
+            PageActions.BasicActions.wait_until_element_clickable(self, 20, PlaceOrder.apply_olyve_premeier_code)
             self._driver.find_element(*PlaceOrder.apply_olyve_premeier_code).click()
             time.sleep(15)
             if olyvepremierecode == 'nope':

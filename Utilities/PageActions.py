@@ -62,6 +62,9 @@ class BasicActions(Browser):
             return False
         return True
 
+    def wait_until_element_clickable(self, time_to_wait, locator):
+        WebDriverWait(self._driver, time_to_wait).until(EC.element_to_be_clickable(locator))
+
     @staticmethod
     # The following common function is used to get the scroll top value of the window
     def window_scroll_top(self):
