@@ -1,12 +1,13 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 class NegativeCases(object):
     product_image = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[1]/div[1]/div/div/div/div[1]/olv-image/div/img')
     pick_me_button = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[5]/div/div')
-    close_pick_me_dialog = (By.CSS_SELECTOR, '.ngdialog-close')
     name_field = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[6]/div/div[1]/form/div[2]/div/div[2]/div/input')
     zip_code_field = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[6]/div/div[1]/form/div[4]/div/div[2]/div/input')
-    Go_button = (By.XPATH,'html/body/div[1]/div/div/div[2]/div[2]/div[6]/div/div[1]/form/div[5]/div/a')
+    Go_button = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[6]/div/div[1]/form/div[5]/div/a')
     error_zip_code_message_body = (By.XPATH, 'html/body/div[3]/div[2]/div/div/div[2]/div/p')
     error_zip_code_message_header = (By.XPATH, 'html/body/div[3]/div[2]/div/div/div[1]/div')
     error_zip_code_message_OK = (By.XPATH, 'html/body/div[3]/div[2]/div/div/div[3]/div/a')
@@ -21,7 +22,10 @@ class NegativeCases(object):
         if self._driver.find_element(*NegativeCases.pick_me_button).is_displayed():
             self._driver.find_element(*NegativeCases.product_image).click()
             if not (self._driver.find_element(*NegativeCases.pick_me_button).is_displayed()):
-                self._driver.find_element(*NegativeCases.close_pick_me_dialog).click()
+                action = ActionChains(self._driver)
+                action.key_down(Keys.ESCAPE)
+                action.key_up(Keys.ESCAPE)
+                action.perform()
                 if self._driver.find_element(*NegativeCases.pick_me_button).is_displayed():
                     return True
                 else:
@@ -31,7 +35,7 @@ class NegativeCases(object):
         else:
             return False
 
-    def no_name_zipdode(self, error_missing_name_zipcode, error_missing_name):
+    def no_name_zipcode(self, error_missing_name_zipcode, error_missing_name):
         self._driver.find_element(*NegativeCases.zip_code_field).click()
         self._driver.find_element(*NegativeCases.name_field).click()
         if (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).is_displayed()) and (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).text == error_missing_name):

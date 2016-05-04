@@ -54,7 +54,7 @@ class NegativeCasesTest(unittest.TestCase):
         # Wait till the Product Details page is loaded
         BasicActions.implicit_wait(50)
         if placeorder.wait_for_product_page():
-            self.assertTrue(negativecases.no_name_zipdode(self.Negativeresult[4][0]), "Missing Name or Zip Code are accepted")
+            self.assertTrue(negativecases.no_name_zipcode(self.Negativeresult[4][0]), "Missing Name or Zip Code are accepted")
 
     def test_invalid_name(self):
         placeorder = PlaceOrder(Browser._driver)
@@ -85,6 +85,12 @@ class NegativeCasesTest(unittest.TestCase):
         BasicActions.implicit_wait(50)
         if placeorder.wait_for_product_page():
             self.assertTrue(negativecases.unsupported_zip_code(self.Negativeresult[7][0],self.Negativeresult[3][0],self.Negativeresult[9][0],self.Negativeresult[10][0]),"Unsupported Zip Code is accepted")
+
+    @classmethod
+    def tearDown(cls):
+        # close the browser window(s)
+        Browser.quit_driver()
+
 
 if __name__ == '__main__':
     unittest.main()
