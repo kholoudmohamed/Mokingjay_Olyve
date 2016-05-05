@@ -12,11 +12,6 @@ class NegativeCasesTest(unittest.TestCase):
     # Get the file location of the Excel Input File
     _fileLocation = FileLocator.read_config_get_file_location('ExcelConfiguration', 'DataSourcefileLocation')
 
-    # In the Configuration File with the Key 'ExcelConfiguration' - Sheet Name 'OrderInfoSheetName'
-    orderinfo_sheetName = ConfigReader.readconfig('ExcelConfiguration', 'OrderInfoSheetName')
-    # Fill the result of the selected sheet in the 2 dimensional array with the values in 'OrderInfoSheetName'
-    OrderInforesult = ExcelDataReader.get_data(_fileLocation, orderinfo_sheetName, HDR=True)
-
     # In the Configuration File with the Key 'ExcelConfiguration' - Sheet Name 'GeneralInfoSheetName'
     Negative_sheetName = ConfigReader.readconfig('ExcelConfiguration', 'OthersSheetName')
     # Fill the result of the selected sheet in the 2 dimensional array with the values in 'GeneralInfoSheetName'
