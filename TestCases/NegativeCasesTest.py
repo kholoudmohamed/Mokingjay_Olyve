@@ -59,7 +59,7 @@ class NegativeCasesTest(unittest.TestCase):
         # Wait till the Product Details page is loaded
         BasicActions.implicit_wait(30)
         if placeorder.wait_for_product_page():
-            self.assertTrue(negativecases.invalid_name(self.Negativeresult[8][0],self.Negativeresult[3][0],self.Negativeresult[6][0]), "Invalid Name is accepted")
+            self.assertTrue(negativecases.invalid_name(self.Negativeresult[2][0], self.Negativeresult[5][0], self.Negativeresult[8][0]), "Invalid Name is accepted")
 
     def test_invalid_zipcode(self):
         placeorder = PlaceOrder(Browser._driver)
@@ -69,7 +69,7 @@ class NegativeCasesTest(unittest.TestCase):
         # Wait till the Product Details page is loaded
         BasicActions.implicit_wait(30)
         if placeorder.wait_for_product_page():
-            self.assertTrue(negativecases.invalid_zip_code(self.Negativeresult[7][0],self.Negativeresult[2][0],self.Negativeresult[5][0]),"Invalid Zip Code is accepted")
+            self.assertTrue(negativecases.invalid_zip_code(self.Negativeresult[1][0], self.Negativeresult[3][0], self.Negativeresult[7][0]), "Invalid Zip Code is accepted")
 
     def test_usupported_zipcode(self):
         placeorder = PlaceOrder(Browser._driver)
@@ -79,7 +79,7 @@ class NegativeCasesTest(unittest.TestCase):
         # Wait till the Product Details page is loaded
         BasicActions.implicit_wait(30)
         if placeorder.wait_for_product_page():
-            self.assertTrue(negativecases.unsupported_zip_code(self.Negativeresult[7][0],self.Negativeresult[3][0],self.Negativeresult[9][0],self.Negativeresult[10][0]),"Unsupported Zip Code is accepted")
+            self.assertTrue(negativecases.unsupported_zip_code(self.Negativeresult[1][0], self.Negativeresult[4][0], self.Negativeresult[9][0], self.Negativeresult[10][0]), "Unsupported Zip Code is accepted")
 
     @classmethod
     def tearDown(cls):
