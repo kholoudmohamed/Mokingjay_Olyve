@@ -10,6 +10,7 @@ HomeSheetName = "Home"
 ProductsSheetName = "Products"
 OrderInfoSheetName = "OrderInfo"
 GeneralInfoSheetName = "GeneralInfo"
+OthersSheetName = "Others"
 
 # The Drivers Locations/Paths located here
 ["DriverConfiguration"]

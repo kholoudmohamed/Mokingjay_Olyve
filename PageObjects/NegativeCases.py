@@ -12,7 +12,7 @@ class NegativeCases(object):
     error_zip_code_message_header = (By.XPATH, 'html/body/div[3]/div[2]/div/div/div[1]/div')
     error_zip_code_message_OK = (By.XPATH, 'html/body/div[3]/div[2]/div/div/div[3]/div/a')
     error_message_invalid_zip_code = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[6]/div/div[1]/form/div[4]/div/div[2]/div/span')
-    error_message_missing_name_zipcode = (By.CSS_SELECTOR, '.errormsg')
+    error_message_missing_name_zipcode = (By.CLASS_NAME, 'errormsg')
     error_message_invalid_name = (By.XPATH, 'html/body/div[1]/div/div/div[2]/div[2]/div[6]/div/div[1]/form/div[2]/div/div[2]/div/span')
 
     def __init__(self, driver):
@@ -35,13 +35,20 @@ class NegativeCases(object):
         else:
             return False
 
-    def no_name_zipcode(self, error_missing_name_zipcode, error_missing_name):
+    def no_name_zipcode(self, error_missing_name_zipcode):
+        self._driver.find_element(*NegativeCases.pick_me_button).click()
         self._driver.find_element(*NegativeCases.zip_code_field).click()
-        self._driver.find_element(*NegativeCases.name_field).click()
-        if (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).is_displayed()) and (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).text == error_missing_name):
-            return True
+        if (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).is_displayed()) and (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).get_attribute('title') == error_missing_name_zipcode):
+            zipcode_validator = True
         else:
-            return False
+            zipcode_validator = False
+        self._driver.find_element(*NegativeCases.name_field).click()
+        if (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).is_displayed()) and (self._driver.find_element(*NegativeCases.error_message_missing_name_zipcode).get_attribute('title') == error_missing_name_zipcode):
+            name_validator = True
+        else:
+            name_validator = False
+
+        return zipcode_validator and name_validator
 
     def invalid_name(self, valid_zipcode, invalid_name, error_invalid_name):
         self._driver.find_element(*NegativeCases.zip_code_field).clear()
