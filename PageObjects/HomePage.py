@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from Utilities import PageActions
+import time
 
 
 class HomePage(object):
@@ -132,6 +133,7 @@ class HomePage(object):
         self._driver.find_element(*HomePage.header_track_button).click()
         if PageActions.BasicActions.explicit_wait(self, 40,HomePage.track_load):
             curent_url = self._driver.current_url
+            time.sleep(2)
             self._driver.find_element(*HomePage.order_id_track).send_keys(OrderID)
             self._driver.find_element(*HomePage.track_load).click()
             return curent_url
@@ -164,6 +166,7 @@ class HomePage(object):
         self._driver.find_element(*HomePage.second_products_slide).click()
         action = ActionChains(self._driver)
         action.key_down(Keys.SHIFT)
+        time.sleep(2)
         action.click(self._driver.find_element(*HomePage.shop_button_second_slide))
         action.key_up(Keys.SHIFT)
         action.perform()
@@ -171,6 +174,7 @@ class HomePage(object):
     # The following function check if the page scroll down when click on Shop button of the third slide in order to select a Product
     def shop_button_third_slide_click(self):
         self._driver.find_element(*HomePage.third_products_slide).click()
+        time.sleep(2)
         self._driver.find_element(*HomePage.shop_button_third_slide).click()
         if PageActions.BasicActions.window_scroll_top(self) > 0:
             return True

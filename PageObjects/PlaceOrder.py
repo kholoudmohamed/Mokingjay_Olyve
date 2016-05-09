@@ -295,7 +295,10 @@ class PlaceOrder(object):
     # The following function verifies the price of the product at the checkout page is the price of the selected product
     def check_product_price(self, productprice):
         # Product Price
-        changeproductprice = productprice+".00"
+        if "." in productprice:
+            changeproductprice = productprice
+        else:
+            changeproductprice = productprice+".00"
         if self._driver.find_element(*PlaceOrder.product_price_review1).text == changeproductprice:
             return True
         else:
@@ -304,7 +307,10 @@ class PlaceOrder(object):
     # The following function verifies the price of the product at the checkout page review section is the price of the selected product
     def check_product_price_review(self, productprice):
         # Also the Product price in the review section
-        changeproductprice = productprice+".00"
+        if "." in productprice:
+            changeproductprice = productprice
+        else:
+            changeproductprice = productprice+".00"
         if self._driver.find_element(*PlaceOrder.product_price_review2).text == changeproductprice:
             return True
         else:
@@ -878,11 +884,11 @@ class PlaceOrder(object):
 
     # Accessory check should wait for Accessory Page to be loaded
     def wait_for_accessory_page(self):
-        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.accessory_load)
+        return PageActions.BasicActions.explicit_wait(self, 20, PlaceOrder.accessory_load)
 
     # Message check should wait for Message Page to be loaded
     def wait_for_message_page(self):
-        return PageActions.BasicActions.explicit_wait(self, 40, PlaceOrder.message_load)
+        return PageActions.BasicActions.explicit_wait(self, 20, PlaceOrder.message_load)
 
     # Checkout check should wait for Checkout Page to be loaded
     def wait_for_checkout_page(self):

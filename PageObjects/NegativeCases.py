@@ -57,6 +57,7 @@ class NegativeCases(object):
         self._driver.find_element(*NegativeCases.name_field).send_keys(invalid_name)
         self._driver.find_element(*NegativeCases.zip_code_field).send_keys(valid_zipcode)
         self._driver.find_element(*NegativeCases.Go_button).click()
+        self._driver.find_element(*NegativeCases.name_field).click()
         if self._driver.find_element(*NegativeCases.error_message_invalid_name).get_attribute('title') == error_invalid_name:
             return True
         else:
