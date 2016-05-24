@@ -6,14 +6,13 @@ from TestCases.NegativeCasesTest import NegativeCasesTest
 from Utilities import HTMLTestRunner
 from Utilities import FileLocator as FL
 
-
 # get all test from  HomePageTest and PlaceOrderTest
 home_page_tests = unittest.TestLoader().loadTestsFromTestCase(HomePageTest)
 place_order_page_tests = unittest.TestLoader().loadTestsFromTestCase(PlaceOrderTest)
 negative_tests = unittest.TestLoader().loadTestsFromTestCase(NegativeCasesTest)
 
 # create a test Suite combining the tests
-tests = unittest.TestSuite([home_page_tests, place_order_page_tests,negative_tests])
+tests = unittest.TestSuite([home_page_tests, place_order_page_tests, negative_tests])
 
 # Create Test Report Name
 report_name = 'TestReport_' + dt.datetime.now().strftime("%Y-%m-%d_%H %M %S")
