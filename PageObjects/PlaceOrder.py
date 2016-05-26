@@ -165,8 +165,10 @@ class PlaceOrder(object):
     image_upload_review = (By.XPATH, "html/body/div[1]/div/div/div[3]/div/img")
     # The Buy button that should be clicked to proceed to the Order Details Page
     Buy_button = (By.XPATH, ".//*[contains(@class,'row buy')]/div/a")
-    # The Alert displayed if there is no message sent with the order and to make sure that the user didn't forgot to add it
-    CardMessageDialog = (By.XPATH, ".//*[@id='ngdialog2-aria-describedby']")
+    # Forgot card message warning message.
+    forgot_cardmessage_window = (By.XPATH,".//*[@id='ngdialog2']/div[2]/div/div/div[1]/div")
+    # Forgot card Message warning No button.
+    forgot_cardmessage_no= (By.XPATH,".//*[@id='ngdialog2']/div[2]/div/div/div[3]/div/a[2]")
     # The Alert displayed if the selected delivery date is not available
     DeliveryDateNotAvailable = (By.XPATH, ".//*[@id='ngdialog3']/div[2]/div/div/div[1]/div")
     # The Order ID displayed in the Order Details Page
@@ -292,11 +294,13 @@ class PlaceOrder(object):
 
     # The following function verifies the price of the product at the checkout page is the price of the selected product
     def check_product_price(self, productprice):
+        changeproductprice = productprice.split('$')
         # Product Price
         getcontext().rounding = ROUND_DOWN
         TWOPLACES = Decimal(10) ** -2
-        changeproductprice = Decimal(float(productprice)).quantize(TWOPLACES)
-        if self._driver.find_element(*PlaceOrder.product_price_review1).text == changeproductprice:
+        changeproductpriceupdated = Decimal(float(changeproductprice[1])).quantize(TWOPLACES)
+        changeproductpricestring = "$"+ str(changeproductpriceupdated)
+        if self._driver.find_element(*PlaceOrder.product_price_review1).text == changeproductpricestring:
             return True
         else:
             return False
@@ -304,10 +308,12 @@ class PlaceOrder(object):
     # The following function verifies the price of the product at the checkout page review section is the price of the selected product
     def check_product_price_review(self, productprice):
         # Also the Product price in the review section
+        changeproductprice = productprice.split('$')
         getcontext().rounding = ROUND_DOWN
         TWOPLACES = Decimal(10) ** -2
-        changeproductprice = Decimal(float(productprice)).quantize(TWOPLACES)
-        if self._driver.find_element(*PlaceOrder.product_price_review2).text == changeproductprice:
+        changeproductpriceupdated = Decimal(float(changeproductprice[1])).quantize(TWOPLACES)
+        changeproductpricestring = "$" + str(changeproductpriceupdated)
+        if self._driver.find_element(*PlaceOrder.product_price_review2).text == changeproductpricestring:
             return True
         else:
             return False
@@ -316,14 +322,16 @@ class PlaceOrder(object):
     def check_accessory_details(self, accessory, accessorytext, accessoryprice):
         # The following part is checked only if accessory is selected and available for the product
         if accessory == "Yes":
+            changeaccessoryprice = accessoryprice.split('$')
             getcontext().rounding = ROUND_DOWN
             TWOPLACES = Decimal(10) ** -2
-            changeaccessoryprice = Decimal(float(accessoryprice)).quantize(TWOPLACES)
+            changeaccessorypriceupdated = Decimal(float(changeaccessoryprice[1])).quantize(TWOPLACES)
             changeaccessorytext = accessorytext.upper()
             # Accesorry Text
             if self._driver.find_element(*PlaceOrder.accessory_text).text == changeaccessorytext:
                 # Accessory Price
-                if self._driver.find_element(*PlaceOrder.accessory_price_review1).text == changeaccessoryprice:
+                changeaccessorypricestring = "$" + str(changeaccessorypriceupdated)
+                if self._driver.find_element(*PlaceOrder.accessory_price_review1).text == changeaccessorypricestring:
                     return True
             else:
                 return False
@@ -331,14 +339,16 @@ class PlaceOrder(object):
     # The following function verifies the accessory details at the checkout page is the accessory details in the review section of the selected product
     def check_accessory_details_review(self, accessory, accessorytext, accessoryprice):
         if accessory == "Yes":
+            changeaccessoryprice = accessoryprice.split('$')
             getcontext().rounding = ROUND_DOWN
             TWOPLACES = Decimal(10) ** -2
-            changeaccessoryprice = Decimal(float(accessoryprice)).quantize(TWOPLACES)
+            changeaccessorypriceupdated = Decimal(float(changeaccessoryprice[1])).quantize(TWOPLACES)
             changeaccessorytext = accessorytext.upper()
             # Also the Accessory Text in the review section
             if self._driver.find_element(*PlaceOrder.accessory_text_review).text == changeaccessorytext:
                 # Also the Accessory Price in the review section
-                if self._driver.find_element(*PlaceOrder.accessory_price_review2).text == changeaccessoryprice:
+                changeaccessorypricestring = "$" + str(changeaccessorypriceupdated)
+                if self._driver.find_element(*PlaceOrder.accessory_price_review2).text == changeaccessorypricestring:
                     return True
             else:
                 return False
@@ -381,9 +391,11 @@ class PlaceOrder(object):
     # The following function verifies the sales tax at the checkout page is the sales tax of the selected product
     def check_sales_taxes(self, salestax, productprice):
         # Sales Taxes
+        getcontext().rounding = ROUND_DOWN
+        TWOPLACES = Decimal(10) ** -2
         changeproductprice = productprice.split("$")
         subtotalnumber = int(float(changeproductprice[1]))
-        changesalestax = round((subtotalnumber * salestax),2)
+        changesalestax = Decimal(float(subtotalnumber * salestax)).quantize(TWOPLACES)
         changesalestax = "SALES TAX: $" + str(changesalestax)
         if self._driver.find_elements(*PlaceOrder.subtotal_And_salestaxes_And_totalprice)[1].text == changesalestax:
             return True
@@ -393,9 +405,11 @@ class PlaceOrder(object):
     # The following function verifies the sales tax at the checkout page is the sales tax in the review section of the selected product
     def check_sales_taxes_review(self, salestax, productprice):
         # Also Sales Taxes in the review section
+        getcontext().rounding = ROUND_DOWN
+        TWOPLACES = Decimal(10) ** -2
         changeproductprice = productprice.split("$")
         subtotalnumber = int(float(changeproductprice[1]))
-        changesalestax = round((subtotalnumber * salestax), 2)
+        changesalestax = Decimal(float(subtotalnumber * salestax)).quantize(TWOPLACES)
         changesalestax = "$" + str(changesalestax)
         if self._driver.find_elements(*PlaceOrder.sales_taxes_review)[-1].text == changesalestax:
             return True
@@ -404,13 +418,15 @@ class PlaceOrder(object):
 
     # The following function verifies the total price at the checkout page is the total price of the selected product
     def check_total_price(self, salestax, accessoryprice, productprice):
+        getcontext().rounding = ROUND_DOWN
+        TWOPLACES = Decimal(10) ** -2
         changeproductprice = productprice.split("$")
         if accessoryprice != 0:
             changeaccessoryprice = accessoryprice.split("$")
             subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
         else:
             subtotalnumber = int(float(changeproductprice[1]))
-        changesalestax = round((float(changeproductprice[1]) * salestax), 2)
+        changesalestax = Decimal((float(changeproductprice[1]) * salestax)).quantize(TWOPLACES)
         Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
         if self._driver.find_elements(*PlaceOrder.subtotal_And_salestaxes_And_totalprice)[2].text == Total:
@@ -421,13 +437,15 @@ class PlaceOrder(object):
     # The following function verifies the total price at the checkout page is the total price in the review section of the selected product
     def check_total_price_review(self, salestax, accessoryprice, productprice):
         # Also total in the review section
+        getcontext().rounding = ROUND_DOWN
+        TWOPLACES = Decimal(10) ** -2
         changeproductprice = productprice.split("$")
         if accessoryprice != 0:
             changeaccessoryprice = accessoryprice.split("$")
             subtotalnumber = int(float(changeaccessoryprice[1]) + float(changeproductprice[1]))
         else:
             subtotalnumber = int(float(changeproductprice[1]))
-        changesalestax = round((float(changeproductprice[1]) * salestax), 2)
+        changesalestax = Decimal((float(changeproductprice[1]) * salestax)).quantize(TWOPLACES)
         Totalnumber = changesalestax + subtotalnumber
         Total = "TOTAL: $" + str(Totalnumber)
         if self._driver.find_elements(*PlaceOrder.total_price_review)[1].text == Total:
@@ -484,6 +502,8 @@ class PlaceOrder(object):
                 return True
             else:
                 return False
+        else:
+            return True
 
     # The following function fills the Zip Code at the checkout page
     def check_zip_code(self, zipcode):
@@ -539,6 +559,7 @@ class PlaceOrder(object):
     # The following function fills the delivery day at the checkout page of the selected product
     def fill_delivery_date(self, deliveryday):
         # Delivery Date
+        time.sleep(20)
         if deliveryday is not None:
             Calendar_days = self._driver.find_elements_by_tag_name("span")
             for dayselected in Calendar_days:
@@ -751,18 +772,24 @@ class PlaceOrder(object):
     # The following function verifies the message at the checkout page is the message in the review section of the selected product
     def check_message_review(self, message):
         # Also check the message in the review section
-        if self._driver.find_element(*PlaceOrder.message_review).text == message:
-            return True
+        if message is not None:
+            if self._driver.find_element(*PlaceOrder.message_review).text == message:
+                return True
+            else:
+                return False
         else:
-            return False
+            return True
 
     # The following function verifies the message signature at the checkout page is the message signature in the review section of the selected product
     def check_signature_review(self, signature):
         # Also check the signature in the review section
-        if self._driver.find_element(*PlaceOrder.signature_review).text == signature:
-            return True
+        if signature is not None:
+            if self._driver.find_element(*PlaceOrder.signature_review).text == signature:
+                return True
+            else:
+                return False
         else:
-            return False
+            return True
 
     # The following function verifies the Video/Photo uploaded at the checkout page
     def check_videophoto_review(self, videolocation, photolocation, videophotopageurl):
@@ -800,10 +827,9 @@ class PlaceOrder(object):
         self._driver.find_element(*PlaceOrder.Buy_button).click()
         # Check if the message is empty an alert is displayed and the user in this case is not forgotting the message
         if message is None:
-            if self._driver.find_element(*PlaceOrder.CardMessageDialog).is_displayed():
-                self._driver.switch_to_alert()
-                PageActions.BasicActions.dismiss_alert()
-                PageActions.BasicActions.implicit_wait(50)
+            if self._driver.find_element(*PlaceOrder.forgot_cardmessage_window).is_displayed():
+                self._driver.find_element(*PlaceOrder.forgot_cardmessage_no).click()
+
 
     # The following function verifies that there is an Order ID generated
     def check_confirmation_number(self):

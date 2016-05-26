@@ -164,13 +164,14 @@ class PlaceOrderTest(unittest.TestCase):
                                             self.assertTrue(placeorder.check_signature_review(self.OrderInforesult[6][row_index]), "The Signature doesn't match the entered signature")
                                             # Verify the Video/Photo sent with the order of the selected Product
                                             self.assertTrue(placeorder.check_videophoto_review(self.OrderInforesult[8][row_index], self.OrderInforesult[7][row_index], self.GeneralInforesult[1][4]), "The Video/Photo uploaded not found")
-                                            # Returns back to the Checkout Page
-                                            BasicActions.go_back()
-                                            placeorder.wait_for_checkout_page()
+                                            if (self.OrderInforesult[8][row_index] and self.OrderInforesult[7][row_index] == True):
+                                                # Returns back to the Checkout Page
+                                                BasicActions.go_back()
+                                                placeorder.wait_for_checkout_page()
                                             # Click on the Buy button to proceed to the Order Details Page
                                             placeorder.Buy_click(self.OrderInforesult[5][row_index])
                                             # Problem in waiting for Order Details Screen, Use time.sleep instead
-                                            time.sleep(30)
+                                            time.sleep(90)
                                             if placeorder.wait_for_order_details_page:
                                                 current_url = Browser._driver.current_url
                                                 if current_url == self.GeneralInforesult[1][3]:

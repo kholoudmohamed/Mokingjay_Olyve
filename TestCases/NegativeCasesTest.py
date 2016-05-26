@@ -1,4 +1,5 @@
 import unittest
+import time
 from PageObjects.PlaceOrder import PlaceOrder
 from PageObjects.NegativeCases import NegativeCases
 from Utilities import FileLocator
@@ -33,8 +34,9 @@ class NegativeCasesTest(unittest.TestCase):
     # The following test case order a selected product
     def test_productimage_with_pick_me_button(self):
         placeorder = PlaceOrder(Browser._driver)
-        negativecases = NegativeCases(Browser._driver)
         # Find the selected product and click on it
+        negativecases = NegativeCases(Browser._driver)
+        time.sleep(10)
         placeorder.findproductandclick(self.Negativeresult[0][0])
         # Wait till the Product Details page is loaded
         BasicActions.implicit_wait(30)
@@ -44,6 +46,7 @@ class NegativeCasesTest(unittest.TestCase):
     def test_missing_name_zipcode(self):
         placeorder = PlaceOrder(Browser._driver)
         negativecases = NegativeCases(Browser._driver)
+        time.sleep(10)
         # Find the selected product and click on it
         placeorder.findproductandclick(self.Negativeresult[0][0])
         # Wait till the Product Details page is loaded
@@ -54,6 +57,7 @@ class NegativeCasesTest(unittest.TestCase):
     def test_invalid_name(self):
         placeorder = PlaceOrder(Browser._driver)
         negativecases = NegativeCases(Browser._driver)
+        time.sleep(10)
         # Find the selected product and click on it
         placeorder.findproductandclick(self.Negativeresult[0][0])
         # Wait till the Product Details page is loaded
@@ -64,6 +68,7 @@ class NegativeCasesTest(unittest.TestCase):
     def test_invalid_zipcode(self):
         placeorder = PlaceOrder(Browser._driver)
         negativecases = NegativeCases(Browser._driver)
+        time.sleep(10)
         # Find the selected product and click on it
         placeorder.findproductandclick(self.Negativeresult[0][0])
         # Wait till the Product Details page is loaded
@@ -74,6 +79,7 @@ class NegativeCasesTest(unittest.TestCase):
     def test_usupported_zipcode(self):
         placeorder = PlaceOrder(Browser._driver)
         negativecases = NegativeCases(Browser._driver)
+        time.sleep(10)
         # Find the selected product and click on it
         placeorder.findproductandclick(self.Negativeresult[0][0])
         # Wait till the Product Details page is loaded
