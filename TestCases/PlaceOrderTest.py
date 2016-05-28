@@ -164,7 +164,7 @@ class PlaceOrderTest(unittest.TestCase):
                                             self.assertTrue(placeorder.check_signature_review(self.OrderInforesult[6][row_index]), "The Signature doesn't match the entered signature")
                                             # Verify the Video/Photo sent with the order of the selected Product
                                             self.assertTrue(placeorder.check_videophoto_review(self.OrderInforesult[8][row_index], self.OrderInforesult[7][row_index], self.GeneralInforesult[1][4]), "The Video/Photo uploaded not found")
-                                            if (self.OrderInforesult[8][row_index] and self.OrderInforesult[7][row_index] == True):
+                                            if self.OrderInforesult[8][row_index] is not None or self.OrderInforesult[7][row_index] is not None:
                                                 # Returns back to the Checkout Page
                                                 BasicActions.go_back()
                                                 placeorder.wait_for_checkout_page()
